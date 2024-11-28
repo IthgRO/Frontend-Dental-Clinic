@@ -40,7 +40,11 @@ const ServiceForm = ({ service, onSuccess }: ServiceFormProps) => {
 
   return (
     <>
-      <Button type="primary" onClick={() => setIsVisible(true)}>
+      <Button
+        className="sm:w-full lg:w-[100px] w-16"
+        type="primary"
+        onClick={() => setIsVisible(true)}
+      >
         {service ? 'Edit Service' : 'New Service'}
       </Button>
 

@@ -3,7 +3,6 @@ import MainLayout from '@/components/layouts/MainLayout'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import PrivateRoute from './PrivateRoute'
 
 const Login = lazy(() => import('@/pages/auth/Login'))
 const Register = lazy(() => import('@/pages/auth/Register'))
@@ -22,38 +21,10 @@ const AppRoutes = () => {
         </Route>
 
         <Route element={<MainLayout />}>
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/appointments"
-            element={
-              <PrivateRoute>
-                <Appointments />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/services"
-            element={
-              <PrivateRoute>
-                <Services />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/appointments" element={<Appointments />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
