@@ -4,12 +4,20 @@ import apiClient from './apiClient'
 
 export const authService = {
   login: async (email: string, password: string) => {
-    const response = await apiClient.post('/auth/login', { email, password })
+    const response = await apiClient.post('/api/user/login', { email, password })
     return response.data
   },
 
-  register: async (userData: Partial<User>) => {
-    const response = await apiClient.post('/auth/register', userData)
+  register: async (userData: {
+    FirstName: string
+    LastName: string
+    Email: string
+    Phone: string
+    ClinicId: UUID
+    Role: string
+    Password: string
+  }) => {
+    const response = await apiClient.post('/api/user/register', userData)
     return response.data
   },
 
