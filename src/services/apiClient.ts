@@ -1,4 +1,3 @@
-// src/services/api.ts
 import { useAuthStore } from '@/store/useAuthStore'
 import axios from 'axios'
 

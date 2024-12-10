@@ -1,19 +1,17 @@
+// src/store/useAppointmentStore.ts
 import { Appointment, AppointmentStatus } from '@/types'
 import { create } from 'zustand'
 
-interface Error {
-  message: string
-}
-
 interface AppointmentState {
   appointments: Appointment[]
-  selectedAppointment: Appointment | null
+  selectedAppointment: Partial<Appointment> | null
   isLoading: boolean
   error: string | null
-  fetchAppointments: (clinicId: string) => Promise<void>
-  createAppointment: (appointment: Omit<Appointment, 'id'>) => Promise<void>
-  updateAppointment: (appointment: Appointment) => Promise<void>
+  setSelectedService: (service: { value: string; label: string; price: number }) => void
+  setSelectedDateTime: (dateTime: { date: string; time: string }) => void
+  createAppointment: (appointment: Partial<Appointment>) => Promise<void>
   updateStatus: (id: string, status: AppointmentStatus) => Promise<void>
+  resetSelection: () => void
 }
 
 export const useAppointmentStore = create<AppointmentState>(set => ({
@@ -21,73 +19,59 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
   selectedAppointment: null,
   isLoading: false,
   error: null,
-  fetchAppointments: async (clinicId: string) => {
-    set({ isLoading: true })
-    try {
-      // API call implementation
-      const response = await fetch(`/api/clinics/${clinicId}/appointments`)
-      const data = await response.json()
-      set({ appointments: data, isLoading: false })
-    } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
-    }
+
+  setSelectedService: service => {
+    set(state => ({
+      selectedAppointment: {
+        ...state.selectedAppointment,
+        service: service.label,
+        price: service.price,
+      },
+    }))
   },
-  createAppointment: async (newAppointment: Omit<Appointment, 'id'>) => {
+
+  setSelectedDateTime: dateTime => {
+    set(state => ({
+      selectedAppointment: {
+        ...state.selectedAppointment,
+        date: dateTime.date,
+        time: dateTime.time,
+      },
+    }))
+  },
+
+  resetSelection: () => {
+    set({ selectedAppointment: null })
+  },
+
+  createAppointment: async appointment => {
     set({ isLoading: true })
     try {
-      // API call implementation
-      const response = await fetch('/api/appointments', {
-        method: 'POST',
-        body: JSON.stringify(newAppointment),
-      })
-      const data = await response.json()
+      const newAppointment = {
+        ...appointment,
+        id: Date.now().toString(),
+        status: 'confirmed' as AppointmentStatus,
+      }
+
       set(state => ({
-        appointments: [...state.appointments, data],
+        appointments: [...state.appointments, newAppointment as Appointment],
+        selectedAppointment: null,
         isLoading: false,
       }))
     } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
+      set({ error: (err as Error).message, isLoading: false })
     }
   },
-  updateAppointment: async (updatedAppointment: Appointment) => {
+
+  updateStatus: async (id, status) => {
     set({ isLoading: true })
     try {
-      // API call implementation
-      const response = await fetch(`/api/appointments/${updatedAppointment.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(updatedAppointment),
-      })
-      const data = await response.json()
       set(state => ({
-        appointments: state.appointments.map(app => (app.id === data.id ? data : app)),
+        appointments: state.appointments.map(app => (app.id === id ? { ...app, status } : app)),
         isLoading: false,
       }))
     } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
-    }
-  },
-  updateStatus: async (appointmentId: string, newStatus: AppointmentStatus) => {
-    set({ isLoading: true })
-    try {
-      // API call implementation
-      const response = await fetch(`/api/appointments/${appointmentId}/status`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status: newStatus }),
-      })
-      const data = await response.json()
-      console.log('data', data)
-      set(state => ({
-        appointments: state.appointments.map(app =>
-          app.id === appointmentId ? { ...app, status: newStatus } : app
-        ),
-        isLoading: false,
-      }))
-    } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
+      set({ error: (err as Error).message, isLoading: false })
     }
   },
 }))

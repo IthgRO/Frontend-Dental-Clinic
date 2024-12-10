@@ -1,20 +1,13 @@
-import { BaseEntity, UUID } from './common.types'
+export type AppointmentStatus = 'pending' | 'confirmed' | 'cancelled'
 
-export enum AppointmentStatus {
-  PENDING = 'pending',
-  CONFIRMED = 'confirmed',
-  CANCELLED = 'cancelled',
-  COMPLETED = 'completed',
-}
-
-export interface Appointment extends BaseEntity {
-  clinic_id: UUID
-  patient_id: UUID
-  dentist_id: UUID
-  service_id: UUID
-  start_time: Date
-  end_time: Date
-  timezone: string
+export interface Appointment {
+  id: string
+  service: string
+  dentistName: string
+  dentistImage?: string
+  clinic: string
+  date: string
+  time: string
+  address: string
   status: AppointmentStatus
-  notes?: string
 }
