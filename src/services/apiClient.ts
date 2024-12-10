@@ -2,15 +2,23 @@ import { useAuthStore } from '@/store/useAuthStore'
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: 'https://dentalbackend.azurewebsites.net',
   headers: {
     'Content-Type': 'application/json',
+    Accept: '*/*',
+    Connection: 'keep-alive',
   },
+  // Important for CORS
+  withCredentials: false,
 })
 
-// Let's add some debugging
 apiClient.interceptors.request.use(
   config => {
+    // Add CORS headers to each request
+    config.headers['Access-Control-Allow-Origin'] = '*'
+    config.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    config.headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept'
+
     console.log('Making request to:', config.url, 'with data:', config.data)
     return config
   },
