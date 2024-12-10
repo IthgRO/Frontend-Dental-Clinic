@@ -1,5 +1,5 @@
-import { Form, Input, Button } from 'antd'
-import { useAuth } from '@/hooks/useAuth'
+import { authService } from '@/services/auth.service'
+import { Button, Form, Input, message } from 'antd'
 import { useState } from 'react'
 
 const ForgotPassword = () => {

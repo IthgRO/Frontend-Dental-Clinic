@@ -1,18 +1,56 @@
-import { useAuth } from '@/hooks/useAuth'
-import { Form, Input, Button } from 'antd'
-import { Link } from 'react-router-dom'
+import { Button, Form, Input, message } from 'antd'
+import { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Test GET request to verify API access
+    fetch('https://dentalbackend.azurewebsites.net/api/dentist/seeAvailableDentists', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Successfully fetched dentists:', data)
+      })
+      .catch(error => {
+        console.error('Error fetching dentists:', error)
+      })
+  }, [])
 
   const onFinish = async (values: { email: string; password: string }) => {
     try {
-      const response = await authService.login(values.email, values.password)
-      localStorage.setItem('token', response.token) // Save token to localStorage
+      const response = await fetch('https://dentalbackend.azurewebsites.net/api/user/login', {
+        method: 'POST',
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/json',
+          Connection: 'keep-alive',
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log('Login successful:', data)
+
+      localStorage.setItem('token', data.token)
       message.success('Login successful!')
-      navigate('/dashboard') // Redirect to dashboard
+      navigate('/dashboard')
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'Login failed. Try again.')
+      console.error('Login failed:', error)
+      message.error(error.message || 'Login failed. Try again.')
     }
   }
 
@@ -67,7 +105,7 @@ const Login = () => {
           </Link>
         </p>
         <p className="mt-2">
-          Don’t have an account?{' '}
+          Don't have an account?{' '}
           <Link to="/register" className="text-black font-semibold hover:underline">
             Sign Up
           </Link>

@@ -1,11 +1,21 @@
 // src/services/auth.service.ts
-import { User } from '@/types'
+import { UUID } from '@/types'
 import apiClient from './apiClient'
 
 export const authService = {
   login: async (email: string, password: string) => {
-    const response = await apiClient.post('/api/user/login', { email, password })
-    return response.data
+    console.log('Attempting login with:', { email, password })
+    try {
+      const response = await apiClient.post('/api/user/login', {
+        email,
+        password,
+      })
+      console.log('Login response:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('Login error:', error)
+      throw error
+    }
   },
 
   register: async (userData: {
