@@ -10,29 +10,37 @@ const Login = () => {
   useEffect(() => {
     console.log('Attempting to fetch dentists...')
     apiClient
-      .get('/api/dentist/seeAvailableDentists')
+      .get('/dentist/seeAvailableDentists')
       .then(response => {
         console.log('Successfully fetched dentists:', response.data)
       })
       .catch(error => {
         console.error('Error fetching dentists:', error)
+        // More specific error handling
+        if (error.response) {
+          message.error(`Server error: ${error.response.status}`)
+        } else if (error.request) {
+          message.error('No response from server')
+        } else {
+          message.error('Error setting up request')
+        }
       })
   }, [])
 
   const testGetRequest = async () => {
     try {
-      const response = await apiClient.get('/api/dentist/seeAvailableDentists')
+      const response = await apiClient.get('/dentist/seeAvailableDentists')
       console.log('Test GET request data:', response.data)
       message.success('GET request successful! Check console')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Test GET request failed:', error)
-      message.error('GET request failed')
+      message.error(error.response?.data?.message || 'GET request failed')
     }
   }
 
   const onFinish = async (values: { email: string; password: string }) => {
     try {
-      const response = await apiClient.post('/api/user/login', {
+      const response = await apiClient.post('/user/login', {
         email: values.email,
         password: values.password,
       })

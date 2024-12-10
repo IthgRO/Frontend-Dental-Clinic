@@ -1,48 +1,81 @@
-// src/services/auth.service.ts
-import { UUID } from '@/types'
 import apiClient from './apiClient'
 
+export interface RegisterRequest {
+  id: number
+  clinicId: number
+  email: string
+  firstName: string
+  lastName: string
+  phone: string
+  role: number // Changed to number as per API spec
+  timezone: string
+  password: string
+}
+
+export interface LoginRequest {
+  email: string
+  password: string
+}
+
+export interface LoginResponse {
+  token: string
+  user: {
+    id: string
+    email: string
+    role: string
+    firstName: string
+    lastName: string
+  }
+}
+
 export const authService = {
-  login: async (email: string, password: string) => {
-    console.log('Attempting login with:', { email, password })
+  login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     try {
-      const response = await apiClient.post('/api/user/login', {
-        email,
-        password,
-      })
-      console.log('Login response:', response.data)
+      const response = await apiClient.post<LoginResponse>('/user/login', credentials)
       return response.data
-    } catch (error) {
-      console.error('Login error:', error)
+    } catch (error: any) {
+      console.error('Login error:', error.response?.data || error.message)
       throw error
     }
   },
 
-  register: async (userData: {
-    FirstName: string
-    LastName: string
-    Email: string
-    Phone: string
-    ClinicId: UUID
-    Role: string
-    Password: string
-  }) => {
-    const response = await apiClient.post('/api/user/register', userData)
-    return response.data
+  register: async (userData: RegisterRequest) => {
+    try {
+      const response = await apiClient.post('/user/register', userData)
+      return response.data
+    } catch (error: any) {
+      console.error('Registration error:', error.response?.data || error.message)
+      throw error
+    }
   },
 
   forgotPassword: async (email: string) => {
-    const response = await apiClient.post('/auth/forgot-password', { email })
-    return response.data
+    try {
+      const response = await apiClient.post('/auth/forgot-password', { email })
+      return response.data
+    } catch (error: any) {
+      console.error('Forgot password error:', error.response?.data || error.message)
+      throw error
+    }
   },
 
   resetPassword: async (token: string, password: string) => {
-    const response = await apiClient.post('/auth/reset-password', { token, password })
-    return response.data
+    try {
+      const response = await apiClient.post('/auth/reset-password', { token, password })
+      return response.data
+    } catch (error: any) {
+      console.error('Reset password error:', error.response?.data || error.message)
+      throw error
+    }
   },
 
   me: async () => {
-    const response = await apiClient.get('/auth/me')
-    return response.data
+    try {
+      const response = await apiClient.get('/auth/me')
+      return response.data
+    } catch (error: any) {
+      console.error('Get user profile error:', error.response?.data || error.message)
+      throw error
+    }
   },
 }
