@@ -1,5 +1,3 @@
-// src/components/Register.tsx
-
 import { authService, RegisterRequest } from '@/services/auth.service'
 import { Button, Checkbox, Form, Input, message, Select } from 'antd'
 import { useState } from 'react'
@@ -7,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 
-// Enum to map role strings to numbers
 enum UserRole {
   Patient = 0,
   Dentist = 1,
@@ -50,14 +47,14 @@ const Register = () => {
 
     try {
       const payload: RegisterRequest = {
-        id: 0, // Default value as per API spec
-        clinicId: 1, // Default clinic ID
+        id: 0,
+        clinicId: 1,
         email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
         phone: values.phone,
-        role: UserRole[values.role], // Convert string role to number
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // User's timezone
+        role: UserRole[values.role],
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         password: values.password,
       }
 
@@ -65,8 +62,6 @@ const Register = () => {
       message.success('Registration successful! Please log in.')
       navigate('/login')
     } catch (error: any) {
-      setLoading(false)
-
       if (error.response?.data?.errors) {
         const errors = error.response.data.errors
         if (Array.isArray(errors.$)) {
@@ -77,6 +72,8 @@ const Register = () => {
       } else {
         message.error('Registration failed. Please try again.')
       }
+    } finally {
+      setLoading(false)
     }
   }
 

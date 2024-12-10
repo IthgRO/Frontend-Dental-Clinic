@@ -7,7 +7,7 @@ export interface RegisterRequest {
   firstName: string
   lastName: string
   phone: string
-  role: number // Changed to number as per API spec
+  role: number
   timezone: string
   password: string
 }
