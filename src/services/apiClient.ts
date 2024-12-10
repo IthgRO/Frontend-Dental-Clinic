@@ -1,13 +1,12 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// Request interceptor
 apiClient.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token')
@@ -23,7 +22,6 @@ apiClient.interceptors.request.use(
   }
 )
 
-// Response interceptor
 apiClient.interceptors.response.use(
   response => {
     console.log('Response:', response.data)

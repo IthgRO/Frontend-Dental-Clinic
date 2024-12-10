@@ -1,68 +1,30 @@
-import apiClient from '@/services/apiClient'
+import { authService } from '@/services/auth.service'
 import { Button, Form, Input, message } from 'antd'
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const navigate = useNavigate()
-
-  // Modified useEffect with better error handling and logging
-  useEffect(() => {
-    console.log('Attempting to fetch dentists...')
-    apiClient
-      .get('/dentist/seeAvailableDentists')
-      .then(response => {
-        console.log('Successfully fetched dentists:', response.data)
-      })
-      .catch(error => {
-        console.error('Error fetching dentists:', error)
-        // More specific error handling
-        if (error.response) {
-          message.error(`Server error: ${error.response.status}`)
-        } else if (error.request) {
-          message.error('No response from server')
-        } else {
-          message.error('Error setting up request')
-        }
-      })
-  }, [])
-
-  const testGetRequest = async () => {
-    try {
-      const response = await apiClient.get('/dentist/seeAvailableDentists')
-      console.log('Test GET request data:', response.data)
-      message.success('GET request successful! Check console')
-    } catch (error: any) {
-      console.error('Test GET request failed:', error)
-      message.error(error.response?.data?.message || 'GET request failed')
-    }
-  }
+  const [loading, setLoading] = useState(false)
 
   const onFinish = async (values: { email: string; password: string }) => {
+    setLoading(true)
     try {
-      const response = await apiClient.post('/user/login', {
-        email: values.email,
-        password: values.password,
-      })
-
-      console.log('Login successful:', response.data)
-      localStorage.setItem('token', response.data.token)
+      const response = await authService.login(values)
+      localStorage.setItem('token', response.token)
       message.success('Login successful!')
       navigate('/dashboard')
     } catch (error: any) {
       console.error('Login failed:', error)
-      message.error(error.response?.data?.message || 'Login failed. Try again.')
+      message.error(error.response?.data?.message || 'Login failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <div className="bg-gray-200 rounded-lg shadow-md p-8 w-full max-w-md">
       <h2 className="text-center text-2xl font-bold mb-4">Welcome Back</h2>
-
-      {/* Added test button */}
-      <Button onClick={testGetRequest} className="mb-4 w-full">
-        Test GET Request
-      </Button>
 
       <Form layout="vertical" onFinish={onFinish} className="space-y-4">
         <Form.Item
@@ -98,6 +60,7 @@ const Login = () => {
             htmlType="submit"
             className="w-full bg-black text-white hover:bg-gray-900 rounded-md"
             size="large"
+            loading={loading}
           >
             Login
           </Button>
