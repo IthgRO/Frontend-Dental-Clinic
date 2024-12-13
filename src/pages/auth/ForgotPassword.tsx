@@ -1,6 +1,8 @@
 import { authService } from '@/services/auth.service'
-import { Button, Form, Input, message } from 'antd'
+import { Button, Form, Input, message, Typography } from 'antd'
 import { useState } from 'react'
+
+const { Title } = Typography
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -18,15 +20,17 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md p-8 w-full max-w-md">
-      <h2 className="text-center text-2xl font-bold mb-4">Reset Password</h2>
+    <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+      <div className="text-center mb-8">
+        <Title level={3}>Reset Password</Title>
+      </div>
       <p className="text-center text-gray-600 mb-6">
         Insert the email you used to create an account
       </p>
       <Form layout="vertical" onFinish={onFinish} className="space-y-4">
         <Form.Item
           name="email"
-          label="Email"
+          label=""
           rules={[
             { required: true, message: 'Please input your email!' },
             { type: 'email', message: 'Please enter a valid email!' },
@@ -35,14 +39,14 @@ const ForgotPassword = () => {
           <Input
             size="large"
             placeholder="Enter your email"
-            className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
         </Form.Item>
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            className="w-full bg-black text-white hover:bg-gray-900 rounded-lg"
+            className="w-full bg-teal-500 hover:bg-teal-600 rounded-md"
             size="large"
           >
             Reset Password
