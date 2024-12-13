@@ -20,7 +20,7 @@ const Navigation = () => (
           </Link>
           <Link
             to="/book"
-            className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+            className="bg-black text-white px-8 py-2 rounded-md hover:bg-gray-800 transition-colors"
           >
             Book Appointment
           </Link>

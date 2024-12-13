@@ -1,40 +1,46 @@
-import { authService } from '@/services/auth.service'
 import { useAuthStore } from '@/store/useAuthStore'
+import { LoginRequest, RegisterRequest } from '@/types'
 import { useMutation } from '@tanstack/react-query'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-
-interface RegisterData {
-  email: string
-  password: string
-  first_name: string
-  last_name: string
-  role: string
-}
 
 export const useAuth = () => {
   const navigate = useNavigate()
-  const { setToken, setUser } = useAuthStore()
+  const { login: loginStore, register: registerStore, logout: logoutStore } = useAuthStore()
 
   const login = useMutation({
-    mutationFn: authService.login,
-    onSuccess: data => {
-      setToken(data.token)
-      setUser(data.user)
+    mutationFn: async (credentials: LoginRequest) => {
+      await loginStore(credentials)
+    },
+    onSuccess: () => {
+      toast.success('Login successful')
       navigate('/dashboard')
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Login failed')
     },
   })
 
   const register = useMutation({
-    mutationFn: (data: RegisterData) => authService.register(data),
+    mutationFn: (data: RegisterRequest) => registerStore(data),
     onSuccess: () => {
+      toast.success('Registration successful! Please log in.')
       navigate('/login')
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Registration failed')
     },
   })
 
   const logout = () => {
-    useAuthStore.getState().logout()
+    logoutStore()
     navigate('/login')
   }
 
-  return { login, register, logout }
+  return {
+    login,
+    register,
+    logout,
+    isLoading: login.isPending || register.isPending,
+  }
 }

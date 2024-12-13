@@ -1,11 +1,11 @@
-// src/components/features/appointments/AppointmentList.tsx
-import { Appointment } from '@/types'
+// src/components/features/appointments/AppointmentListNew.tsx
+import { ApiAppointment } from '@/types'
 import { Button } from 'antd'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 interface AppointmentListProps {
-  appointments: Appointment[]
-  onCancelClick: (id: string) => void
+  appointments: ApiAppointment[]
+  onCancelClick: (id: number) => void
 }
 
 const AppointmentListNew = ({ appointments, onCancelClick }: AppointmentListProps) => (
@@ -14,15 +14,23 @@ const AppointmentListNew = ({ appointments, onCancelClick }: AppointmentListProp
       <div key={appointment.id} className="p-6 flex items-center justify-between">
         <div className="flex gap-6">
           <img
-            src={appointment.dentistImage || '/api/placeholder/100/100'}
-            alt={appointment.dentistName}
+            src="/api/placeholder/100/100"
+            alt={`${appointment.dentistFirstName} ${appointment.dentistLastName}`}
             className="w-20 h-20 rounded-lg object-cover"
           />
           <div>
-            <h3 className="text-xl font-semibold mb-1">{appointment.dentistName}</h3>
-            <p className="text-gray-600 mb-2">{appointment.service}</p>
+            <h3 className="text-xl font-semibold mb-1">
+              Dr. {appointment.dentistFirstName} {appointment.dentistLastName}
+            </h3>
+            <p className="text-gray-600 mb-2">
+              {appointment.serviceName} - {appointment.currency} {appointment.servicePrice}
+            </p>
             <p className="text-gray-500">
-              {format(new Date(appointment.date), 'EEE d MMM, yyyy')} at {appointment.time}
+              {format(parseISO(appointment.startTime), 'EEE d MMM, yyyy')} at{' '}
+              {format(parseISO(appointment.startTime), 'HH:mm')}
+            </p>
+            <p className="text-gray-500">
+              {appointment.clinicName}, {appointment.city}
             </p>
           </div>
         </div>

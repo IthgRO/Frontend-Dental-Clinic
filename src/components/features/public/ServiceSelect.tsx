@@ -1,33 +1,39 @@
-// src/components/features/booking/ServiceSelect.tsx
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { Select } from 'antd'
 
-const services = [
-  { value: 'extraction', label: 'Tooth Extraction', price: 150 },
-  { value: 'whitening', label: 'Teeth Whitening', price: 200 },
-  { value: 'cleaning', label: 'Dental Cleaning', price: 100 },
-]
+interface ServiceSelectProps {
+  services: {
+    id: number
+    name: string
+    price: number
+  }[]
+}
 
-const ServiceSelect = () => {
+const ServiceSelect = ({ services }: ServiceSelectProps) => {
   const { setSelectedService, selectedAppointment } = useAppointmentStore()
 
   return (
     <Select
       className="w-full mb-8"
-      placeholder="Service"
+      placeholder="Select Service"
       size="large"
-      value={selectedAppointment?.service || undefined}
+      value={selectedAppointment?.serviceId}
       options={services.map(service => ({
-        value: service.value,
-        label: `${service.label} ($${service.price})`,
+        value: service.id,
+        label: `${service.name} ($${service.price})`,
       }))}
       onChange={value => {
-        const service = services.find(s => s.value === value)
+        const service = services.find(s => s.id === value)
         if (service) {
-          setSelectedService(service)
+          setSelectedService({
+            value: service.id.toString(),
+            label: service.name,
+            price: service.price,
+          })
         }
       }}
     />
   )
 }
+
 export default ServiceSelect

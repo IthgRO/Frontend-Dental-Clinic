@@ -1,33 +1,38 @@
-import { cities } from '@/constants/locations'
-import { CalendarOutlined, SearchOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Input, Select } from 'antd'
-import { useEffect, useState } from 'react'
+// src/components/features/public/Hero.tsx
+import { useDentists } from '@/hooks/useDentists'
+import { Button, Select } from 'antd'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Hero = () => {
   const navigate = useNavigate()
-  const [isSelectActive, setIsSelectActive] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+  const { dentists } = useDentists()
   const [location, setLocation] = useState<string>('')
-  const [date, setDate] = useState<Date | null>(null)
+  const [service, setService] = useState<string>('')
 
-  useEffect(() => {
-    if (isSelectActive) {
-      setIsOpen(true)
+  // Get unique cities and services from dentists
+  const { cities, services } = useMemo(() => {
+    const citiesSet = new Set<string>()
+    const servicesSet = new Set<string>()
+
+    dentists.forEach(dentist => {
+      citiesSet.add(dentist.clinic.city)
+      dentist.services.forEach(service => {
+        servicesSet.add(service.name)
+      })
+    })
+
+    return {
+      cities: Array.from(citiesSet).map(city => ({ label: city, value: city })),
+      services: Array.from(servicesSet).map(service => ({ label: service, value: service })),
     }
-  }, [isSelectActive])
+  }, [dentists])
 
   const handleSearch = () => {
     const params = new URLSearchParams()
     if (location) params.append('location', location)
-    if (date) params.append('date', date.toISOString())
+    if (service) params.append('service', service)
     navigate(`/dentists?${params.toString()}`)
-  }
-
-  const handleLocationChange = (value: string) => {
-    setLocation(value)
-    setIsSelectActive(true)
-    setIsOpen(false)
   }
 
   return (
@@ -63,45 +68,36 @@ const Hero = () => {
 
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
           <div className="flex gap-4">
-            {isSelectActive ? (
-              <Select
-                size="large"
-                placeholder="Select location"
-                value={location}
-                onChange={handleLocationChange}
-                options={cities}
-                showSearch
-                open={isOpen}
-                onDropdownVisibleChange={setIsOpen}
-                onClick={() => setIsOpen(true)}
-                className="flex-1"
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
-            ) : (
-              <Input
-                size="large"
-                placeholder="Search location"
-                prefix={<SearchOutlined className="text-gray-400" />}
-                onFocus={() => setIsSelectActive(true)}
-                value={location}
-                className="flex-1"
-                readOnly
-              />
-            )}
-            <DatePicker
+            <Select
               size="large"
-              placeholder="Date"
-              onChange={date => setDate(date?.toDate() || null)}
-              suffixIcon={<CalendarOutlined className="text-gray-400" />}
-              className="w-48"
+              placeholder="Select location"
+              value={location || undefined}
+              onChange={setLocation}
+              options={cities}
+              showSearch
+              className="flex-1"
+              allowClear
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+            <Select
+              size="large"
+              placeholder="Select service"
+              value={service || undefined}
+              onChange={setService}
+              options={services}
+              showSearch
+              className="flex-1"
+              allowClear
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
             />
             <Button
               type="primary"
               size="large"
               onClick={handleSearch}
-              disabled={!location || !date}
               className="bg-black hover:bg-gray-800 px-8"
             >
               Search

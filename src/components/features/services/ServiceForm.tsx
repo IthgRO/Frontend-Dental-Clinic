@@ -1,5 +1,5 @@
 import { useServices } from '@/hooks/useServices'
-import { useClinicStore } from '@/store/useClinicStore'
+import { useClinicStore } from '@/store/useDentistStore'
 import { Service } from '@/types'
 import { Button, Form, Input, InputNumber, Modal } from 'antd'
 import { useState } from 'react'

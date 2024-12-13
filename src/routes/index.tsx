@@ -10,6 +10,8 @@ import PrivateRoute from './PrivateRoute'
 const LandingPage = lazy(() => import('@/pages/public/LandingPage'))
 const Login = lazy(() => import('@/pages/auth/Login'))
 const Register = lazy(() => import('@/pages/auth/Register'))
+const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'))
+const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Appointments = lazy(() => import('@/pages/appointments'))
 const Services = lazy(() => import('@/pages/services'))
@@ -32,6 +34,8 @@ const AppRoutes = () => {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
         <Route

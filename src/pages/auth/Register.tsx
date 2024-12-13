@@ -1,96 +1,214 @@
-import { useAuth } from '@/hooks/useAuth'
-import { UserRole } from '@/types'
-import { Button, Card, Form, Input, Select, Typography } from 'antd'
-import { Link } from 'react-router-dom'
+import { authService, RegisterRequest } from '@/services/auth.service'
+import { Button, Checkbox, Form, Input, message, Select } from 'antd'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-const { Title } = Typography
 const { Option } = Select
 
-interface RegisterFormValues {
-  first_name: string
-  last_name: string
+enum UserRole {
+  Patient = 0,
+  Dentist = 1,
+}
+
+interface FormValues {
+  firstName: string
+  lastName: string
   email: string
   password: string
-  role: UserRole
+  confirmPassword: string
+  role: keyof typeof UserRole
+  phone: string
 }
 
 const Register = () => {
-  const { register } = useAuth()
+  const navigate = useNavigate()
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
-  const onFinish = (values: RegisterFormValues) => {
-    register.mutate(values)
+  const validatePhoneNumber = (_: any, value: string) => {
+    const phoneRegex = /^\+?\d{10,15}$/
+    if (!value) {
+      return Promise.reject('Phone number is required!')
+    }
+    if (!phoneRegex.test(value)) {
+      return Promise.reject('Please enter a valid phone number!')
+    }
+    return Promise.resolve()
+  }
+
+  const onFinish = async (values: FormValues) => {
+    if (!termsAccepted) {
+      message.error('Please accept the terms and conditions')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const payload: RegisterRequest = {
+        id: 0,
+        clinicId: 1,
+        email: values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        role: UserRole[values.role],
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        password: values.password,
+      }
+
+      await authService.register(payload)
+      message.success('Registration successful! Please log in.')
+      navigate('/login')
+    } catch (error: any) {
+      if (error.response?.data?.errors) {
+        const errors = error.response.data.errors
+        if (Array.isArray(errors.$)) {
+          message.error(errors.$[0])
+        } else {
+          message.error('Validation failed. Please check your input.')
+        }
+      } else {
+        message.error('Registration failed. Please try again.')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <Card className="shadow-md">
-      <div className="text-center mb-6">
-        <Title level={2}>Create Account</Title>
-        <p className="text-gray-500">Fill in your details to register</p>
-      </div>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-gray-200 rounded-lg shadow-md p-8 w-full max-w-md">
+        <h2 className="text-center text-2xl font-bold mb-4">Create Account</h2>
 
-      <Form layout="vertical" onFinish={onFinish}>
-        <Form.Item
-          name="first_name"
-          label="First Name"
-          rules={[{ required: true, message: 'Please input your first name!' }]}
-        >
-          <Input size="large" placeholder="Enter your first name" />
-        </Form.Item>
+        <Form form={form} layout="vertical" onFinish={onFinish} className="space-y-4">
+          <Form.Item
+            name="firstName"
+            label="First Name"
+            rules={[{ required: true, message: 'Please input your first name!' }]}
+          >
+            <Input
+              size="large"
+              placeholder="Enter your first name"
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            />
+          </Form.Item>
 
-        <Form.Item
-          name="last_name"
-          label="Last Name"
-          rules={[{ required: true, message: 'Please input your last name!' }]}
-        >
-          <Input size="large" placeholder="Enter your last name" />
-        </Form.Item>
+          <Form.Item
+            name="lastName"
+            label="Last Name"
+            rules={[{ required: true, message: 'Please input your last name!' }]}
+          >
+            <Input
+              size="large"
+              placeholder="Enter your last name"
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            />
+          </Form.Item>
 
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Please enter a valid email!' },
-          ]}
-        >
-          <Input size="large" placeholder="Enter your email" />
-        </Form.Item>
+          <Form.Item name="phone" label="Phone Number" rules={[{ validator: validatePhoneNumber }]}>
+            <Input
+              size="large"
+              placeholder="Enter your phone number"
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            />
+          </Form.Item>
 
-        <Form.Item
-          name="password"
-          label="Password"
-          rules={[
-            { required: true, message: 'Please input your password!' },
-            { min: 6, message: 'Password must be at least 6 characters!' },
-          ]}
-        >
-          <Input.Password size="large" placeholder="Enter your password" />
-        </Form.Item>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: 'Please input your email!' },
+              { type: 'email', message: 'Please enter a valid email!' },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Enter your email"
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            />
+          </Form.Item>
 
-        <Form.Item
-          name="role"
-          label="Register as"
-          rules={[{ required: true, message: 'Please select a role!' }]}
-        >
-          <Select size="large" placeholder="Select your role">
-            <Option value={UserRole.PATIENT}>Patient</Option>
-            <Option value={UserRole.DENTIST}>Dentist</Option>
-          </Select>
-        </Form.Item>
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              { required: true, message: 'Please input your password!' },
+              { min: 8, message: 'Password must be at least 8 characters!' },
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="Enter your password"
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            />
+          </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" size="large" block loading={register.isPending}>
-            Register
-          </Button>
-        </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={['password']}
+            rules={[
+              { required: true, message: 'Please confirm your password!' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve()
+                  }
+                  return Promise.reject(new Error('The passwords do not match!'))
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="Confirm your password"
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            />
+          </Form.Item>
 
-        <div className="text-center">
-          <Link to="/login" className="text-primary">
-            Already have an account? Login
-          </Link>
+          <Form.Item
+            name="role"
+            label="Register as"
+            rules={[{ required: true, message: 'Please select a role!' }]}
+          >
+            <Select size="large" placeholder="Select your role" className="rounded-lg">
+              <Option value="Patient">Patient</Option>
+              <Option value="Dentist">Dentist</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item>
+            <Checkbox checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}>
+              I agree to the terms and conditions
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="w-full bg-black text-white hover:bg-gray-900 rounded-lg"
+              size="large"
+              loading={loading}
+              disabled={loading}
+            >
+              Sign Up
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <div className="text-center mt-4">
+          <p>
+            Already have an account?{' '}
+            <Link to="/login" className="text-black font-semibold hover:underline">
+              Login Here
+            </Link>
+          </p>
         </div>
-      </Form>
-    </Card>
+      </div>
+    </div>
   )
 }
 

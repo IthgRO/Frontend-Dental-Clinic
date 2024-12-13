@@ -7,14 +7,13 @@ export enum UserRole {
 }
 
 export interface User extends BaseEntity {
-  clinic_id: UUID
-  email: string
-  first_name: string
-  last_name: string
-  phone: string
-  role: UserRole
-  timezone: string
-  is_active: boolean
+  FirstName: string
+  LastName: string
+  Email: string
+  Phone: string
+  ClinicId: UUID
+  Role: string
+  Password: string
 }
 
 export interface DentistProfile extends BaseEntity {

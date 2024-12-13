@@ -1,6 +1,6 @@
 import AppointmentForm from '@/components/features/appointments/AppointmentForm'
 import { useAppointments } from '@/hooks/useAppointments'
-import { useClinicStore } from '@/store/useClinicStore'
+import { useClinicStore } from '@/store/useDentistStore'
 import { Table } from 'antd'
 
 const Appointments = () => {

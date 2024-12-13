@@ -1,55 +1,50 @@
-import { useAppointments } from '@/hooks/useAppointments'
-import { useClinicStore } from '@/store/useClinicStore'
 import { Appointment } from '@/types'
-import { List, Tag } from 'antd'
+import { Table, Tag } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import { format } from 'date-fns'
 
 interface AppointmentListProps {
+  appointments: Appointment[]
   limit?: number
-  date?: Date
 }
 
-const AppointmentList = ({ limit, date }: AppointmentListProps) => {
-  const { selectedClinic } = useClinicStore()
-  const { appointments } = useAppointments(selectedClinic?.id || '')
+const AppointmentList = ({ appointments, limit }: AppointmentListProps) => {
+  const displayedAppointments = limit ? appointments.slice(0, limit) : appointments
 
-  let filteredAppointments = appointments.data || []
-  if (date) {
-    filteredAppointments = filteredAppointments.filter(
-      app => format(new Date(app.start_time), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
-    )
-  }
-  if (limit) {
-    filteredAppointments = filteredAppointments.slice(0, limit)
-  }
-
-  const getStatusColor = (status: string) => {
-    const colors = {
-      pending: 'gold',
-      confirmed: 'green',
-      cancelled: 'red',
-      completed: 'blue',
-    }
-    return colors[status] || 'default'
-  }
+  const columns: ColumnsType<Appointment> = [
+    {
+      title: 'Service',
+      dataIndex: 'service',
+      key: 'service',
+    },
+    {
+      title: 'Dentist',
+      dataIndex: 'dentistName',
+      key: 'dentistName',
+    },
+    {
+      title: 'Date & Time',
+      key: 'datetime',
+      render: (_, record) => (
+        <span>
+          {format(new Date(record.date), 'MMM d, yyyy')} at {record.time}
+        </span>
+      ),
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (status: string) => (
+        <Tag color={status === 'confirmed' ? 'green' : status === 'cancelled' ? 'red' : 'gold'}>
+          {status.toUpperCase()}
+        </Tag>
+      ),
+    },
+  ]
 
   return (
-    <List
-      dataSource={filteredAppointments}
-      loading={appointments.isLoading}
-      renderItem={(appointment: Appointment) => (
-        <List.Item
-          extra={
-            <Tag color={getStatusColor(appointment.status)}>{appointment.status.toUpperCase()}</Tag>
-          }
-        >
-          <List.Item.Meta
-            title={format(new Date(appointment.start_time), 'PPp')}
-            description={appointment.notes}
-          />
-        </List.Item>
-      )}
-    />
+    <Table columns={columns} dataSource={displayedAppointments} rowKey="id" pagination={false} />
   )
 }
 

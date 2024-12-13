@@ -1,16 +1,17 @@
-// src/store/useAppointmentStore.ts
-import { Appointment, AppointmentStatus } from '@/types'
+import { dentistService } from '@/services/dentist.service'
+import { Appointment, BookAppointmentRequest } from '@/types'
 import { create } from 'zustand'
 
 interface AppointmentState {
   appointments: Appointment[]
-  selectedAppointment: Partial<Appointment> | null
+  selectedAppointment: Partial<BookAppointmentRequest> | null
   isLoading: boolean
   error: string | null
   setSelectedService: (service: { value: string; label: string; price: number }) => void
   setSelectedDateTime: (dateTime: { date: string; time: string }) => void
-  createAppointment: (appointment: Partial<Appointment>) => Promise<void>
-  updateStatus: (id: string, status: AppointmentStatus) => Promise<void>
+  createAppointment: (appointment: Partial<BookAppointmentRequest>) => Promise<void>
+  fetchMyAppointments: () => Promise<void>
+  cancelAppointment: (id: number) => Promise<void>
   resetSelection: () => void
 }
 
@@ -24,7 +25,7 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
     set(state => ({
       selectedAppointment: {
         ...state.selectedAppointment,
-        service: service.label,
+        serviceId: parseInt(service.value),
         price: service.price,
       },
     }))
@@ -34,44 +35,73 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
     set(state => ({
       selectedAppointment: {
         ...state.selectedAppointment,
-        date: dateTime.date,
-        time: dateTime.time,
+        startDate: `${dateTime.date}T${dateTime.time}`,
       },
     }))
   },
 
-  resetSelection: () => {
-    set({ selectedAppointment: null })
+  fetchMyAppointments: async () => {
+    set({ isLoading: true })
+    try {
+      const appointments = await dentistService.getMyAppointments()
+      set({ appointments, isLoading: false })
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.message || 'Failed to fetch appointments',
+        isLoading: false,
+      })
+    }
   },
 
   createAppointment: async appointment => {
     set({ isLoading: true })
     try {
-      const newAppointment = {
-        ...appointment,
-        id: Date.now().toString(),
-        status: 'confirmed' as AppointmentStatus,
+      if (
+        !appointment.dentistId ||
+        !appointment.clinicId ||
+        !appointment.serviceId ||
+        !appointment.startDate
+      ) {
+        throw new Error('Missing required appointment details')
       }
 
+      await dentistService.bookAppointment(
+        appointment.dentistId,
+        appointment.clinicId,
+        appointment.serviceId,
+        appointment.startDate
+      )
       set(state => ({
-        appointments: [...state.appointments, newAppointment as Appointment],
         selectedAppointment: null,
         isLoading: false,
       }))
-    } catch (err) {
-      set({ error: (err as Error).message, isLoading: false })
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.message || 'Failed to create appointment',
+        isLoading: false,
+      })
+      throw err
     }
   },
 
-  updateStatus: async (id, status) => {
+  cancelAppointment: async id => {
     set({ isLoading: true })
     try {
+      await dentistService.cancelAppointment(id)
       set(state => ({
-        appointments: state.appointments.map(app => (app.id === id ? { ...app, status } : app)),
+        appointments: state.appointments.filter(app => app.id !== id.toString()),
         isLoading: false,
       }))
-    } catch (err) {
-      set({ error: (err as Error).message, isLoading: false })
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.message || 'Failed to cancel appointment',
+        isLoading: false,
+      })
+      throw err
     }
+  },
+
+  resetSelection: () => {
+    set({ selectedAppointment: null })
   },
 }))

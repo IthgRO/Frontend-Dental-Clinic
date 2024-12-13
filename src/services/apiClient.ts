@@ -1,4 +1,3 @@
-import { useAuthStore } from '@/store/useAuthStore'
 import axios from 'axios'
 
 const apiClient = axios.create({
@@ -8,20 +7,32 @@ const apiClient = axios.create({
   },
 })
 
-apiClient.interceptors.request.use(config => {
-  const token = useAuthStore.getState().token
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+apiClient.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    console.log('Request:', { url: config.url, data: config.data })
+    return config
+  },
+  error => {
+    console.error('Request error:', error)
+    return Promise.reject(error)
   }
-  return config
-})
+)
 
 apiClient.interceptors.response.use(
-  response => response,
-  async error => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout()
-    }
+  response => {
+    console.log('Response:', response.data)
+    return response
+  },
+  error => {
+    console.error('Response error:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    })
     return Promise.reject(error)
   }
 )

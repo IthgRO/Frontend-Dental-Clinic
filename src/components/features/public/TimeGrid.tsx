@@ -1,50 +1,84 @@
-// src/components/features/booking/TimeGrid.tsx
+import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
-import { generateWeekSchedule } from '@/utils/mockData'
-import { Button } from 'antd'
-import { addDays, format, startOfWeek } from 'date-fns'
+import { Button, Spin } from 'antd'
+import { addDays, format, parseISO, startOfWeek } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-const TimeGrid = () => {
+interface TimeGridProps {
+  dentistId: number
+}
+
+const TimeGrid = ({ dentistId }: TimeGridProps) => {
   const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }))
-  const [weekSchedule, setWeekSchedule] = useState<string[][]>([])
+  const { availableSlots, fetchSlots, isLoading } = useTimeSlots()
   const { setSelectedDateTime, selectedAppointment } = useAppointmentStore()
 
+  // Calculate dates once
+  const dates = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => addDays(startDate, i)),
+    [startDate]
+  )
+
+  // Fetch slots only when dentistId or startDate changes
   useEffect(() => {
-    setWeekSchedule(generateWeekSchedule())
-  }, [startDate])
+    if (dentistId) {
+      const endDate = addDays(startDate, 6)
+      fetchSlots(dentistId, startDate, endDate)
+    }
+  }, [dentistId, startDate])
 
-  const dates = Array.from({ length: 7 }, (_, i) => addDays(startDate, i))
-  const maxSlots = Math.max(...weekSchedule.map(day => day.length))
+  const getTimeSlotsForDate = useCallback(
+    (date: Date) => {
+      const dateStr = format(date, 'yyyy-MM-dd')
+      return availableSlots
+        .filter(slot => format(parseISO(slot.startTime), 'yyyy-MM-dd') === dateStr)
+        .map(slot => format(parseISO(slot.startTime), 'HH:mm'))
+    },
+    [availableSlots]
+  )
 
-  const handleDateChange = (direction: 'prev' | 'next') => {
-    setStartDate(date => addDays(date, direction === 'prev' ? -7 : 7))
-  }
+  const handleDateChange = useCallback((direction: 'prev' | 'next') => {
+    setStartDate(current => addDays(current, direction === 'prev' ? -7 : 7))
+  }, [])
 
-  const isDateInPast = (date: Date) => {
-    return date < new Date(new Date().setHours(0, 0, 0, 0))
-  }
+  const isDateInPast = useCallback((date: Date) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return date < today
+  }, [])
 
-  const isTimeInPast = (date: Date, time: string) => {
-    if (isDateInPast(date)) return true
+  const isTimeInPast = useCallback(
+    (date: Date, time: string) => {
+      if (isDateInPast(date)) return true
+      const [hours, minutes] = time.split(':').map(Number)
+      const compareDate = new Date(date)
+      compareDate.setHours(hours, minutes)
+      return compareDate < new Date()
+    },
+    [isDateInPast]
+  )
 
-    const [hours, minutes] = time.split(':').map(Number)
-    const currentDate = new Date()
-    const compareDate = new Date(date)
-    compareDate.setHours(hours, minutes)
-
-    return compareDate < currentDate
-  }
+  const handleTimeSelect = useCallback(
+    (date: Date, time: string) => {
+      if (!isTimeInPast(date, time)) {
+        setSelectedDateTime({
+          date: format(date, 'yyyy-MM-dd'),
+          time,
+        })
+      }
+    },
+    [setSelectedDateTime, isTimeInPast]
+  )
 
   return (
-    <div>
+    <div className="relative">
       <div className="flex items-center justify-between mb-6">
         <Button
           type="text"
           icon={<ChevronLeft />}
           onClick={() => handleDateChange('prev')}
-          disabled={isDateInPast(addDays(startDate, -7))}
+          disabled={isDateInPast(startDate)}
         />
         <div className="grid grid-cols-7 flex-1">
           {dates.map(date => (
@@ -59,45 +93,42 @@ const TimeGrid = () => {
       </div>
 
       <div className="grid grid-cols-7 gap-2">
-        {dates.map((date, dayIndex) => (
-          <div key={date.toISOString()} className="space-y-2">
-            {Array.from({ length: maxSlots }, (_, slotIndex) => {
-              const time = weekSchedule[dayIndex]?.[slotIndex]
-              if (!time) return <div key={slotIndex} className="h-12" />
+        {dates.map(date => {
+          const timeSlots = getTimeSlotsForDate(date)
+          return (
+            <div key={date.toISOString()} className="space-y-2">
+              {timeSlots.map(time => {
+                const isSelected =
+                  selectedAppointment?.startDate === `${format(date, 'yyyy-MM-dd')}T${time}:00`
+                const isPast = isTimeInPast(date, time)
 
-              const isSelected =
-                selectedAppointment?.date === format(date, 'yyyy-MM-dd') &&
-                selectedAppointment?.time === time
-
-              const isPast = isTimeInPast(date, time)
-
-              return (
-                <Button
-                  key={`${date.toISOString()}-${time}`}
-                  className={`w-full h-12 transition-colors ${
-                    isSelected
-                      ? 'border-2 border-black text-black'
-                      : isPast
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'hover:border-black'
-                  }`}
-                  onClick={() => {
-                    if (!isPast) {
-                      setSelectedDateTime({
-                        date: format(date, 'yyyy-MM-dd'),
-                        time,
-                      })
-                    }
-                  }}
-                  disabled={isPast}
-                >
-                  {time}
-                </Button>
-              )
-            })}
-          </div>
-        ))}
+                return (
+                  <Button
+                    key={`${date.toISOString()}-${time}`}
+                    className={`w-full h-12 transition-colors ${
+                      isSelected
+                        ? 'border-2 border-black text-black'
+                        : isPast
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'hover:border-black'
+                    }`}
+                    onClick={() => handleTimeSelect(date, time)}
+                    disabled={isPast}
+                  >
+                    {time}
+                  </Button>
+                )
+              })}
+            </div>
+          )
+        })}
       </div>
+
+      {isLoading && (
+        <div className="absolute inset-0 bg-white/50 flex items-center justify-center">
+          <Spin size="large" />
+        </div>
+      )}
     </div>
   )
 }

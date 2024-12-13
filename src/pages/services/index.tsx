@@ -1,7 +1,7 @@
 import ServiceForm from '@/components/features/services/ServiceForm'
 import PageHeader from '@/components/ui/PageHeader'
 import { useServices } from '@/hooks/useServices'
-import { useClinicStore } from '@/store/useClinicStore'
+import { useClinicStore } from '@/store/useDentistStore'
 import { Service } from '@/types'
 import { Button, Card, Space, Table } from 'antd'
 
