@@ -1,7 +1,9 @@
 import { authService } from '@/services/auth.service'
-import { Button, Form, Input, message } from 'antd'
+import { Button, Form, Input, message, Typography } from 'antd'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+
+const { Title } = Typography
 
 const Login = () => {
   const navigate = useNavigate()
@@ -23,13 +25,14 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md p-8 w-full max-w-md">
-      <h2 className="text-center text-2xl font-bold mb-4">Welcome Back</h2>
-
+    <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+      <div className="text-center mb-8">
+        <Title level={3}>Welcome Back</Title>
+      </div>
       <Form layout="vertical" onFinish={onFinish} className="space-y-4">
         <Form.Item
           name="email"
-          label="Email"
+          label=""
           rules={[
             { required: true, message: 'Please input your email!' },
             { type: 'email', message: 'Please enter a valid email!' },
@@ -37,30 +40,25 @@ const Login = () => {
         >
           <Input
             size="large"
-            placeholder="Enter your email"
-            className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
+            placeholder="Email"
+            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
         </Form.Item>
 
         <Form.Item
           name="password"
-          label="Password"
+          label=""
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
-          <Input.Password
-            size="large"
-            placeholder="Enter your password"
-            className="rounded-lg border-gray-300 focus:ring-2 focus:ring-black focus:border-black"
-          />
+          <Input.Password size="large" placeholder="Password" />
         </Form.Item>
 
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            className="w-full bg-black text-white hover:bg-gray-900 rounded-md"
+            className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
             size="large"
-            loading={loading}
           >
             Login
           </Button>
@@ -70,13 +68,20 @@ const Login = () => {
       <div className="text-center mt-4">
         <p>
           Forgot Password?{' '}
-          <Link to="/forgot-password" className="text-black font-semibold hover:underline">
+          <Link
+            to="/forgot-password"
+            className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
+          >
             Reset Here
           </Link>
         </p>
-        <p className="mt-2">
+        <div className="my-4 border-t border-gray-300"></div>
+        <p className="text-center mt-2">
           Don't have an account?{' '}
-          <Link to="/register" className="text-black font-semibold hover:underline">
+          <Link
+            to="/register"
+            className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
+          >
             Sign Up
           </Link>
         </p>
