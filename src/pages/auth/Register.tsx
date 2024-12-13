@@ -189,7 +189,7 @@ const Register = () => {
           <Button
             type="primary"
             htmlType="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 rounded-md"
+            className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
             size="large"
             loading={loading}
             disabled={loading}
@@ -204,7 +204,7 @@ const Register = () => {
           Already have an account?{' '}
           <Link
             to="/login"
-            className="text-teal-500 font-semibold hover:text-teal-500 hover:underline hover:scale-105"
+            className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
           >
             Login Here
           </Link>

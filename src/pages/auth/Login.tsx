@@ -57,7 +57,7 @@ const Login = () => {
           <Button
             type="primary"
             htmlType="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 rounded-md"
+            className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
             size="large"
           >
             Login
@@ -70,7 +70,7 @@ const Login = () => {
           Forgot Password?{' '}
           <Link
             to="/forgot-password"
-            className="text-teal-500 font-semibold hover:text-teal-500 hover:underline hover:scale-105"
+            className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
           >
             Reset Here
           </Link>
@@ -80,7 +80,7 @@ const Login = () => {
           Don't have an account?{' '}
           <Link
             to="/register"
-            className="text-teal-500 font-semibold hover:text-teal-500 hover:underline hover:scale-105"
+            className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
           >
             Sign Up
           </Link>
