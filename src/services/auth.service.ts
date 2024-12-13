@@ -18,14 +18,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string
-  user: {
-    id: string
-    email: string
-    role: string
-    firstName: string
-    lastName: string
-  }
+  jwt: string
 }
 
 export const authService = {
@@ -51,7 +44,7 @@ export const authService = {
 
   forgotPassword: async (email: string) => {
     try {
-      const response = await apiClient.post('/auth/forgot-password', { email })
+      const response = await apiClient.post('/user/forgot-password', { email })
       return response.data
     } catch (error: any) {
       console.error('Forgot password error:', error.response?.data || error.message)
@@ -61,7 +54,7 @@ export const authService = {
 
   resetPassword: async (token: string, password: string) => {
     try {
-      const response = await apiClient.post('/auth/reset-password', { token, password })
+      const response = await apiClient.post('/user/reset-password', { token, password })
       return response.data
     } catch (error: any) {
       console.error('Reset password error:', error.response?.data || error.message)

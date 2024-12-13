@@ -1,19 +1,18 @@
-import { Appointment, AppointmentStatus } from '@/types'
+import { dentistService } from '@/services/dentist.service'
+import { Appointment, BookAppointmentRequest } from '@/types'
 import { create } from 'zustand'
-
-interface Error {
-  message: string
-}
 
 interface AppointmentState {
   appointments: Appointment[]
-  selectedAppointment: Appointment | null
+  selectedAppointment: Partial<BookAppointmentRequest> | null
   isLoading: boolean
   error: string | null
-  fetchAppointments: (clinicId: string) => Promise<void>
-  createAppointment: (appointment: Omit<Appointment, 'id'>) => Promise<void>
-  updateAppointment: (appointment: Appointment) => Promise<void>
-  updateStatus: (id: string, status: AppointmentStatus) => Promise<void>
+  setSelectedService: (service: { value: string; label: string; price: number }) => void
+  setSelectedDateTime: (dateTime: { date: string; time: string }) => void
+  createAppointment: (appointment: Partial<BookAppointmentRequest>) => Promise<void>
+  fetchMyAppointments: () => Promise<void>
+  cancelAppointment: (id: number) => Promise<void>
+  resetSelection: () => void
 }
 
 export const useAppointmentStore = create<AppointmentState>(set => ({
@@ -21,73 +20,88 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
   selectedAppointment: null,
   isLoading: false,
   error: null,
-  fetchAppointments: async (clinicId: string) => {
+
+  setSelectedService: service => {
+    set(state => ({
+      selectedAppointment: {
+        ...state.selectedAppointment,
+        serviceId: parseInt(service.value),
+        price: service.price,
+      },
+    }))
+  },
+
+  setSelectedDateTime: dateTime => {
+    set(state => ({
+      selectedAppointment: {
+        ...state.selectedAppointment,
+        startDate: `${dateTime.date}T${dateTime.time}`,
+      },
+    }))
+  },
+
+  fetchMyAppointments: async () => {
     set({ isLoading: true })
     try {
-      // API call implementation
-      const response = await fetch(`/api/clinics/${clinicId}/appointments`)
-      const data = await response.json()
-      set({ appointments: data, isLoading: false })
-    } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
+      const appointments = await dentistService.getMyAppointments()
+      set({ appointments, isLoading: false })
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.message || 'Failed to fetch appointments',
+        isLoading: false,
+      })
     }
   },
-  createAppointment: async (newAppointment: Omit<Appointment, 'id'>) => {
+
+  createAppointment: async appointment => {
     set({ isLoading: true })
     try {
-      // API call implementation
-      const response = await fetch('/api/appointments', {
-        method: 'POST',
-        body: JSON.stringify(newAppointment),
-      })
-      const data = await response.json()
+      if (
+        !appointment.dentistId ||
+        !appointment.clinicId ||
+        !appointment.serviceId ||
+        !appointment.startDate
+      ) {
+        throw new Error('Missing required appointment details')
+      }
+
+      await dentistService.bookAppointment(
+        appointment.dentistId,
+        appointment.clinicId,
+        appointment.serviceId,
+        appointment.startDate
+      )
       set(state => ({
-        appointments: [...state.appointments, data],
+        selectedAppointment: null,
         isLoading: false,
       }))
-    } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.message || 'Failed to create appointment',
+        isLoading: false,
+      })
+      throw err
     }
   },
-  updateAppointment: async (updatedAppointment: Appointment) => {
+
+  cancelAppointment: async id => {
     set({ isLoading: true })
     try {
-      // API call implementation
-      const response = await fetch(`/api/appointments/${updatedAppointment.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(updatedAppointment),
-      })
-      const data = await response.json()
+      await dentistService.cancelAppointment(id)
       set(state => ({
-        appointments: state.appointments.map(app => (app.id === data.id ? data : app)),
+        appointments: state.appointments.filter(app => app.id !== id.toString()),
         isLoading: false,
       }))
-    } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.message || 'Failed to cancel appointment',
+        isLoading: false,
+      })
+      throw err
     }
   },
-  updateStatus: async (appointmentId: string, newStatus: AppointmentStatus) => {
-    set({ isLoading: true })
-    try {
-      // API call implementation
-      const response = await fetch(`/api/appointments/${appointmentId}/status`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status: newStatus }),
-      })
-      const data = await response.json()
-      console.log('data', data)
-      set(state => ({
-        appointments: state.appointments.map(app =>
-          app.id === appointmentId ? { ...app, status: newStatus } : app
-        ),
-        isLoading: false,
-      }))
-    } catch (err) {
-      const error = err as Error
-      set({ error: error.message, isLoading: false })
-    }
+
+  resetSelection: () => {
+    set({ selectedAppointment: null })
   },
 }))

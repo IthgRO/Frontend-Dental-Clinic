@@ -1,6 +1,6 @@
 import { useAppointments } from '@/hooks/useAppointments'
 import { useServices } from '@/hooks/useServices'
-import { useClinicStore } from '@/store/useClinicStore'
+import { useClinicStore } from '@/store/useDentistStore'
 import { Appointment, Service } from '@/types'
 import { Button, DatePicker, Form, Input, Modal, Select } from 'antd'
 import { useState } from 'react'

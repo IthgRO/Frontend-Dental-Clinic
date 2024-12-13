@@ -1,19 +1,22 @@
 import AppointmentList from '@/components/features/appointments/AppointmentList'
 import { useAppointments } from '@/hooks/useAppointments'
-import { useServices } from '@/hooks/useServices'
-import { useClinicStore } from '@/store/useClinicStore'
 import { CalendarOutlined, MedicineBoxOutlined, UserOutlined } from '@ant-design/icons'
-import { Card, Col, Row, Statistic } from 'antd'
+import { Card, Col, Row, Spin, Statistic } from 'antd'
 
 const Dashboard = () => {
-  const { selectedClinic } = useClinicStore()
-  const { appointments } = useAppointments(selectedClinic?.id || '')
-  const { services } = useServices(selectedClinic?.id || '')
+  const { appointments, isLoading } = useAppointments()
 
-  const totalAppointments = appointments.data?.length || 0
-  const totalServices = services.data?.length || 0
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spin size="large" />
+      </div>
+    )
+  }
+
+  const totalAppointments = appointments?.length || 0
   const upcomingAppointments =
-    appointments.data?.filter(app => new Date(app.start_time) > new Date()).length || 0
+    appointments?.filter(app => new Date(app.date + 'T' + app.time) > new Date()).length || 0
 
   return (
     <div>
@@ -39,8 +42,8 @@ const Dashboard = () => {
         <Col span={8}>
           <Card>
             <Statistic
-              title="Available Services"
-              value={totalServices}
+              title="Total Services"
+              value={appointments?.filter(app => app.service)?.length || 0}
               prefix={<MedicineBoxOutlined />}
             />
           </Card>
@@ -48,7 +51,7 @@ const Dashboard = () => {
       </Row>
 
       <Card title="Recent Appointments">
-        <AppointmentList limit={5} />
+        <AppointmentList appointments={appointments || []} limit={5} />
       </Card>
     </div>
   )
