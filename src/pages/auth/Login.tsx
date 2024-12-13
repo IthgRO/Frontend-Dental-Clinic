@@ -8,6 +8,7 @@ const { Title } = Typography
 const Login = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [passwordVisible, setPasswordVisible] = useState(false)
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true)
@@ -29,7 +30,7 @@ const Login = () => {
       <div className="text-center mb-8">
         <Title level={3}>Welcome Back</Title>
       </div>
-      <Form layout="vertical" onFinish={onFinish} className="space-y-4">
+      <Form layout="vertical" onFinish={onFinish} validateTrigger="onSubmit" className="space-y-4">
         <Form.Item
           name="email"
           label=""
@@ -50,7 +51,28 @@ const Login = () => {
           label=""
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
-          <Input.Password size="large" placeholder="Password" />
+          <div className="relative">
+            <Input
+              type={passwordVisible ? 'text' : 'password'}
+              size="large"
+              placeholder="Password"
+              className="placeholder:text-gray-500 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            />
+            <div
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+              onClick={() => setPasswordVisible(prev => !prev)}
+            >
+              <img
+                src={
+                  passwordVisible
+                    ? '/src/assets/seePasswordOn.png'
+                    : '/src/assets/seePasswordOff.png'
+                }
+                alt="Toggle Password Visibility"
+                className="w-5 h-5"
+              />
+            </div>
+          </div>
         </Form.Item>
 
         <Form.Item>

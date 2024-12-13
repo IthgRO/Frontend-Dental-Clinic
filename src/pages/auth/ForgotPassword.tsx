@@ -27,7 +27,7 @@ const ForgotPassword = () => {
       <p className="text-center text-gray-600 mb-6">
         Insert the email you used to create an account
       </p>
-      <Form layout="vertical" onFinish={onFinish} className="space-y-4">
+      <Form layout="vertical" onFinish={onFinish} validateTrigger="onSubmit" className="space-y-4">
         <Form.Item
           name="email"
           label=""
