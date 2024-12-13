@@ -1,9 +1,12 @@
-import { Form, Input, Button, message } from 'antd'
-import { useAuth } from '@/hooks/useAuth'
+import { authService } from '@/services/auth.service'
+import { Form, Input, Button, message, Typography } from 'antd'
 import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
+
+const { Title } = Typography
 
 const ResetPassword = () => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [searchParams] = useSearchParams()
 
@@ -23,6 +26,7 @@ const ResetPassword = () => {
     try {
       await authService.resetPassword(token, values.password)
       message.success('Password reset successful! You can now log in.')
+      navigate('/login')
     } catch (error: any) {
       message.error(error.response?.data?.message || 'Failed to reset password.')
     } finally {
@@ -31,12 +35,14 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md p-8 w-full max-w-md">
-      <h2 className="text-center text-2xl font-bold mb-4">Set New Password</h2>
+    <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+      <div className="text-center mb-8">
+        <Title level={3}>Set Your New Password</Title>
+      </div>
       <Form layout="vertical" onFinish={onFinish}>
         <Form.Item
           name="password"
-          label="New Password"
+          label=""
           rules={[
             { required: true, message: 'Please input your new password!' },
             { min: 8, message: 'Password must be at least 8 characters!' },
@@ -51,7 +57,7 @@ const ResetPassword = () => {
         </Form.Item>
         <Form.Item
           name="confirmPassword"
-          label="Confirm Password"
+          label=""
           dependencies={['password']}
           rules={[
             { required: true, message: 'Please confirm your password!' },
@@ -73,7 +79,7 @@ const ResetPassword = () => {
             htmlType="submit"
             size="large"
             loading={loading}
-            className="w-full bg-black text-white"
+            className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
           >
             Reset Password
           </Button>

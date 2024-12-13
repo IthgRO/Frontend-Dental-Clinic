@@ -1,3 +1,4 @@
+// src/components/features/public/ServiceSelect.tsx
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { Select } from 'antd'
 
@@ -7,14 +8,15 @@ interface ServiceSelectProps {
     name: string
     price: number
   }[]
+  className?: string
 }
 
-const ServiceSelect = ({ services }: ServiceSelectProps) => {
+const ServiceSelect = ({ services, className = '' }: ServiceSelectProps) => {
   const { setSelectedService, selectedAppointment } = useAppointmentStore()
 
   return (
     <Select
-      className="w-full mb-8"
+      className={className}
       placeholder="Select Service"
       size="large"
       value={selectedAppointment?.serviceId}
