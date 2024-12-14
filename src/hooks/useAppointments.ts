@@ -1,29 +1,51 @@
-import { appointmentService } from '@/services/appointment.service'
-import { Appointment } from '@/types'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+// src/hooks/useAppointments.ts
+import { dentistService } from '@/services/dentist.service'
+import { useAppointmentStore } from '@/store/useAppointmentStore'
+import { BookAppointmentRequest } from '@/types'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'react-hot-toast'
 
-export const useAppointments = (clinicId: string) => {
-  const queryClient = useQueryClient()
+export const useAppointments = () => {
+  const { setSelectedService, setSelectedDateTime, resetSelection } = useAppointmentStore()
 
-  const appointments = useQuery({
-    queryKey: ['appointments', clinicId],
-    queryFn: () => appointmentService.getAppointments(clinicId),
+  const fetchAppointments = useQuery({
+    queryKey: ['appointments'],
+    queryFn: dentistService.getMyAppointments,
   })
 
-  const createAppointment = useMutation({
-    mutationFn: appointmentService.createAppointment,
+  const bookAppointment = useMutation({
+    mutationFn: (data: BookAppointmentRequest) =>
+      dentistService.bookAppointment(data.dentistId, data.clinicId, data.serviceId, data.startDate),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
+      toast.success('Appointment booked successfully')
+      resetSelection()
+      fetchAppointments.refetch()
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to book appointment')
     },
   })
 
-  const updateAppointment = useMutation({
-    mutationFn: (appointment: Partial<Appointment>) =>
-      appointmentService.updateAppointment(appointment.id!, appointment),
+  const cancelAppointment = useMutation({
+    mutationFn: dentistService.cancelAppointment,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
+      toast.success('Appointment cancelled successfully')
+      fetchAppointments.refetch()
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to cancel appointment')
     },
   })
 
-  return { appointments, createAppointment, updateAppointment }
+  return {
+    appointments: fetchAppointments.data,
+    isLoading:
+      fetchAppointments.isLoading || bookAppointment.isPending || cancelAppointment.isPending,
+    error: fetchAppointments.error,
+    bookAppointment,
+    cancelAppointment,
+    setSelectedService,
+    setSelectedDateTime,
+    resetSelection,
+  }
 }

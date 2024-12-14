@@ -60,7 +60,7 @@ const ResetPassword = () => {
               type={passwordVisible ? 'text' : 'password'}
               size="large"
               placeholder="Password"
-              className="placeholder:text-gray-500 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+              className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
             />
             <div
               className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
@@ -99,7 +99,7 @@ const ResetPassword = () => {
               type={confirmPasswordVisible ? 'text' : 'password'}
               size="large"
               placeholder="Confirm Password"
-              className="placeholder:text-gray-500 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+              className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
             />
             <div
               className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"

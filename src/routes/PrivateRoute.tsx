@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/store/useAuthStore'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 
 interface PrivateRouteProps {
   children: React.ReactNode
@@ -7,9 +7,10 @@ interface PrivateRouteProps {
 
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const { token } = useAuthStore()
+  const location = useLocation()
 
   if (!token) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   return <>{children}</>
