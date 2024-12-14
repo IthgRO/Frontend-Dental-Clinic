@@ -1,6 +1,7 @@
 // src/components/features/auth/RegisterForm.tsx
 import { Button, Checkbox, Form, Input } from 'antd'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const validatePhoneNumber = (_: any, value: string) => {
   const phoneRegex = /^\+?\d{10,15}$/
@@ -30,8 +31,16 @@ export const RegisterForm = ({
   showLinks = true,
   className,
 }: RegisterFormProps) => {
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
+
   return (
-    <Form layout="vertical" onFinish={onFinish} className={`space-y-4 ${className}`}>
+    <Form
+      layout="vertical"
+      onFinish={onFinish}
+      validateTrigger="onSubmit"
+      className={`space-y-4 ${className}`}
+    >
       <Form.Item
         name="firstName"
         label=""
@@ -74,7 +83,7 @@ export const RegisterForm = ({
       <Form.Item name="phone" label="" rules={[{ validator: validatePhoneNumber }]}>
         <Input
           size="large"
-          placeholder="Phone number"
+          placeholder="Phone Number"
           className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
@@ -92,11 +101,26 @@ export const RegisterForm = ({
           },
         ]}
       >
-        <Input.Password
-          size="large"
-          placeholder="Password"
-          className="placeholder:text-gray-500 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
-        />
+        <div className="relative">
+          <Input
+            type={passwordVisible ? 'text' : 'password'}
+            size="large"
+            placeholder="Password"
+            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          />
+          <div
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+            onClick={() => setPasswordVisible(prev => !prev)}
+          >
+            <img
+              src={
+                passwordVisible ? '/src/assets/seePasswordOn.png' : '/src/assets/seePasswordOff.png'
+              }
+              alt="Toggle Password Visibility"
+              className="w-5 h-5"
+            />
+          </div>
+        </div>
       </Form.Item>
 
       <Form.Item
@@ -115,21 +139,46 @@ export const RegisterForm = ({
           }),
         ]}
       >
-        <Input.Password
-          size="large"
-          placeholder="Confirm Password"
-          className="placeholder:text-gray-500 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
-        />
+        <div className="relative">
+          <Input
+            type={confirmPasswordVisible ? 'text' : 'password'}
+            size="large"
+            placeholder="Confirm Password"
+            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          />
+          <div
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+            onClick={() => setConfirmPasswordVisible(prev => !prev)}
+          >
+            <img
+              src={
+                confirmPasswordVisible
+                  ? '/src/assets/seePasswordOn.png'
+                  : '/src/assets/seePasswordOff.png'
+              }
+              alt="Toggle Password Visibility"
+              className="w-5 h-5"
+            />
+          </div>
+        </div>
       </Form.Item>
 
       <Form.Item>
-        <Checkbox
-          checked={termsAccepted}
-          onChange={e => onTermsChange(e.target.checked)}
-          className="focus:ring-teal-500"
-        >
-          I agree to the terms and conditions
-        </Checkbox>
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 cursor-pointer" onClick={() => onTermsChange(prev => !prev)}>
+            <img
+              src={termsAccepted ? '/src/assets/checkBoxOn.png' : '/src/assets/checkBoxOff.png'}
+              alt="Checkbox"
+              className="w-full h-full"
+            />
+          </div>
+          <label
+            onClick={() => onTermsChange(prev => !prev)}
+            className="cursor-pointer text-gray-700"
+          >
+            I agree to the terms and conditions
+          </label>
+        </div>
       </Form.Item>
 
       <Form.Item>

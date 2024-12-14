@@ -1,6 +1,7 @@
 // src/components/features/auth/LoginForm.tsx
 import { Button, Form, Input } from 'antd'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 export interface LoginFormProps {
   onFinish: (values: { email: string; password: string }) => void
@@ -17,8 +18,14 @@ export const LoginForm = ({
   showLinks = true,
   className,
 }: LoginFormProps) => {
+  const [passwordVisible, setPasswordVisible] = useState(false)
   return (
-    <Form layout="vertical" onFinish={onFinish} className={`space-y-4 ${className}`}>
+    <Form
+      layout="vertical"
+      onFinish={onFinish}
+      validateTrigger="onSubmit"
+      className={`space-y-4 ${className}`}
+    >
       <Form.Item
         name="email"
         label=""
@@ -39,7 +46,26 @@ export const LoginForm = ({
         label=""
         rules={[{ required: true, message: 'Please input your password!' }]}
       >
-        <Input.Password size="large" placeholder="Password" />
+        <div className="relative">
+          <Input
+            type={passwordVisible ? 'text' : 'password'}
+            size="large"
+            placeholder="Password"
+            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          />
+          <div
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+            onClick={() => setPasswordVisible(prev => !prev)}
+          >
+            <img
+              src={
+                passwordVisible ? '/src/assets/seePasswordOn.png' : '/src/assets/seePasswordOff.png'
+              }
+              alt="Toggle Password Visibility"
+              className="w-5 h-5"
+            />
+          </div>
+        </div>
       </Form.Item>
 
       {error && <div className="text-red-500 text-sm text-center mb-4">{error}</div>}

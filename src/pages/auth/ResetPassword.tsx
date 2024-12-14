@@ -1,7 +1,7 @@
 import { authService } from '@/services/auth.service'
 import { Form, Input, Button, message, Typography } from 'antd'
 import { useState } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
@@ -9,6 +9,8 @@ const ResetPassword = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [searchParams] = useSearchParams()
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
 
   const onFinish = async (values: { password: string; confirmPassword: string }) => {
     const token = searchParams.get('token')
@@ -39,7 +41,7 @@ const ResetPassword = () => {
       <div className="text-center mb-8">
         <Title level={3}>Set Your New Password</Title>
       </div>
-      <Form layout="vertical" onFinish={onFinish}>
+      <Form layout="vertical" onFinish={onFinish} validateTrigger="onSubmit">
         <Form.Item
           name="password"
           label=""
@@ -53,7 +55,28 @@ const ResetPassword = () => {
             },
           ]}
         >
-          <Input.Password size="large" placeholder="Enter new password" />
+          <div className="relative">
+            <Input
+              type={passwordVisible ? 'text' : 'password'}
+              size="large"
+              placeholder="Password"
+              className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            />
+            <div
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+              onClick={() => setPasswordVisible(prev => !prev)}
+            >
+              <img
+                src={
+                  passwordVisible
+                    ? '/src/assets/seePasswordOn.png'
+                    : '/src/assets/seePasswordOff.png'
+                }
+                alt="Toggle Password Visibility"
+                className="w-5 h-5"
+              />
+            </div>
+          </div>
         </Form.Item>
         <Form.Item
           name="confirmPassword"
@@ -71,7 +94,28 @@ const ResetPassword = () => {
             }),
           ]}
         >
-          <Input.Password size="large" placeholder="Confirm new password" />
+          <div className="relative">
+            <Input
+              type={confirmPasswordVisible ? 'text' : 'password'}
+              size="large"
+              placeholder="Confirm Password"
+              className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            />
+            <div
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+              onClick={() => setConfirmPasswordVisible(prev => !prev)}
+            >
+              <img
+                src={
+                  confirmPasswordVisible
+                    ? '/src/assets/seePasswordOn.png'
+                    : '/src/assets/seePasswordOff.png'
+                }
+                alt="Toggle Password Visibility"
+                className="w-5 h-5"
+              />
+            </div>
+          </div>
         </Form.Item>
         <Form.Item>
           <Button
@@ -85,6 +129,17 @@ const ResetPassword = () => {
           </Button>
         </Form.Item>
       </Form>
+      <div className="text-center mt-4">
+        <p>
+          Go back to{' '}
+          <Link
+            to="/login"
+            className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }
