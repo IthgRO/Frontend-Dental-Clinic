@@ -1,6 +1,6 @@
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
-import { Button, Spin } from 'antd'
+import { Button, Empty, Spin } from 'antd'
 import { addDays, format, parseISO, startOfWeek } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -71,6 +71,58 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
     [setSelectedDateTime, isTimeInPast]
   )
 
+  // Check if there are any available future slots
+  const hasAvailableSlots = useMemo(() => {
+    return dates.some(date => {
+      if (isDateInPast(date)) return false
+      const slots = getTimeSlotsForDate(date)
+      return slots.some(time => !isTimeInPast(date, time))
+    })
+  }, [dates, getTimeSlotsForDate, isDateInPast, isTimeInPast])
+
+  const renderTimeSlots = useCallback(
+    (date: Date) => {
+      const timeSlots = getTimeSlotsForDate(date)
+      const availableTimeSlots = timeSlots.filter(time => !isTimeInPast(date, time))
+      const isPastDate = isDateInPast(date)
+
+      if (isPastDate) {
+        return (
+          <div className="h-12 flex items-center justify-center rounded border border-gray-100">
+            <p className="text-gray-400 text-sm">Past date</p>
+          </div>
+        )
+      }
+
+      if (!timeSlots.length) {
+        return (
+          <div className="h-12 flex items-center justify-center rounded border border-gray-100">
+            <p className="text-gray-400 text-sm">No available slots</p>
+          </div>
+        )
+      }
+
+      return availableTimeSlots.map(time => {
+        const isSelected =
+          selectedAppointment?.startDate === `${format(date, 'yyyy-MM-dd')}T${time}`
+        const buttonClassName = isSelected
+          ? 'w-full h-12 bg-teal-600 text-white border-teal-600 hover:bg-teal-600 hover:border-teal-600'
+          : 'w-full h-12 hover:border-teal-600 hover:text-teal-600'
+
+        return (
+          <Button
+            key={`${date.toISOString()}-${time}`}
+            className={buttonClassName}
+            onClick={() => handleTimeSelect(date, time)}
+          >
+            {time}
+          </Button>
+        )
+      })
+    },
+    [getTimeSlotsForDate, isDateInPast, isTimeInPast, handleTimeSelect, selectedAppointment]
+  )
+
   return (
     <div className="relative">
       <div className="flex items-center justify-between mb-6">
@@ -92,37 +144,26 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
         <Button type="text" icon={<ChevronRight />} onClick={() => handleDateChange('next')} />
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
-        {dates.map(date => {
-          const timeSlots = getTimeSlotsForDate(date)
-          return (
+      {!isLoading && !hasAvailableSlots ? (
+        <div className="py-12 px-4">
+          <Empty
+            description={
+              <div className="space-y-2">
+                <p className="text-gray-600">No available appointments this week</p>
+                <p className="text-gray-400 text-sm">Please try another week</p>
+              </div>
+            }
+          />
+        </div>
+      ) : (
+        <div className="grid grid-cols-7 gap-2">
+          {dates.map(date => (
             <div key={date.toISOString()} className="space-y-2">
-              {timeSlots.map(time => {
-                const isSelected =
-                  selectedAppointment?.startDate === `${format(date, 'yyyy-MM-dd')}T${time}:00`
-                const isPast = isTimeInPast(date, time)
-
-                return (
-                  <Button
-                    key={`${date.toISOString()}-${time}`}
-                    className={`w-full h-12 transition-colors ${
-                      isSelected
-                        ? 'border-2 border-black text-black'
-                        : isPast
-                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                          : 'hover:border-black'
-                    }`}
-                    onClick={() => handleTimeSelect(date, time)}
-                    disabled={isPast}
-                  >
-                    {time}
-                  </Button>
-                )
-              })}
+              {renderTimeSlots(date)}
             </div>
-          )
-        })}
-      </div>
+          ))}
+        </div>
+      )}
 
       {isLoading && (
         <div className="absolute inset-0 bg-white/50 flex items-center justify-center">

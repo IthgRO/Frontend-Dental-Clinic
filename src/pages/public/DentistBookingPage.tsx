@@ -8,16 +8,28 @@ import { useDentists } from '@/hooks/useDentists'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Button, Spin } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const DentistBookingPage = () => {
   const { id } = useParams()
   const { selectedDentist, isLoading, error } = useDentists(id)
-  const { selectedAppointment } = useAppointmentStore()
+  const { selectedAppointment, setSelectedService } = useAppointmentStore()
   const { token } = useAuthStore()
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+
+  // Preselect first service when dentist data loads
+  useEffect(() => {
+    if (selectedDentist?.services && selectedDentist.services.length > 0) {
+      const firstService = selectedDentist.services[0]
+      setSelectedService({
+        value: firstService.id.toString(),
+        label: firstService.name,
+        price: firstService.price,
+      })
+    }
+  }, [selectedDentist, setSelectedService])
 
   const handleContinueClick = () => {
     if (!token) {

@@ -1,0 +1,22 @@
+{
+  "buttons": {
+    "save": "Vista",
+    "cancel": "Hætta við",
+    "confirm": "Staðfesta",
+    "submit": "Senda",
+    "back": "Til baka"
+  },
+  "messages": {
+    "loading": "Hleður...",
+    "error": "Villa kom upp",
+    "success": "Aðgerð tókst",
+    "confirmAction": "Ertu viss?"
+  },
+  "errors": {
+    "generic": "Eitthvað fór úrskeiðis",
+    "networkError": "Netvilla kom upp",
+    "unauthorized": "Óheimil aðgerð",
+    "sessionExpired": "Seta útrunnin",
+    "required": "Þetta svæði er skylda"
+  }
+}

@@ -1,9 +1,9 @@
-// src/components/features/booking/BookingConfirmationModal.tsx
 import { useDentists } from '@/hooks/useDentists'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { BookAppointmentRequest } from '@/types'
 import { Button, Modal } from 'antd'
 import { format } from 'date-fns'
+import { CheckCircle, Clock, CreditCard, MapPin, User } from 'lucide-react'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -24,7 +24,6 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
   const { createAppointment } = useAppointmentStore()
   const { dentists } = useDentists()
 
-  // Find the service price
   const servicePrice = useMemo(() => {
     const dentist = dentists.find(d => d.id === appointment.dentistId)
     const service = dentist?.services.find(s => s.id === appointment.serviceId)
@@ -48,34 +47,61 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
 
   return (
     <Modal
-      title="Confirm Appointment"
+      title={
+        <div className="flex items-center gap-3 px-2 pt-2">
+          <CheckCircle className="text-teal-500" size={24} />
+          <h3 className="text-xl font-semibold text-gray-900">Confirm Your Appointment</h3>
+        </div>
+      }
       open={isOpen}
       footer={null}
       onCancel={onClose}
       width={500}
-      className="rounded-lg"
+      className="rounded-xl overflow-hidden"
     >
       <div className="py-6 space-y-6">
         <div className="space-y-4">
-          <LabelValue label="Dentist" value={appointment.dentistName} />
-          <LabelValue label="Clinic" value={appointment.clinic} />
-          <LabelValue
-            label="Appointment Time"
-            value={format(new Date(appointment.startDate), 'EEE d MMM, yyyy HH:mm')}
-          />
-          <LabelValue label="Address" value={appointment.address} />
-          {servicePrice && <LabelValue label="Price" value={`€${servicePrice.toLocaleString()}`} />}
+          <p className="text-lg text-gray-600">Please review your appointment details below:</p>
+
+          <div className="bg-gray-50 p-6 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <User size={20} className="text-gray-400" />
+              <p className="text-gray-900">{appointment.dentistName}</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <MapPin size={20} className="text-gray-400" />
+              <div>
+                <p className="text-gray-900">{appointment.clinic}</p>
+                <p className="text-gray-600">{appointment.address}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Clock size={20} className="text-gray-400" />
+              <p className="text-gray-900">
+                {format(new Date(appointment.startDate), 'EEE d MMM, yyyy HH:mm')}
+              </p>
+            </div>
+
+            {servicePrice && (
+              <div className="flex items-center gap-3">
+                <CreditCard size={20} className="text-gray-400" />
+                <p className="text-gray-900">€{servicePrice.toLocaleString()}</p>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex gap-4">
-          <Button size="large" onClick={onClose} className="flex-1">
+          <Button size="large" onClick={onClose} className="flex-1 h-11">
             Cancel
           </Button>
           <Button
             type="primary"
             size="large"
             onClick={handleConfirm}
-            className="flex-1 bg-black hover:bg-gray-800"
+            className="flex-1 h-11 bg-teal-600 hover:bg-teal-700"
           >
             Confirm Appointment
           </Button>
@@ -84,12 +110,5 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
     </Modal>
   )
 }
-
-const LabelValue = ({ label, value }: { label: string; value: string }) => (
-  <div>
-    <h3 className="text-sm font-medium text-gray-500">{label}</h3>
-    <p className="text-lg">{value}</p>
-  </div>
-)
 
 export default BookingConfirmationModal

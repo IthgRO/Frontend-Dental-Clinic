@@ -1,0 +1,22 @@
+{
+  "buttons": {
+    "save": "Lagre",
+    "cancel": "Avbryt",
+    "confirm": "Bekreft",
+    "submit": "Send inn",
+    "back": "Tilbake"
+  },
+  "messages": {
+    "loading": "Laster...",
+    "error": "En feil oppstod",
+    "success": "Operasjonen var vellykket",
+    "confirmAction": "Er du sikker?"
+  },
+  "errors": {
+    "generic": "Noe gikk galt",
+    "networkError": "Nettverksfeil oppstod",
+    "unauthorized": "Uautorisert tilgang",
+    "sessionExpired": "Økten er utløpt",
+    "required": "Dette feltet er påkrevd"
+  }
+}

@@ -1,7 +1,7 @@
-// src/components/features/auth/LoginForm.tsx
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { Button, Form, Input } from 'antd'
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export interface LoginFormProps {
   onFinish: (values: { email: string; password: string }) => void
@@ -18,7 +18,9 @@ export const LoginForm = ({
   showLinks = true,
   className,
 }: LoginFormProps) => {
+  const { t } = useAppTranslation('auth')
   const [passwordVisible, setPasswordVisible] = useState(false)
+
   return (
     <Form
       layout="vertical"
@@ -30,13 +32,13 @@ export const LoginForm = ({
         name="email"
         label=""
         rules={[
-          { required: true, message: 'Please input your email!' },
-          { type: 'email', message: 'Please enter a valid email!' },
+          { required: true, message: t('validation.required') },
+          { type: 'email', message: t('validation.email') },
         ]}
       >
         <Input
           size="large"
-          placeholder="Email"
+          placeholder={t('login.emailPlaceholder')}
           className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
@@ -44,13 +46,13 @@ export const LoginForm = ({
       <Form.Item
         name="password"
         label=""
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: t('validation.required') }]}
       >
         <div className="relative">
           <Input
             type={passwordVisible ? 'text' : 'password'}
             size="large"
-            placeholder="Password"
+            placeholder={t('login.passwordPlaceholder')}
             className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
           <div
@@ -77,29 +79,29 @@ export const LoginForm = ({
           className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
           size="large"
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {isLoading ? t('login.loadingButton') : t('login.submitButton')}
         </Button>
       </Form.Item>
 
       {showLinks && (
         <div className="text-center mt-4">
           <p>
-            Forgot Password?{' '}
+            {t('login.forgotPassword')}{' '}
             <Link
               to="/forgot-password"
               className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
             >
-              Reset Here
+              {t('login.resetLink')}
             </Link>
           </p>
           <div className="my-4 border-t border-gray-300"></div>
           <p className="text-center mt-2">
-            Don't have an account?{' '}
+            {t('login.noAccount')}{' '}
             <Link
               to="/register"
               className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
             >
-              Sign Up
+              {t('login.signUpLink')}
             </Link>
           </p>
         </div>
