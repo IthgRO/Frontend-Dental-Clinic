@@ -1,15 +1,15 @@
-// src/components/features/auth/RegisterForm.tsx
-import { Button, Checkbox, Form, Input } from 'antd'
-import { Link } from 'react-router-dom'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { Button, Form, Input } from 'antd'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-const validatePhoneNumber = (_: any, value: string) => {
+const validatePhoneNumber = (t: any) => (_: any, value: string) => {
   const phoneRegex = /^\+?\d{10,15}$/
   if (!value) {
-    return Promise.reject('Phone number is required!')
+    return Promise.reject(t('validation.required'))
   }
   if (!phoneRegex.test(value)) {
-    return Promise.reject('Please enter a valid phone number!')
+    return Promise.reject(t('validation.phone'))
   }
   return Promise.resolve()
 }
@@ -31,6 +31,7 @@ export const RegisterForm = ({
   showLinks = true,
   className,
 }: RegisterFormProps) => {
+  const { t } = useAppTranslation('auth')
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
 
@@ -44,11 +45,11 @@ export const RegisterForm = ({
       <Form.Item
         name="firstName"
         label=""
-        rules={[{ required: true, message: 'Please input your first name!' }]}
+        rules={[{ required: true, message: t('validation.required') }]}
       >
         <Input
           size="large"
-          placeholder="Name"
+          placeholder={t('register.namePlaceholder')}
           className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
@@ -56,11 +57,11 @@ export const RegisterForm = ({
       <Form.Item
         name="lastName"
         label=""
-        rules={[{ required: true, message: 'Please input your last name!' }]}
+        rules={[{ required: true, message: t('validation.required') }]}
       >
         <Input
           size="large"
-          placeholder="Surname"
+          placeholder={t('register.surnamePlaceholder')}
           className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
@@ -69,21 +70,21 @@ export const RegisterForm = ({
         name="email"
         label=""
         rules={[
-          { required: true, message: 'Please input your email!' },
-          { type: 'email', message: '*Invalid email' },
+          { required: true, message: t('validation.required') },
+          { type: 'email', message: t('validation.email') },
         ]}
       >
         <Input
           size="large"
-          placeholder="Email"
+          placeholder={t('register.emailPlaceholder')}
           className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
-      <Form.Item name="phone" label="" rules={[{ validator: validatePhoneNumber }]}>
+      <Form.Item name="phone" label="" rules={[{ validator: validatePhoneNumber(t) }]}>
         <Input
           size="large"
-          placeholder="Phone Number"
+          placeholder={t('register.phonePlaceholder')}
           className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
@@ -92,12 +93,11 @@ export const RegisterForm = ({
         name="password"
         label=""
         rules={[
-          { required: true, message: 'Please input your password!' },
-          { min: 8, message: 'Password must be at least 8 characters!' },
+          { required: true, message: t('validation.required') },
+          { min: 8, message: t('validation.passwordLength') },
           {
             pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-            message:
-              'Password must contain at least one uppercase letter, one lowercase letter, and one number!',
+            message: t('validation.passwordRequirements'),
           },
         ]}
       >
@@ -105,7 +105,7 @@ export const RegisterForm = ({
           <Input
             type={passwordVisible ? 'text' : 'password'}
             size="large"
-            placeholder="Password"
+            placeholder={t('register.passwordPlaceholder')}
             className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
           <div
@@ -128,13 +128,13 @@ export const RegisterForm = ({
         label=""
         dependencies={['password']}
         rules={[
-          { required: true, message: 'Please confirm your password!' },
+          { required: true, message: t('validation.required') },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('password') === value) {
                 return Promise.resolve()
               }
-              return Promise.reject(new Error('The passwords do not match!'))
+              return Promise.reject(new Error(t('validation.passwordsMatch')))
             },
           }),
         ]}
@@ -143,7 +143,7 @@ export const RegisterForm = ({
           <Input
             type={confirmPasswordVisible ? 'text' : 'password'}
             size="large"
-            placeholder="Confirm Password"
+            placeholder={t('register.confirmPasswordPlaceholder')}
             className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
           <div
@@ -165,7 +165,7 @@ export const RegisterForm = ({
 
       <Form.Item>
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 cursor-pointer" onClick={() => onTermsChange(prev => !prev)}>
+          <div className="w-4 h-4 cursor-pointer" onClick={() => onTermsChange(!termsAccepted)}>
             <img
               src={termsAccepted ? '/src/assets/checkBoxOn.png' : '/src/assets/checkBoxOff.png'}
               alt="Checkbox"
@@ -173,10 +173,10 @@ export const RegisterForm = ({
             />
           </div>
           <label
-            onClick={() => onTermsChange(prev => !prev)}
+            onClick={() => onTermsChange(!termsAccepted)}
             className="cursor-pointer text-gray-700"
           >
-            I agree to the terms and conditions
+            {t('register.termsCheckbox')}
           </label>
         </div>
       </Form.Item>
@@ -189,19 +189,19 @@ export const RegisterForm = ({
           size="large"
           loading={isLoading}
         >
-          Sign Up
+          {isLoading ? t('register.loadingButton') : t('register.submitButton')}
         </Button>
       </Form.Item>
 
       {showLinks && (
         <div className="text-center mt-4">
           <p>
-            Already have an account?{' '}
+            {t('register.haveAccount')}{' '}
             <Link
               to="/login"
               className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
             >
-              Login Here
+              {t('register.loginLink')}
             </Link>
           </p>
         </div>

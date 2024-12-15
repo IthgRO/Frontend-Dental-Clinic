@@ -1,0 +1,22 @@
+{
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "back": "Back"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Operation successful",
+    "confirmAction": "Are you sure?"
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "networkError": "Network error occurred",
+    "unauthorized": "Unauthorized access",
+    "sessionExpired": "Session expired",
+    "required": "This field is required"
+  }
+}

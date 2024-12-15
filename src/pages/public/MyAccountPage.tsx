@@ -23,12 +23,10 @@ const MyAccountPage = () => {
         <h1 className="text-2xl font-semibold">My Appointments</h1>
       </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <AppointmentListNew
-          appointments={appointments || []}
-          onCancelClick={setSelectedAppointmentId}
-        />
-      </div>
+      <AppointmentListNew
+        appointments={appointments || []}
+        onCancelClick={setSelectedAppointmentId}
+      />
 
       {selectedAppointmentId && (
         <CancelConfirmationModal

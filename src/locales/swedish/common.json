@@ -1,0 +1,22 @@
+{
+  "buttons": {
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "confirm": "Bekräfta",
+    "submit": "Skicka",
+    "back": "Tillbaka"
+  },
+  "messages": {
+    "loading": "Laddar...",
+    "error": "Ett fel uppstod",
+    "success": "Åtgärden lyckades",
+    "confirmAction": "Är du säker?"
+  },
+  "errors": {
+    "generic": "Något gick fel",
+    "networkError": "Nätverksfel uppstod",
+    "unauthorized": "Obehörig åtkomst",
+    "sessionExpired": "Sessionen har löpt ut",
+    "required": "Detta fält är obligatoriskt"
+  }
+}

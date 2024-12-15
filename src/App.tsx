@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { BrowserRouter } from 'react-router-dom'
+import './config/i18n'
 import AppRoutes from './routes'
 
 const queryClient = new QueryClient()

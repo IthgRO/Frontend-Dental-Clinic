@@ -1,4 +1,4 @@
-// src/components/features/public/Navigation.tsx
+import LanguageSwitcher from '@/components/common/LanguageSwitcher'
 import { useAuthStore } from '@/store/useAuthStore'
 import { UserOutlined } from '@ant-design/icons'
 import { Button, Dropdown, Menu } from 'antd'
@@ -42,7 +42,9 @@ const Navigation = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+
             {token ? (
               <>
                 <Dropdown overlay={userMenu} placement="bottomRight">
@@ -64,16 +66,27 @@ const Navigation = () => {
               </>
             ) : (
               <>
-                <div className="hidden sm:flex items-center gap-4">
-                  <Link to="/login" className="text-gray-600 hover:text-teal-600 transition-colors">
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="text-gray-600 hover:text-teal-600 transition-colors"
-                  >
-                    Sign Up
-                  </Link>
+                <div className="hidden sm:block">
+                  <div className="relative flex w-[240px] h-10 border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    {/* Divider */}
+                    <div className="absolute left-1/2 top-0 h-full w-[1px] bg-gray-200"></div>
+
+                    {/* Login Button */}
+                    <Link
+                      to="/login"
+                      className="flex-1 flex items-center justify-center text-gray-600 font-medium hover:bg-teal-600 hover:text-white transition-all"
+                    >
+                      Log In
+                    </Link>
+
+                    {/* Sign Up Button */}
+                    <Link
+                      to="/register"
+                      className="flex-1 flex items-center justify-center text-gray-600 font-medium hover:bg-teal-600 hover:text-white transition-all"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
                 </div>
                 <Button
                   type="primary"
