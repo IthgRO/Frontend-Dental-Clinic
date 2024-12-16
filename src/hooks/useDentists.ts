@@ -10,6 +10,7 @@ export const useDentists = (dentistId?: string) => {
     error,
     fetchDentists,
     selectDentist,
+    clearSelectedDentist,
   } = useDentistStore()
 
   const { isLoading: queryLoading } = useQuery({
@@ -18,15 +19,22 @@ export const useDentists = (dentistId?: string) => {
     enabled: dentists.length === 0,
   })
 
-  // Handle dentist selection when we have the data
+  // Clear selected dentist when component unmounts
   useEffect(() => {
-    if (dentists.length > 0 && dentistId && !selectedDentist) {
+    return () => {
+      clearSelectedDentist()
+    }
+  }, [clearSelectedDentist])
+
+  // Handle dentist selection when we have the data and dentistId changes
+  useEffect(() => {
+    if (dentists.length > 0 && dentistId) {
       const dentist = dentists.find(d => d.id === Number(dentistId))
       if (dentist) {
         selectDentist(dentist)
       }
     }
-  }, [dentists, dentistId, selectedDentist, selectDentist])
+  }, [dentists, dentistId, selectDentist])
 
   return {
     dentists,

@@ -13,6 +13,7 @@ interface AppointmentState {
   fetchMyAppointments: () => Promise<void>
   cancelAppointment: (id: number) => Promise<void>
   resetSelection: () => void
+  clearSelectedAppointment: () => void
 }
 
 export const useAppointmentStore = create<AppointmentState>(set => ({
@@ -103,5 +104,13 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
 
   resetSelection: () => {
     set({ selectedAppointment: null })
+  },
+
+  // New function to clear selected appointment
+  clearSelectedAppointment: () => {
+    set({
+      selectedAppointment: null,
+      error: null,
+    })
   },
 }))

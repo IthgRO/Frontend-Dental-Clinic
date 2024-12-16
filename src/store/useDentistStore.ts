@@ -49,7 +49,6 @@ export const useDentistStore = create<DentistState>(set => ({
   },
 
   fetchAvailableSlots: async (dentistId, startDate, endDate) => {
-    // Don't set loading to true here to prevent re-renders
     try {
       const slots = await dentistService.getAvailableSlots(dentistId, startDate, endDate)
       set({ availableSlots: slots })

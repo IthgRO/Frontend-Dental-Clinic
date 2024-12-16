@@ -1,4 +1,3 @@
-// src/pages/public/DentistBookingPage.tsx
 import AuthModal from '@/components/features/auth/AuthModal'
 import BookingConfirmationModal from '@/components/features/booking/BookingConfirmationModal'
 import DentistHeader from '@/components/features/public/DentistHeader'
@@ -14,10 +13,18 @@ import { useParams } from 'react-router-dom'
 const DentistBookingPage = () => {
   const { id } = useParams()
   const { selectedDentist, isLoading, error } = useDentists(id)
-  const { selectedAppointment, setSelectedService } = useAppointmentStore()
+  const { selectedAppointment, setSelectedService, clearSelectedAppointment } =
+    useAppointmentStore()
   const { token } = useAuthStore()
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+
+  // Clear selected appointment when component unmounts
+  useEffect(() => {
+    return () => {
+      clearSelectedAppointment()
+    }
+  }, [clearSelectedAppointment])
 
   // Preselect first service when dentist data loads
   useEffect(() => {
