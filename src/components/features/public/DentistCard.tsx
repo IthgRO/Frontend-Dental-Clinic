@@ -9,13 +9,17 @@ interface DentistCardProps {
 
 const DentistCard = ({ dentist }: DentistCardProps) => {
   const priceRange = `$${dentist.priceRange.min}-$${dentist.priceRange.max}`
+  const lastName = dentist.name.split(" ")[1]
+  const imageFileName = `${lastName}.png`;
+  const imagePath = `/placeholders/${imageFileName}`
+
 
   return (
     <Link to={`/dentists/${dentist.id}`}>
       <Card hoverable className="transition-all hover:shadow-lg">
         <div className="flex gap-6">
           <img
-            src={`/api/placeholder/160/160`} // Placeholder since we don't have images
+            src={imagePath} // Placeholder since we don't have images
             alt={dentist.name}
             className="w-40 h-40 rounded-lg object-cover"
           />

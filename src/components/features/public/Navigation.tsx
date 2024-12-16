@@ -33,12 +33,12 @@ const Navigation = () => {
               <img src="/logo.png" alt="Dental Logo" className="h-16 w-auto" />
             </Link>
             <div className="hidden md:flex items-center gap-8">
-              <Link to="/dentists" className="text-gray-600 hover:text-teal-600 transition-colors">
+              {/* <Link to="/dentists" className="text-gray-600 hover:text-teal-600 transition-colors">
                 Find a Dentist
               </Link>
               <Link to="/contact" className="text-gray-600 hover:text-teal-600 transition-colors">
                 Contact
-              </Link>
+              </Link> */}
             </div>
           </div>
 
