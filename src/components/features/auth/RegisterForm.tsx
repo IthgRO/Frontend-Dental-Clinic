@@ -50,7 +50,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.namePlaceholder')}
-          className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -62,7 +62,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.surnamePlaceholder')}
-          className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -77,7 +77,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.emailPlaceholder')}
-          className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -85,7 +85,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.phonePlaceholder')}
-          className="w-[276px] placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -106,7 +106,7 @@ export const RegisterForm = ({
             type={passwordVisible ? 'text' : 'password'}
             size="large"
             placeholder={t('register.passwordPlaceholder')}
-            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
           <div
             className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
@@ -114,7 +114,7 @@ export const RegisterForm = ({
           >
             <img
               src={
-                passwordVisible ? '/src/assets/seePasswordOn.png' : '/src/assets/seePasswordOff.png'
+                passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'
               }
               alt="Toggle Password Visibility"
               className="w-5 h-5"
@@ -144,7 +144,7 @@ export const RegisterForm = ({
             type={confirmPasswordVisible ? 'text' : 'password'}
             size="large"
             placeholder={t('register.confirmPasswordPlaceholder')}
-            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
           <div
             className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
@@ -153,8 +153,8 @@ export const RegisterForm = ({
             <img
               src={
                 confirmPasswordVisible
-                  ? '/src/assets/seePasswordOn.png'
-                  : '/src/assets/seePasswordOff.png'
+                  ? '/seePasswordOn.png'
+                  : '/seePasswordOff.png'
               }
               alt="Toggle Password Visibility"
               className="w-5 h-5"
@@ -167,7 +167,7 @@ export const RegisterForm = ({
         <div className="flex items-center space-x-2">
           <div className="w-4 h-4 cursor-pointer" onClick={() => onTermsChange(!termsAccepted)}>
             <img
-              src={termsAccepted ? '/src/assets/checkBoxOn.png' : '/src/assets/checkBoxOff.png'}
+              src={termsAccepted ? '/checkBoxOn.png' : '/checkBoxOff.png'}
               alt="Checkbox"
               className="w-full h-full"
             />

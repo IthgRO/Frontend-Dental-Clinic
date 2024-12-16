@@ -1,15 +1,13 @@
 import { dentistService } from '@/services/dentist.service'
-import { Dentist, DentistResponse, TimeSlot } from '@/types'
+import { Dentist, DentistResponse } from '@/types'
 import { create } from 'zustand'
 
 interface DentistState {
   dentists: Dentist[]
   selectedDentist: Dentist | null
-  availableSlots: TimeSlot[]
   isLoading: boolean
   error: string | null
   fetchDentists: () => Promise<Dentist[]>
-  fetchAvailableSlots: (dentistId: number, startDate: string, endDate: string) => Promise<void>
   selectDentist: (dentist: Dentist) => void
   clearSelectedDentist: () => void
 }
@@ -17,7 +15,6 @@ interface DentistState {
 export const useDentistStore = create<DentistState>(set => ({
   dentists: [],
   selectedDentist: null,
-  availableSlots: [],
   isLoading: false,
   error: null,
 
@@ -48,24 +45,11 @@ export const useDentistStore = create<DentistState>(set => ({
     }
   },
 
-  fetchAvailableSlots: async (dentistId, startDate, endDate) => {
-    try {
-      const slots = await dentistService.getAvailableSlots(dentistId, startDate, endDate)
-      set({ availableSlots: slots })
-      return slots
-    } catch (error: any) {
-      set({
-        error: error.response?.data?.message || 'Failed to fetch available slots',
-      })
-      throw error
-    }
-  },
-
   selectDentist: dentist => {
     set({ selectedDentist: dentist })
   },
 
   clearSelectedDentist: () => {
-    set({ selectedDentist: null, availableSlots: [] })
+    set({ selectedDentist: null })
   },
 }))

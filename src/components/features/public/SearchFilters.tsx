@@ -1,14 +1,14 @@
-// src/components/features/public/SearchFilters.tsx
 import { useDentists } from '@/hooks/useDentists'
-import { Button, Card, Checkbox, Divider, Select, Slider } from 'antd'
+import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import { Card, Checkbox, Collapse, Divider, Select, Slider, Tag } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 const SearchFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { dentists } = useDentists()
+  const [activeKey, setActiveKey] = useState<string[]>(['0'])
 
-  // Get unique cities, services and price range from dentists
   const { cities, services, priceRange } = useMemo(() => {
     const citiesSet = new Set<string>()
     const servicesSet = new Map<number, { name: string; price: number }>()
@@ -35,7 +35,6 @@ const SearchFilters = () => {
     }
   }, [dentists])
 
-  // State for filters
   const [selectedCity, setSelectedCity] = useState(searchParams.get('location') || '')
   const [selectedServices, setSelectedServices] = useState<number[]>(
     searchParams.get('services')?.split(',').map(Number).filter(Boolean) || []
@@ -44,8 +43,9 @@ const SearchFilters = () => {
     Number(searchParams.get('minPrice')) || priceRange.min,
     Number(searchParams.get('maxPrice')) || priceRange.max,
   ])
+  const [tempPriceRange, setTempPriceRange] = useState<[number, number]>(selectedPriceRange)
+  const [isDragging, setIsDragging] = useState(false)
 
-  // Handle URL params on mount
   useEffect(() => {
     const serviceParam = searchParams.get('service')
     if (serviceParam) {
@@ -56,7 +56,7 @@ const SearchFilters = () => {
     }
   }, [searchParams, services])
 
-  const handleApplyFilters = () => {
+  useEffect(() => {
     const params = new URLSearchParams(searchParams)
 
     if (selectedCity) {
@@ -71,16 +71,17 @@ const SearchFilters = () => {
       params.delete('services')
     }
 
-    if (selectedPriceRange[0] !== priceRange.min || selectedPriceRange[1] !== priceRange.max) {
-      params.set('minPrice', selectedPriceRange[0].toString())
-      params.set('maxPrice', selectedPriceRange[1].toString())
-    } else {
-      params.delete('minPrice')
-      params.delete('maxPrice')
+    if (!isDragging) {
+      if (selectedPriceRange[0] !== priceRange.min || selectedPriceRange[1] !== priceRange.max) {
+        params.set('minPrice', selectedPriceRange[0].toString())
+        params.set('maxPrice', selectedPriceRange[1].toString())
+      } else {
+        params.delete('minPrice')
+        params.delete('maxPrice')
+      }
+      setSearchParams(params)
     }
-
-    setSearchParams(params)
-  }
+  }, [selectedCity, selectedServices, selectedPriceRange, isDragging])
 
   const handleServiceSelect = (serviceId: number, checked: boolean) => {
     if (checked) {
@@ -90,70 +91,154 @@ const SearchFilters = () => {
     }
   }
 
+  const handleCitySelect = (value: string | null) => {
+    setSelectedCity(value || '')
+  }
+
+  const handleSliderChange = (value: [number, number]) => {
+    setTempPriceRange(value)
+    setIsDragging(true)
+  }
+
+  const handleSliderAfterChange = (value: [number, number]) => {
+    setSelectedPriceRange(value)
+    setIsDragging(false)
+  }
+
+  const getExtraContent = (type: 'location' | 'services' | 'price') => {
+    switch (type) {
+      case 'location':
+        return selectedCity ? <Tag color="blue">{selectedCity}</Tag> : null
+      case 'services':
+        return selectedServices.length ? (
+          <Tag color="blue">{selectedServices.length} selected</Tag>
+        ) : null
+      case 'price':
+        return selectedPriceRange[0] !== priceRange.min ||
+          selectedPriceRange[1] !== priceRange.max ? (
+          <Tag color="blue">
+            €{selectedPriceRange[0]} - €{selectedPriceRange[1]}
+          </Tag>
+        ) : null
+      default:
+        return null
+    }
+  }
+
+  const filterContent = (
+    <div className="space-y-6">
+      <div>
+        <h3 className="font-medium mb-3">Location</h3>
+        <Select
+          className="w-full"
+          size="large"
+          placeholder="Select your city"
+          options={cities}
+          value={selectedCity || undefined}
+          onChange={handleCitySelect}
+          allowClear
+          showSearch
+          filterOption={(input, option) =>
+            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+          }
+        />
+      </div>
+
+      <Divider />
+
+      <div>
+        <h3 className="font-medium mb-3">Services</h3>
+        <div className="space-y-2">
+          {services.map(service => (
+            <Checkbox
+              key={service.value}
+              checked={selectedServices.includes(service.value)}
+              onChange={e => handleServiceSelect(service.value, e.target.checked)}
+            >
+              {service.label}
+            </Checkbox>
+          ))}
+        </div>
+      </div>
+
+      <Divider />
+
+      <div>
+        <h3 className="font-medium mb-3">Price Range</h3>
+        <Slider
+          range
+          min={priceRange.min}
+          max={priceRange.max}
+          value={isDragging ? tempPriceRange : selectedPriceRange}
+          onChange={handleSliderChange}
+          onAfterChange={handleSliderAfterChange}
+          marks={{
+            [priceRange.min]: `€${priceRange.min}`,
+            [priceRange.max]: `€${priceRange.max}`,
+          }}
+          className="mt-6"
+        />
+      </div>
+    </div>
+  )
+
   return (
     <Card className="sticky top-24">
-      <div className="space-y-6">
-        <div>
-          <h3 className="font-medium mb-3">Location</h3>
-          <Select
-            className="w-full"
-            size="large"
-            placeholder="Select your city"
-            options={cities}
-            value={selectedCity || undefined}
-            onChange={setSelectedCity}
-            allowClear
-            showSearch
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-          />
-        </div>
+      <div className="hidden md:block">{filterContent}</div>
 
-        <Divider />
-
-        <div>
-          <h3 className="font-medium mb-3">Services</h3>
-          <div className="space-y-2">
-            {services.map(service => (
-              <Checkbox
-                key={service.value}
-                checked={selectedServices.includes(service.value)}
-                onChange={e => handleServiceSelect(service.value, e.target.checked)}
-              >
-                {service.label}
-              </Checkbox>
-            ))}
-          </div>
-        </div>
-
-        <Divider />
-
-        <div>
-          <h3 className="font-medium mb-3">Price Range</h3>
-          <Slider
-            range
-            min={priceRange.min}
-            max={priceRange.max}
-            value={selectedPriceRange}
-            onChange={setSelectedPriceRange as (value: number[]) => void}
-            marks={{
-              [priceRange.min]: `€${priceRange.min}`,
-              [priceRange.max]: `€${priceRange.max}`,
-            }}
-            className="mt-6"
-          />
-        </div>
-
-        <Button
-          type="primary"
-          block
-          size="large"
-          onClick={handleApplyFilters}
-          className="bg-black hover:bg-gray-800"
+      <div className="md:hidden">
+        <Collapse
+          activeKey={activeKey}
+          onChange={keys => setActiveKey(typeof keys === 'string' ? [keys] : keys)}
+          expandIconPosition="end"
+          expandIcon={({ isActive }) => (isActive ? <UpOutlined /> : <DownOutlined />)}
         >
-          Apply Filters
-        </Button>
+          <Collapse.Panel header="Location" key="0" extra={getExtraContent('location')}>
+            <Select
+              className="w-full"
+              size="large"
+              placeholder="Select your city"
+              options={cities}
+              value={selectedCity || undefined}
+              onChange={handleCitySelect}
+              allowClear
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Collapse.Panel>
+
+          <Collapse.Panel header="Services" key="1" extra={getExtraContent('services')}>
+            <div className="space-y-2">
+              {services.map(service => (
+                <Checkbox
+                  key={service.value}
+                  checked={selectedServices.includes(service.value)}
+                  onChange={e => handleServiceSelect(service.value, e.target.checked)}
+                >
+                  {service.label}
+                </Checkbox>
+              ))}
+            </div>
+          </Collapse.Panel>
+
+          <Collapse.Panel header="Price Range" key="2" extra={getExtraContent('price')}>
+            <Slider
+              range
+              min={priceRange.min}
+              max={priceRange.max}
+              value={isDragging ? tempPriceRange : selectedPriceRange}
+              onChange={handleSliderChange}
+              onAfterChange={handleSliderAfterChange}
+              marks={{
+                [priceRange.min]: `€${priceRange.min}`,
+                [priceRange.max]: `€${priceRange.max}`,
+              }}
+              className="mt-6"
+            />
+          </Collapse.Panel>
+        </Collapse>
       </div>
     </Card>
   )

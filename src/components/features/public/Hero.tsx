@@ -1,4 +1,3 @@
-// src/components/features/public/Hero.tsx
 import { useDentists } from '@/hooks/useDentists'
 import { Button, Select } from 'antd'
 import { useMemo, useState } from 'react'
@@ -10,7 +9,6 @@ const Hero = () => {
   const [location, setLocation] = useState<string>('')
   const [service, setService] = useState<string>('')
 
-  // Get unique cities and services from dentists
   const { cities, services } = useMemo(() => {
     const citiesSet = new Set<string>()
     const servicesSet = new Set<string>()
@@ -36,30 +34,31 @@ const Hero = () => {
   }
 
   return (
-    <div className="bg-gray-50 mb-16">
-      <div className="relative flex justify-center items-end min-h-[550px]">
-        {/* Background Image */}
+    <div className="bg-gray-50 mb-8 md:mb-16">
+      <div className="relative flex justify-center items-end min-h-[450px] sm:min-h-[500px] md:min-h-[550px]">
+        {/* Background Image with Mobile Overlay */}
         <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-black/40 md:bg-transparent z-10"></div>
           <img
             src="/landing-page-hero.png"
             alt="Background"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-[100%_center]"
           />
         </div>
 
         {/* Content Container */}
-        <div className="relative z-10 h-full">
-          <div className="max-w-7xl mx-auto px-8 h-full flex flex-col items-center justify-center">
-            {/* Main Content Wrapper with controlled width */}
-            <div className="w-full max-w-3xl flex flex-col items-center space-y-16 mb-[-44px]">
+        <div className="relative z-20 h-full w-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-full flex flex-col items-center justify-center">
+            {/* Main Content Wrapper */}
+            <div className="w-full max-w-3xl flex flex-col items-center space-y-8 md:space-y-16 mb-[-24px] md:mb-[-44px]">
               {/* Text Content */}
-              <div className="flex flex-col justify-start items-start text-left">
-                <h1 className="text-5xl font-bold text-white mb-6">
+              <div className="flex flex-col justify-start items-start text-left w-full">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">
                   Find your new
                   <br />
                   dentist online
                 </h1>
-                <p className="text-xl text-white/90 mb-12 max-w-2xl">
+                <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 md:mb-12 max-w-2xl">
                   Book appointments with 100+ dentists all over Europe in just one click. Find the
                   perfect doctor, perfect place and perfect time.
                 </p>
@@ -67,16 +66,16 @@ const Hero = () => {
                 <Button
                   type="primary"
                   size="large"
-                  className="h-12 px-8 text-base bg-black hover:bg-gray-800 border-none"
+                  className="h-10 md:h-12 px-6 md:px-8 text-sm md:text-base bg-black hover:bg-gray-800 border-none"
                   onClick={() => navigate('/dentists')}
                 >
                   Book Appointment
                 </Button>
               </div>
 
-              {/* Search Bar */}
-              <div className="w-full bg-white p-6 rounded-lg shadow-lg mb-[44px]">
-                <div className="flex gap-4">
+              {/* Search Bar - Mobile Layout */}
+              <div className="w-full bg-white p-4 md:p-6 rounded-lg shadow-lg mb-[24px] md:mb-[44px]">
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                   <Select
                     size="large"
                     placeholder="Select location"
@@ -84,7 +83,7 @@ const Hero = () => {
                     onChange={setLocation}
                     options={cities}
                     showSearch
-                    className="flex-1"
+                    className="w-full"
                     allowClear
                     filterOption={(input, option) =>
                       (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -97,7 +96,7 @@ const Hero = () => {
                     onChange={setService}
                     options={services}
                     showSearch
-                    className="flex-1"
+                    className="w-full"
                     allowClear
                     filterOption={(input, option) =>
                       (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -107,7 +106,7 @@ const Hero = () => {
                     type="primary"
                     size="large"
                     onClick={handleSearch}
-                    className="bg-black hover:bg-gray-800 border-none px-8"
+                    className="w-full sm:w-auto bg-black hover:bg-gray-800 border-none px-8"
                   >
                     Search
                   </Button>

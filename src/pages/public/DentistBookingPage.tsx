@@ -67,7 +67,15 @@ const DentistBookingPage = () => {
 
   return (
     <>
-      <DentistHeader name={selectedDentist.name} clinic={selectedDentist.clinic.name} />
+      <DentistHeader
+        name={selectedDentist.name}
+        clinic={selectedDentist.clinic.name}
+        city={selectedDentist.clinic.city}
+        dentistId={selectedDentist.id}
+        priceRange={selectedDentist.priceRange}
+        phone={selectedDentist.phone}
+        email={selectedDentist.email}
+      />
 
       <div className="flex items-center gap-4 mb-8 justify-between">
         <ServiceSelect services={selectedDentist.services} className="w-[500px]" />

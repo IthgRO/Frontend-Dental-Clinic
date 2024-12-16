@@ -7,7 +7,6 @@ const { Content } = Layout
 const AuthLayout = () => {
   return (
     <Layout className="min-h-screen">
-      {/* <Navigation /> */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSwitcher />
       </div>
@@ -16,7 +15,6 @@ const AuthLayout = () => {
           <Outlet />
         </div>
       </Content>
-      {/* <Footer /> */}
     </Layout>
   )
 }

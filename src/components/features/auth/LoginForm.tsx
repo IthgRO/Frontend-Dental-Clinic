@@ -39,7 +39,7 @@ export const LoginForm = ({
         <Input
           size="large"
           placeholder={t('login.emailPlaceholder')}
-          className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -53,7 +53,7 @@ export const LoginForm = ({
             type={passwordVisible ? 'text' : 'password'}
             size="large"
             placeholder={t('login.passwordPlaceholder')}
-            className="placeholder:text-gray-600 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
           />
           <div
             className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
@@ -61,7 +61,7 @@ export const LoginForm = ({
           >
             <img
               src={
-                passwordVisible ? '/src/assets/seePasswordOn.png' : '/src/assets/seePasswordOff.png'
+                passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'
               }
               alt="Toggle Password Visibility"
               className="w-5 h-5"
@@ -85,7 +85,7 @@ export const LoginForm = ({
 
       {showLinks && (
         <div className="text-center mt-4">
-          <p>
+          {/* <p>
             {t('login.forgotPassword')}{' '}
             <Link
               to="/forgot-password"
@@ -93,7 +93,7 @@ export const LoginForm = ({
             >
               {t('login.resetLink')}
             </Link>
-          </p>
+          </p> */}
           <div className="my-4 border-t border-gray-300"></div>
           <p className="text-center mt-2">
             {t('login.noAccount')}{' '}
