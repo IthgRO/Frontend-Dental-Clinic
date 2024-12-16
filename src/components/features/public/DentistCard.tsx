@@ -75,7 +75,7 @@ const DentistCard = ({ dentist }: DentistCardProps) => {
         </div>
 
         {/* Desktop/Tablet Layout */}
-        <div className="hidden sm:flex gap-6">
+        <div className="hidden items-center sm:flex gap-6">
           <img src={imagePath} alt={dentist.name} className="w-40 h-40 rounded-lg object-cover" />
           <div className="flex-1">
             <div className="flex justify-between items-start mb-2">

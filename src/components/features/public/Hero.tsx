@@ -26,6 +26,8 @@ const Hero = () => {
     }
   }, [dentists])
 
+  console.log('services', services)
+
   const handleSearch = () => {
     const params = new URLSearchParams()
     if (location) params.append('location', location)

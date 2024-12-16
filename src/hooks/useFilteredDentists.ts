@@ -1,4 +1,3 @@
-// src/hooks/useFilteredDentists.ts
 import { useDentists } from '@/hooks/useDentists'
 import { useSearchParams } from 'react-router-dom'
 
@@ -7,7 +6,7 @@ export const useFilteredDentists = () => {
   const { dentists, isLoading, error } = useDentists()
 
   const location = searchParams.get('location')
-  const services = searchParams.get('services')?.split(',').map(Number).filter(Boolean)
+  const services = searchParams.get('services')?.split(',')
   const service = searchParams.get('service')?.toLowerCase()
   const minPrice = Number(searchParams.get('minPrice'))
   const maxPrice = Number(searchParams.get('maxPrice'))
@@ -18,16 +17,15 @@ export const useFilteredDentists = () => {
       return false
     }
 
-    // Filter by services (from services parameter)
+    // First check services parameter
     if (services?.length) {
-      const dentistServiceIds = dentist.services.map(s => s.id)
-      if (!services.some(serviceId => dentistServiceIds.includes(serviceId))) {
+      const dentistServiceNames = dentist.services.map(s => s.name)
+      if (!services.some(serviceName => dentistServiceNames.includes(serviceName))) {
         return false
       }
     }
-
-    // Filter by service name (from service parameter)
-    if (service) {
+    // Only check service parameter if services parameter is not present
+    else if (service) {
       const hasService = dentist.services.some(s => s.name.toLowerCase().includes(service))
       if (!hasService) return false
     }
