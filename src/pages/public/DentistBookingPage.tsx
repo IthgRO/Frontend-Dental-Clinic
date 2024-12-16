@@ -1,4 +1,3 @@
-// src/pages/public/DentistBookingPage.tsx
 import AuthModal from '@/components/features/auth/AuthModal'
 import BookingConfirmationModal from '@/components/features/booking/BookingConfirmationModal'
 import DentistHeader from '@/components/features/public/DentistHeader'
@@ -14,10 +13,18 @@ import { useParams } from 'react-router-dom'
 const DentistBookingPage = () => {
   const { id } = useParams()
   const { selectedDentist, isLoading, error } = useDentists(id)
-  const { selectedAppointment, setSelectedService } = useAppointmentStore()
+  const { selectedAppointment, setSelectedService, clearSelectedAppointment } =
+    useAppointmentStore()
   const { token } = useAuthStore()
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+
+  // Clear selected appointment when component unmounts
+  useEffect(() => {
+    return () => {
+      clearSelectedAppointment()
+    }
+  }, [clearSelectedAppointment])
 
   // Preselect first service when dentist data loads
   useEffect(() => {
@@ -60,7 +67,15 @@ const DentistBookingPage = () => {
 
   return (
     <>
-      <DentistHeader name={selectedDentist.name} clinic={selectedDentist.clinic.name} />
+      <DentistHeader
+        name={selectedDentist.name}
+        clinic={selectedDentist.clinic.name}
+        city={selectedDentist.clinic.city}
+        dentistId={selectedDentist.id}
+        priceRange={selectedDentist.priceRange}
+        phone={selectedDentist.phone}
+        email={selectedDentist.email}
+      />
 
       <div className="flex items-center gap-4 mb-8 justify-between">
         <ServiceSelect services={selectedDentist.services} className="w-[500px]" />

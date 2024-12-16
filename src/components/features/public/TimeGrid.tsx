@@ -1,9 +1,10 @@
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
+import { TimeSlot } from '@/types'
 import { Button, Empty, Spin } from 'antd'
 import { addDays, format, parseISO, startOfWeek } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 interface TimeGridProps {
   dentistId: number
@@ -11,27 +12,20 @@ interface TimeGridProps {
 
 const TimeGrid = ({ dentistId }: TimeGridProps) => {
   const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }))
-  const { availableSlots, fetchSlots, isLoading } = useTimeSlots()
+  const endDate = addDays(startDate, 6)
+
+  const { availableSlots, isLoading } = useTimeSlots(dentistId, startDate, endDate)
   const { setSelectedDateTime, selectedAppointment } = useAppointmentStore()
 
-  // Calculate dates once
-  const dates = useMemo(
+  const weekDates = useMemo(
     () => Array.from({ length: 7 }, (_, i) => addDays(startDate, i)),
     [startDate]
   )
 
-  // Fetch slots only when dentistId or startDate changes
-  useEffect(() => {
-    if (dentistId) {
-      const endDate = addDays(startDate, 6)
-      fetchSlots(dentistId, startDate, endDate)
-    }
-  }, [dentistId, startDate])
-
   const getTimeSlotsForDate = useCallback(
     (date: Date) => {
       const dateStr = format(date, 'yyyy-MM-dd')
-      return availableSlots
+      return (availableSlots as TimeSlot[])
         .filter(slot => format(parseISO(slot.startTime), 'yyyy-MM-dd') === dateStr)
         .map(slot => format(parseISO(slot.startTime), 'HH:mm'))
     },
@@ -71,14 +65,13 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
     [setSelectedDateTime, isTimeInPast]
   )
 
-  // Check if there are any available future slots
   const hasAvailableSlots = useMemo(() => {
-    return dates.some(date => {
+    return weekDates.some(date => {
       if (isDateInPast(date)) return false
       const slots = getTimeSlotsForDate(date)
       return slots.some(time => !isTimeInPast(date, time))
     })
-  }, [dates, getTimeSlotsForDate, isDateInPast, isTimeInPast])
+  }, [weekDates, getTimeSlotsForDate, isDateInPast, isTimeInPast])
 
   const renderTimeSlots = useCallback(
     (date: Date) => {
@@ -97,7 +90,7 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
       if (!timeSlots.length) {
         return (
           <div className="h-12 flex items-center justify-center rounded border border-gray-100">
-            <p className="text-gray-400 text-sm">No available slots</p>
+            <p className="text-gray-400 text-sm">No slots</p>
           </div>
         )
       }
@@ -131,21 +124,27 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
           icon={<ChevronLeft />}
           onClick={() => handleDateChange('prev')}
           disabled={isDateInPast(startDate)}
+          className="flex-shrink-0"
         />
-        <div className="grid grid-cols-7 flex-1">
-          {dates.map(date => (
+        <div className="grid grid-cols-7 flex-1 px-2">
+          {weekDates.map(date => (
             <div key={date.toISOString()} className="text-center">
-              <div className="text-gray-500 text-sm">{format(date, 'EEE')}</div>
-              <div className="font-medium">{format(date, 'd')}</div>
-              <div className="text-xs text-gray-400">{format(date, 'MMM')}</div>
+              <div className="text-gray-500 text-xs sm:text-sm">{format(date, 'EEE')}</div>
+              <div className="font-medium text-sm sm:text-base">{format(date, 'd')}</div>
+              <div className="text-xs text-gray-400 hidden sm:block">{format(date, 'MMM')}</div>
             </div>
           ))}
         </div>
-        <Button type="text" icon={<ChevronRight />} onClick={() => handleDateChange('next')} />
+        <Button
+          type="text"
+          icon={<ChevronRight />}
+          onClick={() => handleDateChange('next')}
+          className="flex-shrink-0"
+        />
       </div>
 
       {!isLoading && !hasAvailableSlots ? (
-        <div className="py-12 px-4">
+        <div className="py-8 sm:py-12 px-4">
           <Empty
             description={
               <div className="space-y-2">
@@ -156,9 +155,9 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
           />
         </div>
       ) : (
-        <div className="grid grid-cols-7 gap-2">
-          {dates.map(date => (
-            <div key={date.toISOString()} className="space-y-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
+          {weekDates.map(date => (
+            <div key={date.toISOString()} className="space-y-1 sm:space-y-2">
               {renderTimeSlots(date)}
             </div>
           ))}
