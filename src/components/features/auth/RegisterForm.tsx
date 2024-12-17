@@ -1,5 +1,5 @@
 import { useAppTranslation } from '@/hooks/useAppTranslation'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, Modal } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -34,6 +34,10 @@ export const RegisterForm = ({
   const { t } = useAppTranslation('auth')
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
+  const [isTermsModalVisible, setIsTermsModalVisible] = useState(false)
+
+  const showTermsModal = () => setIsTermsModalVisible(true)
+  const closeTermsModal = () => setIsTermsModalVisible(false)
 
   return (
     <Form
@@ -50,7 +54,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.namePlaceholder')}
-          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -62,7 +66,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.surnamePlaceholder')}
-          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -77,7 +81,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.emailPlaceholder')}
-          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -85,7 +89,7 @@ export const RegisterForm = ({
         <Input
           size="large"
           placeholder={t('register.phonePlaceholder')}
-          className="w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
       </Form.Item>
 
@@ -113,9 +117,7 @@ export const RegisterForm = ({
             onClick={() => setPasswordVisible(prev => !prev)}
           >
             <img
-              src={
-                passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'
-              }
+              src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
               alt="Toggle Password Visibility"
               className="w-5 h-5"
             />
@@ -151,11 +153,7 @@ export const RegisterForm = ({
             onClick={() => setConfirmPasswordVisible(prev => !prev)}
           >
             <img
-              src={
-                confirmPasswordVisible
-                  ? '/seePasswordOn.png'
-                  : '/seePasswordOff.png'
-              }
+              src={confirmPasswordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
               alt="Toggle Password Visibility"
               className="w-5 h-5"
             />
@@ -172,14 +170,29 @@ export const RegisterForm = ({
               className="w-full h-full"
             />
           </div>
-          <label
-            onClick={() => onTermsChange(!termsAccepted)}
-            className="cursor-pointer text-gray-700"
-          >
+          <label onClick={showTermsModal} className="cursor-pointer text-gray-700 hover:underline">
             {t('register.termsCheckbox')}
           </label>
         </div>
       </Form.Item>
+
+      <Modal
+        title={t('register.termsAndConditionsTitle')}
+        visible={isTermsModalVisible}
+        onCancel={closeTermsModal}
+        footer={[
+          <Button
+            key="close"
+            className="bg-teal-600 hover:bg-teal-600 rounded-md"
+            type="primary"
+            onClick={closeTermsModal}
+          >
+            {t('register.closeButton')}
+          </Button>,
+        ]}
+      >
+        {t('register.termsAndConditions')}
+      </Modal>
 
       <Form.Item>
         <Button
