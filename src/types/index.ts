@@ -1,4 +1,5 @@
 export * from './appointment.types'
+export * from './booking.types'
 export * from './clinic.types'
 export * from './common.types'
 export * from './dentist.types'

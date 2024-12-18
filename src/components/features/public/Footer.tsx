@@ -1,8 +1,10 @@
 // src/components/features/public/Footer.tsx
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const Footer = () => {
+  const { t } = useAppTranslation('common')
   return (
     <footer className="bg-gray-50 border-t">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -11,9 +13,7 @@ const Footer = () => {
             <div className="mb-4">
               <img src="/logo.png" alt="Dental Logo" className="h-16 w-auto" />
             </div>
-            <p className="text-gray-600 mb-4">
-              Book appointments with the best dentists in your area.
-            </p>
+            <p className="text-gray-600 mb-4">{t('footer.description')}</p>
             <div className="flex gap-4">
               <a
                 href="https://facebook.com"
@@ -56,46 +56,46 @@ const Footer = () => {
 
           {/* Rest of the footer content remains the same */}
           <div>
-            <h4 className="font-medium text-gray-900 mb-4">Quick Links</h4>
+            <h4 className="font-medium text-gray-900 mb-4">{t('footer.quickLinks')}</h4>
             <div className="space-y-2">
               <Link to="/dentists" className="block text-gray-600 hover:text-teal-600">
-                Find a Dentist
+                {t('footer.findDentist')}
               </Link>
               <Link to="/contact" className="block text-gray-600 hover:text-teal-600">
-                Contact Us
+                {t('footer.contactUs')}
               </Link>
               <Link to="/about" className="block text-gray-600 hover:text-teal-600">
-                About Us
+                {t('footer.aboutUs')}
               </Link>
               <Link to="/privacy" className="block text-gray-600 hover:text-teal-600">
-                Privacy Policy
+                {t('footer.privacyPolicy')}
               </Link>
             </div>
           </div>
 
           <div>
-            <h4 className="font-medium text-gray-900 mb-4">Account</h4>
+            <h4 className="font-medium text-gray-900 mb-4">{t('footer.account')}</h4>
             <div className="space-y-2">
               <Link to="/login" className="block text-gray-600 hover:text-teal-600">
-                Login
+                {t('footer.login')}
               </Link>
               <Link to="/register" className="block text-gray-600 hover:text-teal-600">
-                Sign Up
+                {t('footer.signUp')}
               </Link>
               <Link to="/my-account" className="block text-gray-600 hover:text-teal-600">
-                My Account
+                {t('footer.myAccount')}
               </Link>
               <Link to="/appointments" className="block text-gray-600 hover:text-teal-600">
-                My Appointments
+                {t('footer.myAppointments')}
               </Link>
             </div>
           </div>
 
           <div>
-            <h4 className="font-medium text-gray-900 mb-4">Contact</h4>
+            <h4 className="font-medium text-gray-900 mb-4">{t('footer.contact')}</h4>
             <div className="space-y-2 text-gray-600">
               <p className="flex items-center gap-2">
-                Email:{' '}
+                {t('footer.email')}:{' '}
                 <a
                   href="mailto:support@dental.com"
                   className="hover:text-teal-600 transition-colors"
@@ -104,7 +104,7 @@ const Footer = () => {
                 </a>
               </p>
               <p className="flex items-center gap-2">
-                Phone:{' '}
+                {t('footer.phone')}:{' '}
                 <a href="tel:+1234567890" className="hover:text-teal-600 transition-colors">
                   (123) 456-7890
                 </a>
@@ -125,15 +125,15 @@ const Footer = () => {
             </p>
             <div className="flex gap-4 text-gray-600">
               <Link to="/terms" className="hover:text-teal-600">
-                Terms of Service
+                {t('footer.termsOfService')}
               </Link>
               <span>•</span>
               <Link to="/privacy" className="hover:text-teal-600">
-                Privacy Policy
+                {t('footer.privacyPolicy')}
               </Link>
               <span>•</span>
               <Link to="/cookies" className="hover:text-teal-600">
-                Cookie Policy
+                {t('footer.cookiePolicy')}
               </Link>
             </div>
           </div>

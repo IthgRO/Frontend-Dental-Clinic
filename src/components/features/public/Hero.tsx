@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useDentists } from '@/hooks/useDentists'
 import { Button, Select } from 'antd'
 import { useMemo, useState } from 'react'
@@ -8,6 +9,7 @@ const Hero = () => {
   const { dentists } = useDentists()
   const [location, setLocation] = useState<string>('')
   const [service, setService] = useState<string>('')
+  const { t } = useAppTranslation('common')
 
   const { cities, services } = useMemo(() => {
     const citiesSet = new Set<string>()
@@ -56,13 +58,12 @@ const Hero = () => {
               {/* Text Content */}
               <div className="flex flex-col justify-start items-start text-left w-full">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">
-                  Find your new
+                  {t('hero.title1')}
                   <br />
-                  dentist online
+                  {t('hero.title2')}
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 md:mb-12 max-w-2xl">
-                  Book appointments with 100+ dentists all over Europe in just one click. Find the
-                  perfect doctor, perfect place and perfect time.
+                  {t('hero.description')}
                 </p>
 
                 <Button
@@ -71,7 +72,7 @@ const Hero = () => {
                   className="h-10 md:h-12 px-6 md:px-8 text-sm md:text-base bg-black hover:bg-gray-800 border-none"
                   onClick={() => navigate('/dentists')}
                 >
-                  Book Appointment
+                  {t('hero.book')}
                 </Button>
               </div>
 
@@ -80,7 +81,7 @@ const Hero = () => {
                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                   <Select
                     size="large"
-                    placeholder="Select location"
+                    placeholder={t('hero.selectLocation')}
                     value={location || undefined}
                     onChange={setLocation}
                     options={cities}
@@ -93,7 +94,7 @@ const Hero = () => {
                   />
                   <Select
                     size="large"
-                    placeholder="Select service"
+                    placeholder={t('hero.selectService')}
                     value={service || undefined}
                     onChange={setService}
                     options={services}
@@ -110,7 +111,7 @@ const Hero = () => {
                     onClick={handleSearch}
                     className="w-full sm:w-auto bg-black hover:bg-gray-800 border-none px-8"
                   >
-                    Search
+                    {t('hero.search')}
                   </Button>
                 </div>
               </div>

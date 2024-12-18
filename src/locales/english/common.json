@@ -18,5 +18,48 @@
     "unauthorized": "Unauthorized access",
     "sessionExpired": "Session expired",
     "required": "This field is required"
+  },
+  "footer": {
+    "description": "Book appointments with the best dentists in your area.",
+    "quickLinks": "Quick Links",
+    "findDentist": "Find a Dentist",
+    "contactUs": "Contact Us",
+    "aboutUs": "About Us",
+    "privacyPolicy": "Privacy Policy",
+    "account": "Account",
+    "login": "Login",
+    "signUp": "Sign Up",
+    "myAccount": "My Account",
+    "myAppointments": "My Appointments",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy"
+  },
+  "hero": {
+    "description": "Book appointments with 100+ dentists all over Europe in just one click. Find the perfect doctor, perfect place and perfect time.",
+    "title1": "Find your new",
+    "title2": "dentist online",
+    "selectLocation": "Select location",
+    "selectService": "Select service",
+    "book": "Book Appointment",
+    "search": "Search"
+  },
+  "search": {
+    "location": "Location",
+    "selectDate": "Select date"
+  },
+  "dentistList": {
+    "noMatch": "No dentists found matching your criteria"
+  },
+  "navigation": {
+    "myAccount": "My Account",
+    "logout": "Logout",
+    "home": "Home",
+    "login": "Log In",
+    "signUp": "Sign Up",
+    "bookAppointment": "Book Appointment",
+    "book": "Book"
   }
 }

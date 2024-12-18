@@ -1,10 +1,12 @@
 // src/components/features/public/DentistList.tsx
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useFilteredDentists } from '@/hooks/useFilteredDentists'
 import { Spin } from 'antd'
 import DentistCard from './DentistCard'
 
 const DentistList = () => {
   const { filteredDentists, isLoading, error } = useFilteredDentists()
+  const { t } = useAppTranslation('common')
 
   if (isLoading) {
     return (
@@ -19,11 +21,7 @@ const DentistList = () => {
   }
 
   if (filteredDentists.length === 0) {
-    return (
-      <div className="text-center py-12 text-gray-500">
-        No dentists found matching your criteria
-      </div>
-    )
+    return <div className="text-center py-12 text-gray-500">{t('dentistList.noMatch')}</div>
   }
 
   return (
