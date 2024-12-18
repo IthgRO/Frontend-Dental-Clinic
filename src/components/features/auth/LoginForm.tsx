@@ -26,7 +26,7 @@ export const LoginForm = ({
       layout="vertical"
       onFinish={onFinish}
       validateTrigger="onSubmit"
-      className={`space-y-4 ${className}`}
+      className={`space-y-4  ${className}`}
     >
       <Form.Item
         name="email"
@@ -40,6 +40,7 @@ export const LoginForm = ({
           size="large"
           placeholder={t('login.emailPlaceholder')}
           className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          disabled={isLoading}
         />
       </Form.Item>
 
@@ -54,15 +55,14 @@ export const LoginForm = ({
             size="large"
             placeholder={t('login.passwordPlaceholder')}
             className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            disabled={isLoading}
           />
           <div
             className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-            onClick={() => setPasswordVisible(prev => !prev)}
+            onClick={() => !isLoading && setPasswordVisible(prev => !prev)}
           >
             <img
-              src={
-                passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'
-              }
+              src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
               alt="Toggle Password Visibility"
               className="w-5 h-5"
             />
@@ -78,6 +78,8 @@ export const LoginForm = ({
           htmlType="submit"
           className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
           size="large"
+          loading={isLoading}
+          disabled={isLoading}
         >
           {isLoading ? t('login.loadingButton') : t('login.submitButton')}
         </Button>
@@ -85,15 +87,6 @@ export const LoginForm = ({
 
       {showLinks && (
         <div className="text-center mt-4">
-          {/* <p>
-            {t('login.forgotPassword')}{' '}
-            <Link
-              to="/forgot-password"
-              className="text-teal-600 font-semibold hover:text-teal-600 hover:underline hover:scale-105"
-            >
-              {t('login.resetLink')}
-            </Link>
-          </p> */}
           <div className="my-4 border-t border-gray-300"></div>
           <p className="text-center mt-2">
             {t('login.noAccount')}{' '}

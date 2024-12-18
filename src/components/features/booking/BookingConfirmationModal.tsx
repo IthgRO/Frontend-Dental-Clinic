@@ -5,7 +5,7 @@ import { BookAppointmentRequest } from '@/types'
 import { Button, Modal } from 'antd'
 import { format } from 'date-fns'
 import { CheckCircle, Clock, CreditCard, MapPin, User } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
@@ -26,6 +26,7 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
   const navigate = useNavigate()
   const { createAppointment } = useAppointmentStore()
   const { dentists } = useDentists()
+  const [isLoading, setIsLoading] = useState(false)
 
   const servicePrice = useMemo(() => {
     const dentist = dentists.find(d => d.id === appointment.dentistId)
@@ -34,6 +35,7 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
   }, [dentists, appointment.dentistId, appointment.serviceId])
 
   const handleConfirm = async () => {
+    setIsLoading(true)
     try {
       await createAppointment({
         dentistId: appointment.dentistId,
@@ -47,6 +49,8 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
     } catch (error) {
       toast.error(t('booking.notifications.error'))
       console.error('Failed to create appointment:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -101,13 +105,15 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
         </div>
 
         <div className="flex gap-4">
-          <Button size="large" onClick={onClose} className="flex-1 h-11">
+          <Button size="large" onClick={onClose} className="flex-1 h-11" disabled={isLoading}>
             {t('booking.confirmation.buttons.cancel')}
           </Button>
           <Button
             type="primary"
             size="large"
             onClick={handleConfirm}
+            loading={isLoading}
+            disabled={isLoading}
             className="flex-1 h-11 bg-teal-600 hover:bg-teal-700"
           >
             {t('booking.confirmation.buttons.confirm')}

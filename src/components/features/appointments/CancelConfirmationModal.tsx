@@ -101,6 +101,7 @@ const CancelConfirmationModal = ({
             size="large"
             onClick={handleCancel}
             loading={cancelAppointment.isPending}
+            disabled={cancelAppointment.isPending}
             className="flex-1 h-11"
           >
             {t('cancelModal.confirmButton')}
