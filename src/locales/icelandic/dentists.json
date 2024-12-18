@@ -31,7 +31,7 @@
       "more": "+{{count}}"
     },
     "availability": {
-      "today": "Laust í dag kl. {{time}}",
+      "today": "Laust {{time}}",
       "next": "Næsti lausi tími: {{time}}"
     },
     "location": {
@@ -45,6 +45,9 @@
       "phone": "Sími",
       "email": "Netfang",
       "available": "Laust {{time}}"
+    },
+    "navigation": {
+      "back": "Til baka til tannlækna"
     },
     "service": {
       "select": "Veldu Þjónustu",

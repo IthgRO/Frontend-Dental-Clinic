@@ -31,7 +31,7 @@
       "more": "+{{count}}"
     },
     "availability": {
-      "today": "Available today at {{time}}",
+      "today": "Available {{time}}",
       "next": "Next available: {{time}}"
     },
     "location": {

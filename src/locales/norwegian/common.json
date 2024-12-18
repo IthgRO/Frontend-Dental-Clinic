@@ -38,15 +38,6 @@
     "cookiePolicy": "Informasjonskapselpolicy",
     "copyright": "© {{year}} Dental Logo. Alle rettigheter reservert."
   },
-  "hero": {
-    "description": "Bestill avtaler med over 100 tannleger over hele Europa med bare ett klikk. Finn den perfekte legen, det perfekte stedet og den perfekte tiden.",
-    "title1": "Finn din nye",
-    "title2": "tannlege på nett",
-    "selectLocation": "Velg plassering",
-    "selectService": "Velg tjeneste",
-    "book": "Bestill time",
-    "search": "Søk"
-  },
   "search": {
     "location": "Plassering",
     "selectDate": "Velg dato"

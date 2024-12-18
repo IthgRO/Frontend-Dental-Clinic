@@ -31,7 +31,7 @@
       "more": "+{{count}}"
     },
     "availability": {
-      "today": "Tilgjengelig i dag kl. {{time}}",
+      "today": "Tilgjengelig {{time}}",
       "next": "Neste tilgjengelig: {{time}}"
     },
     "location": {
@@ -45,6 +45,9 @@
       "phone": "Telefon",
       "email": "E-post",
       "available": "Tilgjengelig {{time}}"
+    },
+    "navigation": {
+      "back": "Tilbake til tannleger"
     },
     "service": {
       "select": "Velg Tjeneste",

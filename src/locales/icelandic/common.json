@@ -38,15 +38,6 @@
     "cookiePolicy": "Kökustefna",
     "copyright": "© {{year}} Dental Logo. Öll réttindi áskilin."
   },
-  "hero": {
-    "description": "Bókaðu tíma hjá meira en 100 tannlæknum um alla Evrópu með aðeins einum smelli. Finndu hinn fullkomna lækni, fullkominn stað og fullkominn tíma.",
-    "title1": "Finndu nýja",
-    "title2": "tannlækninn þinn á netinu",
-    "selectLocation": "Veldu staðsetningu",
-    "selectService": "Veldu þjónustu",
-    "book": "Bókaðu tíma",
-    "search": "Leita"
-  },
   "search": {
     "location": "Staðsetning",
     "selectDate": "Veldu dagsetningu"
