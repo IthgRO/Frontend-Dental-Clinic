@@ -1,3 +1,5 @@
+import { queryClient } from '@/config/queryClient'
+import { APPOINTMENTS_QUERY_KEY, TIME_SLOTS_QUERY_KEY } from '@/constants/queryKeys'
 import { dentistService } from '@/services/dentist.service'
 import { Appointment, BookAppointmentRequest } from '@/types'
 import { create } from 'zustand'
@@ -46,6 +48,11 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
     try {
       const appointments = await dentistService.getMyAppointments()
       set({ appointments, isLoading: false })
+
+      // Invalidate appointments query
+      await queryClient.invalidateQueries({
+        queryKey: [APPOINTMENTS_QUERY_KEY],
+      })
     } catch (err: any) {
       set({
         error: err.response?.data?.message || 'Failed to fetch appointments',
@@ -72,6 +79,20 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
         appointment.serviceId,
         appointment.startDate
       )
+
+      // Invalidate both queries
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [APPOINTMENTS_QUERY_KEY],
+        }),
+        queryClient.invalidateQueries({
+          predicate: query => {
+            const queryKey = query.queryKey as unknown[]
+            return queryKey[0] === TIME_SLOTS_QUERY_KEY && queryKey[1] === appointment.dentistId
+          },
+        }),
+      ])
+
       set(state => ({
         selectedAppointment: null,
         isLoading: false,
@@ -89,6 +110,16 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
     set({ isLoading: true })
     try {
       await dentistService.cancelAppointment(id)
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [APPOINTMENTS_QUERY_KEY],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TIME_SLOTS_QUERY_KEY],
+        }),
+      ])
+
       set(state => ({
         appointments: state.appointments.filter(app => app.id !== id.toString()),
         isLoading: false,
@@ -106,7 +137,6 @@ export const useAppointmentStore = create<AppointmentState>(set => ({
     set({ selectedAppointment: null })
   },
 
-  // New function to clear selected appointment
   clearSelectedAppointment: () => {
     set({
       selectedAppointment: null,

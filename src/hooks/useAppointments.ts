@@ -1,36 +1,45 @@
-// src/hooks/useAppointments.ts
+import { APPOINTMENTS_QUERY_KEY, TIME_SLOTS_QUERY_KEY } from '@/constants/queryKeys'
 import { dentistService } from '@/services/dentist.service'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { BookAppointmentRequest } from '@/types'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useAppointments = () => {
+  const queryClient = useQueryClient()
   const { setSelectedService, setSelectedDateTime, resetSelection } = useAppointmentStore()
 
   const fetchAppointments = useQuery({
-    queryKey: ['appointments'],
+    queryKey: [APPOINTMENTS_QUERY_KEY],
     queryFn: dentistService.getMyAppointments,
   })
 
   const bookAppointment = useMutation({
     mutationFn: (data: BookAppointmentRequest) =>
       dentistService.bookAppointment(data.dentistId, data.clinicId, data.serviceId, data.startDate),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      // Invalidate both queries to force a refetch
+      queryClient.invalidateQueries({
+        queryKey: [APPOINTMENTS_QUERY_KEY],
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: [TIME_SLOTS_QUERY_KEY],
+      })
+
       resetSelection()
-      fetchAppointments.refetch()
-    },
-    onError: (error: any) => {
-      // toast.error(error.response?.data?.message || 'Failed to book appointment')
     },
   })
 
   const cancelAppointment = useMutation({
     mutationFn: dentistService.cancelAppointment,
-    onSuccess: () => {
-      fetchAppointments.refetch()
-    },
-    onError: (error: any) => {
-      // toast.error(error.response?.data?.message || 'Failed to cancel appointment')
+    onSuccess: async () => {
+      // Invalidate both queries to force a refetch
+      queryClient.invalidateQueries({
+        queryKey: [APPOINTMENTS_QUERY_KEY],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [TIME_SLOTS_QUERY_KEY],
+      })
     },
   })
 
