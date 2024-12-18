@@ -38,15 +38,6 @@
     "cookiePolicy": "Cookie Policy",
     "copyright": "© {{year}} Dental Logo. All rights reserved."
   },
-  "hero": {
-    "description": "Book appointments with 100+ dentists all over Europe in just one click. Find the perfect doctor, perfect place and perfect time.",
-    "title1": "Find your new",
-    "title2": "dentist online",
-    "selectLocation": "Select location",
-    "selectService": "Select service",
-    "book": "Book Appointment",
-    "search": "Search"
-  },
   "search": {
     "location": "Location",
     "selectDate": "Select date"

@@ -31,7 +31,7 @@
       "more": "+{{count}}"
     },
     "availability": {
-      "today": "Tillgänglig idag kl. {{time}}",
+      "today": "Tillgänglig {{time}}",
       "next": "Nästa lediga tid: {{time}}"
     },
     "location": {
@@ -45,6 +45,9 @@
       "phone": "Telefon",
       "email": "E-post",
       "available": "Tillgänglig {{time}}"
+    },
+    "navigation": {
+      "back": "Tillbaka till tandläkare"
     },
     "service": {
       "select": "Välj Behandling",
