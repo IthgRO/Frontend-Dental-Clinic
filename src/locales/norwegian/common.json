@@ -35,7 +35,8 @@
     "email": "E-post",
     "phone": "Telefon",
     "termsOfService": "Bruksvilkår",
-    "cookiePolicy": "Informasjonskapselpolicy"
+    "cookiePolicy": "Informasjonskapselpolicy",
+    "copyright": "© {{year}} Dental Logo. Alle rettigheter reservert."
   },
   "hero": {
     "description": "Bestill avtaler med over 100 tannleger over hele Europa med bare ett klikk. Finn den perfekte legen, det perfekte stedet og den perfekte tiden.",

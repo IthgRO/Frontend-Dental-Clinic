@@ -35,7 +35,8 @@
     "email": "Email",
     "phone": "Phone",
     "termsOfService": "Terms of Service",
-    "cookiePolicy": "Cookie Policy"
+    "cookiePolicy": "Cookie Policy",
+    "copyright": "© {{year}} Dental Logo. All rights reserved."
   },
   "hero": {
     "description": "Book appointments with 100+ dentists all over Europe in just one click. Find the perfect doctor, perfect place and perfect time.",

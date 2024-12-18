@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "title": {
+      "line1": "Hitta din nya",
+      "line2": "tandläkare online"
+    },
+    "subtitle": "Boka tid hos över 100 tandläkare i hela Europa med ett klick. Hitta den perfekta tandläkaren, den perfekta platsen och den perfekta tiden.",
+    "bookButton": "Boka Tid",
+    "search": {
+      "locationPlaceholder": "Välj plats",
+      "servicePlaceholder": "Välj behandling",
+      "searchButton": "Sök"
+    }
+  }
+}

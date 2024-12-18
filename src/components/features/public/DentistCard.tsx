@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { Dentist } from '@/types'
 import { getNextAvailableTime } from '@/utils/dateUtils'
@@ -12,7 +13,12 @@ interface DentistCardProps {
 }
 
 const DentistCard = ({ dentist }: DentistCardProps) => {
-  const priceRange = `€${dentist.priceRange.min.toLocaleString()}-${dentist.priceRange.max.toLocaleString()}`
+  const { t } = useAppTranslation('dentists')
+  const priceRange = t('card.price.range', {
+    min: dentist.priceRange.min.toLocaleString(),
+    max: dentist.priceRange.max.toLocaleString(),
+  })
+
   const lastName = dentist.name.split(' ')[1]
   const imageFileName = `${lastName}.png`
   const imagePath = `/placeholders/${imageFileName}`
@@ -61,14 +67,18 @@ const DentistCard = ({ dentist }: DentistCardProps) => {
                 </Tag>
               ))}
               {dentist.services.length > 3 && (
-                <Tag className="m-0 bg-gray-50">+{dentist.services.length - 3}</Tag>
+                <Tag className="m-0 bg-gray-50">
+                  {t('card.services.more', { count: dentist.services.length - 3 })}
+                </Tag>
               )}
             </div>
 
             {nextAvailableTime && (
               <div className="flex items-center text-teal-600 border-t pt-3">
                 <CalendarOutlined className="mr-2" />
-                <span className="text-sm">Available today at {nextAvailableTime}</span>
+                <span className="text-sm">
+                  {t('card.availability.today', { time: nextAvailableTime })}
+                </span>
               </div>
             )}
           </div>
@@ -105,7 +115,7 @@ const DentistCard = ({ dentist }: DentistCardProps) => {
             {nextAvailableTime && (
               <div className="inline-flex items-center px-3 py-1.5 bg-teal-50 text-teal-600 rounded-md">
                 <CalendarOutlined className="mr-2" />
-                <span>Available today at {nextAvailableTime}</span>
+                <span>{t('card.availability.today', { time: nextAvailableTime })}</span>
               </div>
             )}
           </div>

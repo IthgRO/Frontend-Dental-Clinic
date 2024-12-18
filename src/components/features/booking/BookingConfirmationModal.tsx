@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useDentists } from '@/hooks/useDentists'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { BookAppointmentRequest } from '@/types'
@@ -5,6 +6,7 @@ import { Button, Modal } from 'antd'
 import { format } from 'date-fns'
 import { CheckCircle, Clock, CreditCard, MapPin, User } from 'lucide-react'
 import { useMemo } from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 interface ExtendedAppointment extends BookAppointmentRequest {
@@ -20,6 +22,7 @@ interface BookingConfirmModalProps {
 }
 
 const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfirmModalProps) => {
+  const { t } = useAppTranslation('dentists')
   const navigate = useNavigate()
   const { createAppointment } = useAppointmentStore()
   const { dentists } = useDentists()
@@ -38,9 +41,11 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
         serviceId: appointment.serviceId,
         startDate: appointment.startDate,
       })
+      toast.success(t('booking.notifications.success'))
       onClose()
       navigate('/my-account')
     } catch (error) {
+      toast.error(t('booking.notifications.error'))
       console.error('Failed to create appointment:', error)
     }
   }
@@ -50,7 +55,7 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
       title={
         <div className="flex items-center gap-3 px-2 pt-2">
           <CheckCircle className="text-teal-500" size={24} />
-          <h3 className="text-xl font-semibold text-gray-900">Confirm Your Appointment</h3>
+          <h3 className="text-xl font-semibold text-gray-900">{t('booking.confirmation.title')}</h3>
         </div>
       }
       open={isOpen}
@@ -61,7 +66,7 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
     >
       <div className="py-6 space-y-6">
         <div className="space-y-4">
-          <p className="text-lg text-gray-600">Please review your appointment details below:</p>
+          <p className="text-lg text-gray-600">{t('booking.confirmation.subtitle')}</p>
 
           <div className="bg-gray-50 p-6 rounded-xl space-y-4">
             <div className="flex items-center gap-3">
@@ -87,7 +92,9 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
             {servicePrice && (
               <div className="flex items-center gap-3">
                 <CreditCard size={20} className="text-gray-400" />
-                <p className="text-gray-900">€{servicePrice.toLocaleString()}</p>
+                <p className="text-gray-900">
+                  {t('booking.service.price', { price: servicePrice })}
+                </p>
               </div>
             )}
           </div>
@@ -95,7 +102,7 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
 
         <div className="flex gap-4">
           <Button size="large" onClick={onClose} className="flex-1 h-11">
-            Cancel
+            {t('booking.confirmation.buttons.cancel')}
           </Button>
           <Button
             type="primary"
@@ -103,7 +110,7 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
             onClick={handleConfirm}
             className="flex-1 h-11 bg-teal-600 hover:bg-teal-700"
           >
-            Confirm Appointment
+            {t('booking.confirmation.buttons.confirm')}
           </Button>
         </div>
       </div>

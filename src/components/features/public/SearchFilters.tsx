@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useDentists } from '@/hooks/useDentists'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import { Card, Checkbox, Collapse, Divider, Select, Slider, Tag } from 'antd'
@@ -5,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 const SearchFilters = () => {
+  const { t } = useAppTranslation('dentists')
   const [searchParams, setSearchParams] = useSearchParams()
   const { dentists } = useDentists()
   const [activeKey, setActiveKey] = useState<string[]>(['0'])
@@ -37,12 +39,10 @@ const SearchFilters = () => {
 
   const [selectedCity, setSelectedCity] = useState(searchParams.get('location') || '')
   const [selectedServices, setSelectedServices] = useState<string[]>(() => {
-    // Only check for services parameter initially
     const servicesParam = searchParams.get('services')
     if (servicesParam) {
       return servicesParam.split(',')
     }
-    // If no services parameter but there's a service parameter, find the matching service
     const serviceParam = searchParams.get('service')
     if (serviceParam && services.length) {
       const service = services.find(s => s.label.toLowerCase().includes(serviceParam.toLowerCase()))
@@ -124,29 +124,32 @@ const SearchFilters = () => {
         return selectedCity ? <Tag color="blue">{selectedCity}</Tag> : null
       case 'services':
         return selectedServices.length ? (
-          <Tag color="blue">{selectedServices.length} selected</Tag>
+          <Tag color="blue">
+            {t('filters.services.selected', { count: selectedServices.length })}
+          </Tag>
         ) : null
       case 'price':
         return selectedPriceRange[0] !== priceRange.min ||
           selectedPriceRange[1] !== priceRange.max ? (
           <Tag color="blue">
-            €{selectedPriceRange[0]} - €{selectedPriceRange[1]}
+            {t('filters.price.format', { min: selectedPriceRange[0], max: selectedPriceRange[1] })}
           </Tag>
         ) : null
       default:
         return null
     }
   }
+
   return (
     <Card className="sticky top-24">
       <div className="hidden md:block">
         <div className="space-y-6">
           <div>
-            <h3 className="font-medium mb-3">Location</h3>
+            <h3 className="font-medium mb-3">{t('filters.location.title')}</h3>
             <Select
               className="w-full"
               size="large"
-              placeholder="Select your city"
+              placeholder={t('filters.location.placeholder')}
               options={cities}
               value={selectedCity || undefined}
               onChange={handleCitySelect}
@@ -161,7 +164,7 @@ const SearchFilters = () => {
           <Divider />
 
           <div>
-            <h3 className="font-medium mb-3">Services</h3>
+            <h3 className="font-medium mb-3">{t('filters.services.title')}</h3>
             <div className="space-y-2">
               {services.map(service => (
                 <Checkbox
@@ -178,7 +181,7 @@ const SearchFilters = () => {
           <Divider />
 
           <div>
-            <h3 className="font-medium mb-3">Price Range</h3>
+            <h3 className="font-medium mb-3">{t('filters.price.title')}</h3>
             <Slider
               range
               min={priceRange.min}
@@ -203,11 +206,15 @@ const SearchFilters = () => {
           expandIconPosition="end"
           expandIcon={({ isActive }) => (isActive ? <UpOutlined /> : <DownOutlined />)}
         >
-          <Collapse.Panel header="Location" key="0" extra={getExtraContent('location')}>
+          <Collapse.Panel
+            header={t('filters.location.title')}
+            key="0"
+            extra={getExtraContent('location')}
+          >
             <Select
               className="w-full"
               size="large"
-              placeholder="Select your city"
+              placeholder={t('filters.location.placeholder')}
               options={cities}
               value={selectedCity || undefined}
               onChange={handleCitySelect}
@@ -219,7 +226,11 @@ const SearchFilters = () => {
             />
           </Collapse.Panel>
 
-          <Collapse.Panel header="Services" key="1" extra={getExtraContent('services')}>
+          <Collapse.Panel
+            header={t('filters.services.title')}
+            key="1"
+            extra={getExtraContent('services')}
+          >
             <div className="space-y-2">
               {services.map(service => (
                 <Checkbox
@@ -233,7 +244,11 @@ const SearchFilters = () => {
             </div>
           </Collapse.Panel>
 
-          <Collapse.Panel header="Price Range" key="2" extra={getExtraContent('price')}>
+          <Collapse.Panel
+            header={t('filters.price.title')}
+            key="2"
+            extra={getExtraContent('price')}
+          >
             <Slider
               range
               min={priceRange.min}

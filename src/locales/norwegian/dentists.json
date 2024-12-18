@@ -1,0 +1,98 @@
+{
+  "page": {
+    "title": "Finn en Tannlege",
+    "noResults": "Ingen tannleger funnet med dine kriterier",
+    "loading": "Laster tannleger...",
+    "error": "Feil ved lasting av tannleger",
+    "errorLoading": "Feil ved lasting av tannlege"
+  },
+  "filters": {
+    "title": "Filtrer",
+    "location": {
+      "title": "Sted",
+      "placeholder": "Velg by"
+    },
+    "services": {
+      "title": "Tjenester",
+      "selected": "{{count}} valgt",
+      "placeholder": "Velg tjenester"
+    },
+    "price": {
+      "title": "Prisklasse",
+      "format": "€{{min}} - €{{max}}"
+    }
+  },
+  "card": {
+    "price": {
+      "range": "€{{min}}-{{max}}"
+    },
+    "services": {
+      "title": "Tjenester",
+      "more": "+{{count}}"
+    },
+    "availability": {
+      "today": "Tilgjengelig i dag kl. {{time}}",
+      "next": "Neste tilgjengelig: {{time}}"
+    },
+    "location": {
+      "clinic": "Klinikk",
+      "city": "By"
+    }
+  },
+  "booking": {
+    "header": {
+      "contact": "Kontaktinformasjon",
+      "phone": "Telefon",
+      "email": "E-post",
+      "available": "Tilgjengelig {{time}}"
+    },
+    "service": {
+      "select": "Velg Tjeneste",
+      "price": "€{{price}}",
+      "continue": "Fortsett"
+    },
+    "timeGrid": {
+      "pastDate": "Passert dato",
+      "noSlots": "Ingen ledige timer",
+      "noAppointments": "Ingen ledige timer denne uken",
+      "tryAnother": "Prøv en annen uke",
+      "loading": "Laster tilgjengelige timer..."
+    },
+    "confirmation": {
+      "title": "Bekreft Timen Din",
+      "subtitle": "Vennligst gjennomgå timedetaljene under:",
+      "details": {
+        "dentist": "Tannlege",
+        "clinic": "Klinikk",
+        "address": "Adresse",
+        "time": "Tidspunkt",
+        "price": "Pris"
+      },
+      "buttons": {
+        "cancel": "Avbryt",
+        "confirm": "Bekreft Time"
+      }
+    },
+    "notifications": {
+      "success": "Timen er bekreftet!",
+      "error": "Kunne ikke opprette timen"
+    }
+  },
+  "auth": {
+    "required": {
+      "title": "Innlogging Kreves",
+      "message": "Vennligst logg inn eller registrer deg for å fortsette"
+    }
+  },
+  "search": {
+    "placeholder": "Søk etter tannleger...",
+    "button": "Søk",
+    "filters": "Filtrer"
+  },
+  "sort": {
+    "title": "Sorter etter",
+    "price": "Pris",
+    "availability": "Tilgjengelighet",
+    "rating": "Vurdering"
+  }
+}

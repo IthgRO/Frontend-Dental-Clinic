@@ -1,0 +1,101 @@
+{
+  "page": {
+    "title": "Find a Dentist",
+    "noResults": "No dentists found matching your criteria",
+    "loading": "Loading dentists...",
+    "error": "Error loading dentists",
+    "errorLoading": "Error Loading Dentist"
+  },
+  "filters": {
+    "title": "Filters",
+    "location": {
+      "title": "Location",
+      "placeholder": "Select your city"
+    },
+    "services": {
+      "title": "Services",
+      "selected": "{{count}} selected",
+      "placeholder": "Select services"
+    },
+    "price": {
+      "title": "Price Range",
+      "format": "€{{min}} - €{{max}}"
+    }
+  },
+  "card": {
+    "price": {
+      "range": "€{{min}}-{{max}}"
+    },
+    "services": {
+      "title": "Services",
+      "more": "+{{count}}"
+    },
+    "availability": {
+      "today": "Available today at {{time}}",
+      "next": "Next available: {{time}}"
+    },
+    "location": {
+      "clinic": "Clinic",
+      "city": "City"
+    }
+  },
+  "booking": {
+    "header": {
+      "contact": "Contact Information",
+      "phone": "Phone",
+      "email": "Email",
+      "available": "Available {{time}}"
+    },
+    "navigation": {
+      "back": "Back to dentists"
+    },
+    "service": {
+      "select": "Select Service",
+      "price": "€{{price}}",
+      "continue": "Continue"
+    },
+    "timeGrid": {
+      "pastDate": "Past date",
+      "noSlots": "No slots",
+      "noAppointments": "No available appointments this week",
+      "tryAnother": "Please try another week",
+      "loading": "Loading time slots..."
+    },
+    "confirmation": {
+      "title": "Confirm Your Appointment",
+      "subtitle": "Please review your appointment details below:",
+      "details": {
+        "dentist": "Dentist",
+        "clinic": "Clinic",
+        "address": "Address",
+        "time": "Time",
+        "price": "Price"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "confirm": "Confirm Appointment"
+      }
+    },
+    "notifications": {
+      "success": "Appointment booked successfully!",
+      "error": "Failed to create appointment"
+    }
+  },
+  "auth": {
+    "required": {
+      "title": "Authentication Required",
+      "message": "Please log in or sign up to continue booking"
+    }
+  },
+  "search": {
+    "placeholder": "Search dentists...",
+    "button": "Search",
+    "filters": "Filters"
+  },
+  "sort": {
+    "title": "Sort by",
+    "price": "Price",
+    "availability": "Availability",
+    "rating": "Rating"
+  }
+}

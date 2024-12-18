@@ -1,0 +1,36 @@
+{
+  "myAppointments": {
+    "title": "My Appointments",
+    "noAppointments": "You don't have any appointments scheduled",
+    "loadingMessage": "Loading your appointments..."
+  },
+  "appointmentList": {
+    "doctorPrefix": "Dr.",
+    "timeFormat": "at",
+    "cancelButton": "Cancel Appointment",
+    "noAppointments": "No appointments found"
+  },
+  "cancelModal": {
+    "title": "Cancel Appointment",
+    "message": "Are you sure you want to cancel this appointment?",
+    "confirmButton": "Yes, Cancel",
+    "keepButton": "No, Keep it",
+    "successMessage": "Appointment cancelled successfully",
+    "errorMessage": "Failed to cancel appointment"
+  },
+  "details": {
+    "service": "Service",
+    "location": "Location",
+    "time": "Time",
+    "price": "Price"
+  },
+  "notifications": {
+    "success": {
+      "cancelled": "Appointment cancelled successfully"
+    },
+    "error": {
+      "cancellation": "Failed to cancel appointment",
+      "loading": "Error loading appointments"
+    }
+  }
+}

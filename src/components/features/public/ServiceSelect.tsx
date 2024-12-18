@@ -1,4 +1,4 @@
-// src/components/features/public/ServiceSelect.tsx
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { Select } from 'antd'
 
@@ -12,17 +12,18 @@ interface ServiceSelectProps {
 }
 
 const ServiceSelect = ({ services, className = '' }: ServiceSelectProps) => {
+  const { t } = useAppTranslation('dentists')
   const { setSelectedService, selectedAppointment } = useAppointmentStore()
 
   return (
     <Select
       className={className}
-      placeholder="Select Service"
+      placeholder={t('booking.service.select')}
       size="large"
       value={selectedAppointment?.serviceId}
       options={services.map(service => ({
         value: service.id,
-        label: `${service.name} ($${service.price})`,
+        label: `${service.name} (${t('booking.service.price', { price: service.price })})`,
       }))}
       onChange={value => {
         const service = services.find(s => s.id === value)

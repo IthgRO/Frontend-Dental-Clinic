@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "title": {
+      "line1": "Finndu þinn",
+      "line2": "tannlækni á netinu"
+    },
+    "subtitle": "Bókaðu tíma hjá yfir 100 tannlæknum um alla Evrópu með einum smelli. Finndu fullkomna tannlækninn, fullkomna staðinn og fullkomna tímann.",
+    "bookButton": "Bókaðu tíma",
+    "search": {
+      "locationPlaceholder": "Veldu staðsetningu",
+      "servicePlaceholder": "Veldu þjónustu",
+      "searchButton": "Leita"
+    }
+  }
+}

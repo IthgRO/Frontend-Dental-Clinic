@@ -1,0 +1,98 @@
+{
+  "page": {
+    "title": "Hitta en Tandläkare",
+    "noResults": "Inga tandläkare hittades med dina kriterier",
+    "loading": "Laddar tandläkare...",
+    "error": "Fel vid laddning av tandläkare",
+    "errorLoading": "Fel vid laddning av tandläkare"
+  },
+  "filters": {
+    "title": "Filter",
+    "location": {
+      "title": "Plats",
+      "placeholder": "Välj stad"
+    },
+    "services": {
+      "title": "Behandlingar",
+      "selected": "{{count}} valda",
+      "placeholder": "Välj behandlingar"
+    },
+    "price": {
+      "title": "Prisklass",
+      "format": "€{{min}} - €{{max}}"
+    }
+  },
+  "card": {
+    "price": {
+      "range": "€{{min}}-{{max}}"
+    },
+    "services": {
+      "title": "Behandlingar",
+      "more": "+{{count}}"
+    },
+    "availability": {
+      "today": "Tillgänglig idag kl. {{time}}",
+      "next": "Nästa lediga tid: {{time}}"
+    },
+    "location": {
+      "clinic": "Klinik",
+      "city": "Stad"
+    }
+  },
+  "booking": {
+    "header": {
+      "contact": "Kontaktinformation",
+      "phone": "Telefon",
+      "email": "E-post",
+      "available": "Tillgänglig {{time}}"
+    },
+    "service": {
+      "select": "Välj Behandling",
+      "price": "€{{price}}",
+      "continue": "Fortsätt"
+    },
+    "timeGrid": {
+      "pastDate": "Passerat datum",
+      "noSlots": "Inga lediga tider",
+      "noAppointments": "Inga lediga tider denna vecka",
+      "tryAnother": "Prova en annan vecka",
+      "loading": "Laddar lediga tider..."
+    },
+    "confirmation": {
+      "title": "Bekräfta Din Bokning",
+      "subtitle": "Vänligen kontrollera bokningsdetaljerna nedan:",
+      "details": {
+        "dentist": "Tandläkare",
+        "clinic": "Klinik",
+        "address": "Adress",
+        "time": "Tid",
+        "price": "Pris"
+      },
+      "buttons": {
+        "cancel": "Avbryt",
+        "confirm": "Bekräfta Bokning"
+      }
+    },
+    "notifications": {
+      "success": "Bokningen är bekräftad!",
+      "error": "Kunde inte skapa bokningen"
+    }
+  },
+  "auth": {
+    "required": {
+      "title": "Inloggning Krävs",
+      "message": "Vänligen logga in eller registrera dig för att fortsätta bokningen"
+    }
+  },
+  "search": {
+    "placeholder": "Sök tandläkare...",
+    "button": "Sök",
+    "filters": "Filter"
+  },
+  "sort": {
+    "title": "Sortera efter",
+    "price": "Pris",
+    "availability": "Tillgänglighet",
+    "rating": "Betyg"
+  }
+}
