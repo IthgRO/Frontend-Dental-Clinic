@@ -1,10 +1,12 @@
 // src/hooks/useAuth.ts
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useAuthStore } from '@/store/useAuthStore'
 import { LoginRequest, RegisterRequest } from '@/types'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 
 export const useAuth = () => {
+  const { t } = useAppTranslation('auth')
   const { login: loginStore, register: registerStore, logout: logoutStore } = useAuthStore()
 
   const login = useMutation({
@@ -12,25 +14,36 @@ export const useAuth = () => {
       await loginStore(credentials)
     },
     onSuccess: () => {
-      toast.success('Login successful')
+      toast.success(t('notifications.login.success'))
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Login failed')
+      const errorMessage =
+        error.response?.data?.message === 'Invalid credentials'
+          ? t('notifications.login.invalidCredentials')
+          : t('notifications.login.error')
+      toast.error(errorMessage)
     },
   })
 
   const register = useMutation({
     mutationFn: (data: RegisterRequest) => registerStore(data),
     onSuccess: () => {
-      toast.success('Registration successful! Please log in.')
+      toast.success(t('notifications.register.success'))
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Registration failed')
+      const errorMessage =
+        error.response?.data?.message === 'Email already exists'
+          ? t('notifications.register.emailExists')
+          : error.response?.data?.message === 'Invalid data'
+            ? t('notifications.register.invalidData')
+            : t('notifications.register.error')
+      toast.error(errorMessage)
     },
   })
 
   const logout = () => {
     logoutStore()
+    toast.success(t('notifications.logout.success'))
   }
 
   return {

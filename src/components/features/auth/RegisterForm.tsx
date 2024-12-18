@@ -55,6 +55,7 @@ export const RegisterForm = ({
           size="large"
           placeholder={t('register.namePlaceholder')}
           className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          disabled={isLoading}
         />
       </Form.Item>
 
@@ -67,6 +68,7 @@ export const RegisterForm = ({
           size="large"
           placeholder={t('register.surnamePlaceholder')}
           className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          disabled={isLoading}
         />
       </Form.Item>
 
@@ -82,6 +84,7 @@ export const RegisterForm = ({
           size="large"
           placeholder={t('register.emailPlaceholder')}
           className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          disabled={isLoading}
         />
       </Form.Item>
 
@@ -90,6 +93,7 @@ export const RegisterForm = ({
           size="large"
           placeholder={t('register.phonePlaceholder')}
           className="max-w-[276px] placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          disabled={isLoading}
         />
       </Form.Item>
 
@@ -111,10 +115,11 @@ export const RegisterForm = ({
             size="large"
             placeholder={t('register.passwordPlaceholder')}
             className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            disabled={isLoading}
           />
           <div
             className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-            onClick={() => setPasswordVisible(prev => !prev)}
+            onClick={() => !isLoading && setPasswordVisible(prev => !prev)}
           >
             <img
               src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
@@ -147,10 +152,11 @@ export const RegisterForm = ({
             size="large"
             placeholder={t('register.confirmPasswordPlaceholder')}
             className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+            disabled={isLoading}
           />
           <div
             className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-            onClick={() => setConfirmPasswordVisible(prev => !prev)}
+            onClick={() => !isLoading && setConfirmPasswordVisible(prev => !prev)}
           >
             <img
               src={confirmPasswordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
@@ -163,7 +169,10 @@ export const RegisterForm = ({
 
       <Form.Item>
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 cursor-pointer" onClick={() => onTermsChange(!termsAccepted)}>
+          <div
+            className="w-4 h-4 cursor-pointer"
+            onClick={() => !isLoading && onTermsChange(!termsAccepted)}
+          >
             <img
               src={termsAccepted ? '/checkBoxOn.png' : '/checkBoxOff.png'}
               alt="Checkbox"
@@ -178,7 +187,7 @@ export const RegisterForm = ({
 
       <Modal
         title={t('register.termsAndConditionsTitle')}
-        visible={isTermsModalVisible}
+        open={isTermsModalVisible}
         onCancel={closeTermsModal}
         footer={[
           <Button
@@ -186,6 +195,7 @@ export const RegisterForm = ({
             className="bg-teal-600 hover:bg-teal-600 rounded-md"
             type="primary"
             onClick={closeTermsModal}
+            disabled={isLoading}
           >
             {t('register.closeButton')}
           </Button>,
@@ -201,6 +211,7 @@ export const RegisterForm = ({
           className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
           size="large"
           loading={isLoading}
+          disabled={isLoading}
         >
           {isLoading ? t('register.loadingButton') : t('register.submitButton')}
         </Button>
