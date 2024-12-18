@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { TimeSlot } from '@/types'
@@ -11,6 +12,7 @@ interface TimeGridProps {
 }
 
 const TimeGrid = ({ dentistId }: TimeGridProps) => {
+  const { t } = useAppTranslation('dentists')
   const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }))
   const endDate = addDays(startDate, 6)
 
@@ -82,7 +84,7 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
       if (isPastDate) {
         return (
           <div className="h-12 flex items-center justify-center rounded border border-gray-100">
-            <p className="text-gray-400 text-sm">Past date</p>
+            <p className="text-gray-400 text-sm">{t('booking.timeGrid.pastDate')}</p>
           </div>
         )
       }
@@ -90,7 +92,7 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
       if (!timeSlots.length) {
         return (
           <div className="h-12 flex items-center justify-center rounded border border-gray-100">
-            <p className="text-gray-400 text-sm">No slots</p>
+            <p className="text-gray-400 text-sm">{t('booking.timeGrid.noSlots')}</p>
           </div>
         )
       }
@@ -113,7 +115,7 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
         )
       })
     },
-    [getTimeSlotsForDate, isDateInPast, isTimeInPast, handleTimeSelect, selectedAppointment]
+    [getTimeSlotsForDate, isDateInPast, isTimeInPast, handleTimeSelect, selectedAppointment, t]
   )
 
   return (
@@ -148,8 +150,8 @@ const TimeGrid = ({ dentistId }: TimeGridProps) => {
           <Empty
             description={
               <div className="space-y-2">
-                <p className="text-gray-600">No available appointments this week</p>
-                <p className="text-gray-400 text-sm">Please try another week</p>
+                <p className="text-gray-600">{t('booking.timeGrid.noAppointments')}</p>
+                <p className="text-gray-400 text-sm">{t('booking.timeGrid.tryAnother')}</p>
               </div>
             }
           />

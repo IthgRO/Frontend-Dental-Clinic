@@ -1,6 +1,6 @@
-// src/components/features/auth/AuthModal.tsx
 import { LoginForm } from '@/components/features/auth/LoginForm'
 import { RegisterForm } from '@/components/features/auth/RegisterForm'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useAuth } from '@/hooks/useAuth'
 import { authService, RegisterRequest } from '@/services/auth.service'
 import { useAuthStore } from '@/store/useAuthStore'
@@ -14,6 +14,7 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
+  const { t } = useAppTranslation('auth')
   const [termsAccepted, setTermsAccepted] = useState(false)
   const { error, clearError } = useAuthStore()
   const { login } = useAuth()
@@ -36,7 +37,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
 
   const handleRegister = async (values: any) => {
     if (!termsAccepted) {
-      message.error('Please accept the terms and conditions')
+      message.error(t('validation.acceptTerms'))
       return
     }
 
@@ -55,7 +56,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       }
 
       await authService.register(payload)
-      message.success('Registration successful! Please log in.')
+      message.success(t('register.success'))
       setActiveTab('1') // Switch to login tab
       setTermsAccepted(false)
     } catch (error: any) {
@@ -64,10 +65,10 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
         if (Array.isArray(errors.$)) {
           message.error(errors.$[0])
         } else {
-          message.error('Validation failed. Please check your input.')
+          message.error(t('register.validationError'))
         }
       } else {
-        message.error('Registration failed. Please try again.')
+        message.error(t('register.error'))
       }
     } finally {
       setIsRegistering(false)
@@ -77,7 +78,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
   const items = [
     {
       key: '1',
-      label: 'Login',
+      label: t('login.title'),
       children: (
         <LoginForm
           onFinish={handleLogin}
@@ -90,7 +91,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     },
     {
       key: '2',
-      label: 'Sign Up',
+      label: t('register.title'),
       children: (
         <RegisterForm
           onFinish={handleRegister}

@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "title": {
+      "line1": "Finn din nye",
+      "line2": "tannlege på nett"
+    },
+    "subtitle": "Bestill timer hos over 100 tannleger i hele Europa med ett klikk. Finn den perfekte tannlegen, det perfekte stedet og den perfekte tiden.",
+    "bookButton": "Bestill Time",
+    "search": {
+      "locationPlaceholder": "Velg sted",
+      "servicePlaceholder": "Velg tjeneste",
+      "searchButton": "Søk"
+    }
+  }
+}

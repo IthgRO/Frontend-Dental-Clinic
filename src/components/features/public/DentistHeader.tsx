@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { getNextAvailableTime } from '@/utils/dateUtils'
 import { EuroOutlined } from '@ant-design/icons'
@@ -25,6 +26,7 @@ const DentistHeader = ({
   phone,
   email,
 }: DentistHeaderProps) => {
+  const { t } = useAppTranslation('dentists')
   const lastName = name.split(' ')[1]
   const defaultImageUrl = `/placeholders/${lastName}.png`
 
@@ -77,7 +79,7 @@ const DentistHeader = ({
                 {nextAvailableTime && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <Clock size={18} />
-                    <span>Available {nextAvailableTime}</span>
+                    <span>{t('booking.header.available', { time: nextAvailableTime })}</span>
                   </div>
                 )}
               </div>
@@ -88,7 +90,10 @@ const DentistHeader = ({
                 <div className="text-gray-600 flex items-center gap-1">
                   <EuroOutlined />
                   <span>
-                    {priceRange.min.toLocaleString()}-{priceRange.max.toLocaleString()}
+                    {t('card.price.range', {
+                      min: priceRange.min.toLocaleString(),
+                      max: priceRange.max.toLocaleString(),
+                    })}
                   </span>
                 </div>
               </div>

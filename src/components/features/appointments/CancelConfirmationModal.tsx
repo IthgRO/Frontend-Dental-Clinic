@@ -1,7 +1,9 @@
 import { useAppointments } from '@/hooks/useAppointments'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { Button, Modal } from 'antd'
 import { format, parseISO } from 'date-fns'
 import { AlertCircle, Clock, CreditCard, MapPin, User } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 
 interface CancelConfirmationModalProps {
   isOpen: boolean
@@ -14,6 +16,7 @@ const CancelConfirmationModal = ({
   appointmentId,
   onClose,
 }: CancelConfirmationModalProps) => {
+  const { t } = useAppTranslation('appointments')
   const { appointments, cancelAppointment } = useAppointments()
   const appointment = appointments?.find(a => a.id === appointmentId)
 
@@ -22,8 +25,10 @@ const CancelConfirmationModal = ({
   const handleCancel = async () => {
     try {
       await cancelAppointment.mutateAsync(appointmentId)
+      toast.success(t('notifications.success.cancelled'))
       onClose()
     } catch (error) {
+      toast.error(t('notifications.error.cancellation'))
       console.error('Failed to cancel appointment:', error)
     }
   }
@@ -33,7 +38,7 @@ const CancelConfirmationModal = ({
       title={
         <div className="flex items-center gap-3 px-2 pt-2">
           <AlertCircle className="text-red-500" size={24} />
-          <h3 className="text-xl font-semibold text-gray-900">Cancel Appointment</h3>
+          <h3 className="text-xl font-semibold text-gray-900">{t('cancelModal.title')}</h3>
         </div>
       }
       open={isOpen}
@@ -44,7 +49,7 @@ const CancelConfirmationModal = ({
     >
       <div className="py-6 space-y-6">
         <div className="space-y-4">
-          <p className="text-lg text-gray-600">Are you sure you want to cancel this appointment?</p>
+          <p className="text-lg text-gray-600">{t('cancelModal.message')}</p>
 
           <div className="bg-gray-50 p-6 rounded-xl space-y-4">
             <div className="flex items-center gap-3">
@@ -52,7 +57,8 @@ const CancelConfirmationModal = ({
               <div>
                 <p className="font-medium text-gray-900">{appointment.serviceName}</p>
                 <p className="text-gray-600">
-                  Dr. {appointment.dentistFirstName} {appointment.dentistLastName}
+                  {t('appointmentList.doctorPrefix')} {appointment.dentistFirstName}{' '}
+                  {appointment.dentistLastName}
                 </p>
               </div>
             </div>
@@ -67,8 +73,8 @@ const CancelConfirmationModal = ({
             <div className="flex items-center gap-3">
               <Clock size={20} className="text-gray-400" />
               <p className="text-gray-600">
-                {format(parseISO(appointment.startTime), 'EEE d MMM, yyyy')} at{' '}
-                {format(parseISO(appointment.startTime), 'HH:mm')}
+                {format(parseISO(appointment.startTime), 'EEE d MMM, yyyy')}{' '}
+                {t('appointmentList.timeFormat')} {format(parseISO(appointment.startTime), 'HH:mm')}
               </p>
             </div>
 
@@ -88,7 +94,7 @@ const CancelConfirmationModal = ({
             className="flex-1 h-11"
             disabled={cancelAppointment.isPending}
           >
-            No, Keep it
+            {t('cancelModal.keepButton')}
           </Button>
           <Button
             danger
@@ -97,7 +103,7 @@ const CancelConfirmationModal = ({
             loading={cancelAppointment.isPending}
             className="flex-1 h-11"
           >
-            Yes, Cancel
+            {t('cancelModal.confirmButton')}
           </Button>
         </div>
       </div>

@@ -3,14 +3,18 @@ import BookingConfirmationModal from '@/components/features/booking/BookingConfi
 import DentistHeader from '@/components/features/public/DentistHeader'
 import ServiceSelect from '@/components/features/public/ServiceSelect'
 import TimeGrid from '@/components/features/public/TimeGrid'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useDentists } from '@/hooks/useDentists'
 import { useAppointmentStore } from '@/store/useAppointmentStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Button, Spin } from 'antd'
+import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const DentistBookingPage = () => {
+  const { t } = useAppTranslation('dentists')
+  const navigate = useNavigate()
   const { id } = useParams()
   const { selectedDentist, isLoading, error } = useDentists(id)
   const { selectedAppointment, setSelectedService, clearSelectedAppointment } =
@@ -19,14 +23,15 @@ const DentistBookingPage = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
-  // Clear selected appointment when component unmounts
+  // Check if both service and time slot are selected
+  const isBookingValid = selectedAppointment?.serviceId && selectedAppointment?.startDate
+
   useEffect(() => {
     return () => {
       clearSelectedAppointment()
     }
   }, [clearSelectedAppointment])
 
-  // Preselect first service when dentist data loads
   useEffect(() => {
     if (selectedDentist?.services && selectedDentist.services.length > 0) {
       const firstService = selectedDentist.services[0]
@@ -39,6 +44,7 @@ const DentistBookingPage = () => {
   }, [selectedDentist, setSelectedService])
 
   const handleContinueClick = () => {
+    if (!isBookingValid) return
     if (!token) {
       setIsAuthModalOpen(true)
     } else {
@@ -46,11 +52,15 @@ const DentistBookingPage = () => {
     }
   }
 
+  const handleBack = () => {
+    navigate(-1)
+  }
+
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-600 mb-2">Error Loading Dentist</h2>
+          <h2 className="text-xl font-semibold text-red-600 mb-2">{t('page.errorLoading')}</h2>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -67,6 +77,16 @@ const DentistBookingPage = () => {
 
   return (
     <>
+      <div className="mb-6">
+        <Button
+          icon={<ArrowLeft className="w-5 h-5" />}
+          onClick={handleBack}
+          className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors"
+        >
+          <span>{t('booking.navigation.back')}</span>
+        </Button>
+      </div>
+
       <DentistHeader
         name={selectedDentist.name}
         clinic={selectedDentist.clinic.name}
@@ -82,11 +102,11 @@ const DentistBookingPage = () => {
         <Button
           type="primary"
           size="large"
-          disabled={!selectedAppointment?.serviceId}
+          disabled={!isBookingValid}
           onClick={handleContinueClick}
-          className="bg-teal-600 hover:bg-teal-700"
+          className="bg-teal-600 hover:bg-teal-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          Continue
+          {t('booking.service.continue')}
         </Button>
       </div>
 

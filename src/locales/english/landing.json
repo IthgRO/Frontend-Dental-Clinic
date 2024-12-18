@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "title": {
+      "line1": "Find your new",
+      "line2": "dentist online"
+    },
+    "subtitle": "Book appointments with 100+ dentists all over Europe in just one click. Find the perfect doctor, perfect place and perfect time.",
+    "bookButton": "Book Appointment",
+    "search": {
+      "locationPlaceholder": "Select location",
+      "servicePlaceholder": "Select service",
+      "searchButton": "Search"
+    }
+  }
+}

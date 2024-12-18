@@ -1,0 +1,98 @@
+{
+  "page": {
+    "title": "Finna Tannlækni",
+    "noResults": "Engir tannlæknar fundust með þínum skilyrðum",
+    "loading": "Hleður tannlæknum...",
+    "error": "Villa við að hlaða tannlæknum",
+    "errorLoading": "Villa við að hlaða tannlækni"
+  },
+  "filters": {
+    "title": "Síur",
+    "location": {
+      "title": "Staðsetning",
+      "placeholder": "Veldu borg"
+    },
+    "services": {
+      "title": "Þjónusta",
+      "selected": "{{count}} valið",
+      "placeholder": "Veldu þjónustu"
+    },
+    "price": {
+      "title": "Verðflokkur",
+      "format": "€{{min}} - €{{max}}"
+    }
+  },
+  "card": {
+    "price": {
+      "range": "€{{min}}-{{max}}"
+    },
+    "services": {
+      "title": "Þjónusta",
+      "more": "+{{count}}"
+    },
+    "availability": {
+      "today": "Laust í dag kl. {{time}}",
+      "next": "Næsti lausi tími: {{time}}"
+    },
+    "location": {
+      "clinic": "Stofa",
+      "city": "Borg"
+    }
+  },
+  "booking": {
+    "header": {
+      "contact": "Tengiliðaupplýsingar",
+      "phone": "Sími",
+      "email": "Netfang",
+      "available": "Laust {{time}}"
+    },
+    "service": {
+      "select": "Veldu Þjónustu",
+      "price": "€{{price}}",
+      "continue": "Áfram"
+    },
+    "timeGrid": {
+      "pastDate": "Liðinn dagur",
+      "noSlots": "Engir lausir tímar",
+      "noAppointments": "Engir lausir tímar þessa viku",
+      "tryAnother": "Prófaðu aðra viku",
+      "loading": "Hleður lausum tímum..."
+    },
+    "confirmation": {
+      "title": "Staðfesta Bókun",
+      "subtitle": "Vinsamlegast farðu yfir bókunarupplýsingarnar hér að neðan:",
+      "details": {
+        "dentist": "Tannlæknir",
+        "clinic": "Stofa",
+        "address": "Heimilisfang",
+        "time": "Tími",
+        "price": "Verð"
+      },
+      "buttons": {
+        "cancel": "Hætta við",
+        "confirm": "Staðfesta Bókun"
+      }
+    },
+    "notifications": {
+      "success": "Bókun staðfest!",
+      "error": "Ekki tókst að búa til bókun"
+    }
+  },
+  "auth": {
+    "required": {
+      "title": "Innskráningar Krafist",
+      "message": "Vinsamlegast skráðu þig inn eða nýskráðu þig til að halda áfram með bókun"
+    }
+  },
+  "search": {
+    "placeholder": "Leita að tannlæknum...",
+    "button": "Leita",
+    "filters": "Síur"
+  },
+  "sort": {
+    "title": "Raða eftir",
+    "price": "Verði",
+    "availability": "Lausum tímum",
+    "rating": "Einkunn"
+  }
+}

@@ -35,7 +35,8 @@
     "email": "Netfang",
     "phone": "Sími",
     "termsOfService": "Þjónustuskilmálar",
-    "cookiePolicy": "Kökustefna"
+    "cookiePolicy": "Kökustefna",
+    "copyright": "© {{year}} Dental Logo. Öll réttindi áskilin."
   },
   "hero": {
     "description": "Bókaðu tíma hjá meira en 100 tannlæknum um alla Evrópu með aðeins einum smelli. Finndu hinn fullkomna lækni, fullkominn stað og fullkominn tíma.",

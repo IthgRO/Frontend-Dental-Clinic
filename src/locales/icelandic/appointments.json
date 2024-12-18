@@ -1,0 +1,36 @@
+{
+  "myAppointments": {
+    "title": "Mínar Bókanir",
+    "noAppointments": "Þú hefur engar bókaðar tímar",
+    "loadingMessage": "Hleður bókanirnar þínar..."
+  },
+  "appointmentList": {
+    "doctorPrefix": "Dr.",
+    "timeFormat": "kl.",
+    "cancelButton": "Afbóka Tíma",
+    "noAppointments": "Engar bókanir fundust"
+  },
+  "cancelModal": {
+    "title": "Afbóka Tíma",
+    "message": "Ertu viss um að þú viljir afbóka þennan tíma?",
+    "confirmButton": "Já, Afbóka",
+    "keepButton": "Nei, Halda",
+    "successMessage": "Tíminn var afbókaður",
+    "errorMessage": "Ekki tókst að afbóka tímann"
+  },
+  "details": {
+    "service": "Þjónusta",
+    "location": "Staðsetning",
+    "time": "Tími",
+    "price": "Verð"
+  },
+  "notifications": {
+    "success": {
+      "cancelled": "Tíminn var afbókaður"
+    },
+    "error": {
+      "cancellation": "Ekki tókst að afbóka tímann",
+      "loading": "Villa við að hlaða bókanir"
+    }
+  }
+}

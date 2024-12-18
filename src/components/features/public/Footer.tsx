@@ -1,96 +1,112 @@
-// src/components/features/public/Footer.tsx
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const Footer = () => {
   const { t } = useAppTranslation('common')
+
+  const socialLinks = [
+    {
+      name: 'Facebook',
+      icon: <Facebook size={20} />,
+      url: 'https://facebook.com',
+    },
+    {
+      name: 'LinkedIn',
+      icon: <Linkedin size={20} />,
+      url: 'https://linkedin.com',
+    },
+    {
+      name: 'YouTube',
+      icon: <Youtube size={20} />,
+      url: 'https://youtube.com',
+    },
+    {
+      name: 'Instagram',
+      icon: <Instagram size={20} />,
+      url: 'https://instagram.com',
+    },
+  ]
+
+  const quickLinks = [
+    { to: '/dentists', label: t('footer.findDentist') },
+    { to: '/contact', label: t('footer.contactUs') },
+    { to: '/about', label: t('footer.aboutUs') },
+    { to: '/privacy', label: t('footer.privacyPolicy') },
+  ]
+
+  const accountLinks = [
+    { to: '/login', label: t('footer.login') },
+    { to: '/register', label: t('footer.signUp') },
+    { to: '/my-account', label: t('footer.myAccount') },
+    { to: '/appointments', label: t('footer.myAppointments') },
+  ]
+
+  const footerLinks = [
+    { to: '/terms', label: t('footer.termsOfService') },
+    { to: '/privacy', label: t('footer.privacyPolicy') },
+    { to: '/cookies', label: t('footer.cookiePolicy') },
+  ]
+
   return (
     <footer className="bg-gray-50 border-t">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Logo and Social Links */}
           <div>
             <div className="mb-4">
               <img src="/logo.png" alt="Dental Logo" className="h-16 w-auto" />
             </div>
             <p className="text-gray-600 mb-4">{t('footer.description')}</p>
             <div className="flex gap-4">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-teal-600 transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook size={20} />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-teal-600 transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-teal-600 transition-colors"
-                aria-label="YouTube"
-              >
-                <Youtube size={20} />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-teal-600 transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-              </a>
+              {socialLinks.map(social => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-teal-600 transition-colors"
+                  aria-label={social.name}
+                >
+                  {social.icon}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Rest of the footer content remains the same */}
+          {/* Quick Links */}
           <div>
             <h4 className="font-medium text-gray-900 mb-4">{t('footer.quickLinks')}</h4>
             <div className="space-y-2">
-              <Link to="/dentists" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.findDentist')}
-              </Link>
-              <Link to="/contact" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.contactUs')}
-              </Link>
-              <Link to="/about" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.aboutUs')}
-              </Link>
-              <Link to="/privacy" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.privacyPolicy')}
-              </Link>
+              {quickLinks.map(link => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="block text-gray-600 hover:text-teal-600"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
 
+          {/* Account Links */}
           <div>
             <h4 className="font-medium text-gray-900 mb-4">{t('footer.account')}</h4>
             <div className="space-y-2">
-              <Link to="/login" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.login')}
-              </Link>
-              <Link to="/register" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.signUp')}
-              </Link>
-              <Link to="/my-account" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.myAccount')}
-              </Link>
-              <Link to="/appointments" className="block text-gray-600 hover:text-teal-600">
-                {t('footer.myAppointments')}
-              </Link>
+              {accountLinks.map(link => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="block text-gray-600 hover:text-teal-600"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
 
+          {/* Contact Information */}
           <div>
             <h4 className="font-medium text-gray-900 mb-4">{t('footer.contact')}</h4>
             <div className="space-y-2 text-gray-600">
@@ -118,23 +134,21 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Footer Bottom */}
         <div className="border-t mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600">
-              &copy; {new Date().getFullYear()} Dental Logo. All rights reserved.
+              {t('footer.copyright', { year: new Date().getFullYear() })}
             </p>
             <div className="flex gap-4 text-gray-600">
-              <Link to="/terms" className="hover:text-teal-600">
-                {t('footer.termsOfService')}
-              </Link>
-              <span>•</span>
-              <Link to="/privacy" className="hover:text-teal-600">
-                {t('footer.privacyPolicy')}
-              </Link>
-              <span>•</span>
-              <Link to="/cookies" className="hover:text-teal-600">
-                {t('footer.cookiePolicy')}
-              </Link>
+              {footerLinks.map((link, index) => (
+                <div key={link.to} className="flex items-center">
+                  <Link to={link.to} className="hover:text-teal-600">
+                    {link.label}
+                  </Link>
+                  {index < footerLinks.length - 1 && <span className="ml-4">•</span>}
+                </div>
+              ))}
             </div>
           </div>
         </div>

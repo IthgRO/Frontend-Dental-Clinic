@@ -1,0 +1,36 @@
+{
+  "myAppointments": {
+    "title": "Mine Timer",
+    "noAppointments": "Du har ingen planlagte timer",
+    "loadingMessage": "Laster timene dine..."
+  },
+  "appointmentList": {
+    "doctorPrefix": "Dr.",
+    "timeFormat": "kl.",
+    "cancelButton": "Avbestill Time",
+    "noAppointments": "Ingen timer funnet"
+  },
+  "cancelModal": {
+    "title": "Avbestill Time",
+    "message": "Er du sikker på at du vil avbestille denne timen?",
+    "confirmButton": "Ja, Avbestill",
+    "keepButton": "Nei, Behold den",
+    "successMessage": "Timen ble avbestilt",
+    "errorMessage": "Kunne ikke avbestille timen"
+  },
+  "details": {
+    "service": "Tjeneste",
+    "location": "Sted",
+    "time": "Tidspunkt",
+    "price": "Pris"
+  },
+  "notifications": {
+    "success": {
+      "cancelled": "Timen ble avbestilt"
+    },
+    "error": {
+      "cancellation": "Kunne ikke avbestille timen",
+      "loading": "Feil ved lasting av timer"
+    }
+  }
+}

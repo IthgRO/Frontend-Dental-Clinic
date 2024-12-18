@@ -35,7 +35,8 @@
     "email": "E-post",
     "phone": "Telefon",
     "termsOfService": "Användarvillkor",
-    "cookiePolicy": "Cookiepolicy"
+    "cookiePolicy": "Cookiepolicy",
+    "copyright": "© {{year}} Dental Logo. Alla rättigheter förbehållna."
   },
   "hero": {
     "description": "Boka tider med över 100 tandläkare i hela Europa med bara ett klick. Hitta den perfekta läkaren, den perfekta platsen och den perfekta tiden.",

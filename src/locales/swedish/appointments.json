@@ -1,0 +1,36 @@
+{
+  "myAppointments": {
+    "title": "Mina Bokningar",
+    "noAppointments": "Du har inga bokade tider",
+    "loadingMessage": "Laddar dina bokningar..."
+  },
+  "appointmentList": {
+    "doctorPrefix": "Dr.",
+    "timeFormat": "kl.",
+    "cancelButton": "Avboka Tid",
+    "noAppointments": "Inga bokningar hittades"
+  },
+  "cancelModal": {
+    "title": "Avboka Tid",
+    "message": "Är du säker på att du vill avboka denna tid?",
+    "confirmButton": "Ja, Avboka",
+    "keepButton": "Nej, Behåll",
+    "successMessage": "Tiden har avbokats",
+    "errorMessage": "Kunde inte avboka tiden"
+  },
+  "details": {
+    "service": "Behandling",
+    "location": "Plats",
+    "time": "Tid",
+    "price": "Pris"
+  },
+  "notifications": {
+    "success": {
+      "cancelled": "Tiden har avbokats"
+    },
+    "error": {
+      "cancellation": "Kunde inte avboka tiden",
+      "loading": "Fel vid laddning av bokningar"
+    }
+  }
+}
