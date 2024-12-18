@@ -7,6 +7,14 @@ type TranslationModule = {
   default: Record<string, any>
 }
 
+// Get the stored language or use default
+const getInitialLanguage = () => {
+  const storedLang = localStorage.getItem('preferredLanguage')
+  return storedLang && Object.keys(SUPPORTED_LANGUAGES).includes(storedLang)
+    ? storedLang
+    : DEFAULT_LANGUAGE
+}
+
 // This function loads all translation files dynamically
 function loadTranslations() {
   const resources: Record<string, Record<string, any>> = {}
@@ -23,13 +31,10 @@ function loadTranslations() {
 
   // Process each translation file
   Object.entries(translationFiles).forEach(([path, module]) => {
-    // Extract language and namespace from path
-    // Example path: '../locales/english/auth.json'
     const pathParts = path.split('/')
-    const language = pathParts[pathParts.length - 2] // 'english'
-    const namespace = pathParts[pathParts.length - 1].replace('.json', '') // 'auth'
+    const language = pathParts[pathParts.length - 2]
+    const namespace = pathParts[pathParts.length - 1].replace('.json', '')
 
-    // Add translations to resources
     if (!resources[language]) {
       resources[language] = {}
     }
@@ -39,27 +44,29 @@ function loadTranslations() {
   return resources
 }
 
-// Initialize i18next
 i18n.use(initReactI18next).init({
   resources: loadTranslations(),
-  lng: DEFAULT_LANGUAGE,
+  lng: getInitialLanguage(),
   fallbackLng: DEFAULT_LANGUAGE,
+  defaultNS: 'common',
+  supportedLngs: Object.keys(SUPPORTED_LANGUAGES),
   interpolation: {
     escapeValue: false,
   },
-  // Don't need to declare namespaces as they're loaded dynamically
-  load: 'languageOnly',
-  supportedLngs: Object.keys(SUPPORTED_LANGUAGES),
+})
+
+// Add a language change listener to persist the selection
+i18n.on('languageChanged', lng => {
+  localStorage.setItem('preferredLanguage', lng)
 })
 
 export default i18n
 
-// Type safety for translation keys (basic example)
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'common'
     resources: {
-      [key: string]: any // You can make this more specific if needed
+      [key: string]: any
     }
   }
 }

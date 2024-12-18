@@ -1,13 +1,12 @@
 import { SUPPORTED_LANGUAGES } from '@/config/languages'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { Select } from 'antd'
 import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 
 const { Option } = Select
 
 const LanguageSwitcher = () => {
-  // @ts-ignore - Ignoring TypeScript depth error, the hook works fine
-  const { i18n } = useTranslation()
+  const { i18n } = useAppTranslation()
 
   useEffect(() => {
     const savedLang = localStorage.getItem('preferredLanguage')
