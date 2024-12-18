@@ -18,5 +18,48 @@
     "unauthorized": "Óheimil aðgerð",
     "sessionExpired": "Seta útrunnin",
     "required": "Þetta svæði er skylda"
+  },
+  "footer": {
+    "description": "Bókaðu tíma hjá bestu tannlæknunum á þínu svæði.",
+    "quickLinks": "Flýtileiðir",
+    "findDentist": "Finna tannlækni",
+    "contactUs": "Hafðu samband",
+    "aboutUs": "Um okkur",
+    "privacyPolicy": "Persónuverndarstefna",
+    "account": "Reikningur",
+    "login": "Innskráning",
+    "signUp": "Nýskráning",
+    "myAccount": "Minn reikningur",
+    "myAppointments": "Mínir tímar",
+    "contact": "Tengiliður",
+    "email": "Netfang",
+    "phone": "Sími",
+    "termsOfService": "Þjónustuskilmálar",
+    "cookiePolicy": "Kökustefna"
+  },
+  "hero": {
+    "description": "Bókaðu tíma hjá meira en 100 tannlæknum um alla Evrópu með aðeins einum smelli. Finndu hinn fullkomna lækni, fullkominn stað og fullkominn tíma.",
+    "title1": "Finndu nýja",
+    "title2": "tannlækninn þinn á netinu",
+    "selectLocation": "Veldu staðsetningu",
+    "selectService": "Veldu þjónustu",
+    "book": "Bókaðu tíma",
+    "search": "Leita"
+  },
+  "search": {
+    "location": "Staðsetning",
+    "selectDate": "Veldu dagsetningu"
+  },
+  "dentistList": {
+    "noMatch": "Engir tannlæknar fundust sem passa við þín skilyrði"
+  },
+  "navigation": {
+    "myAccount": "Minn reikningur",
+    "logout": "Skrá út",
+    "home": "Heim",
+    "login": "Innskráning",
+    "signUp": "Nýskráning",
+    "bookAppointment": "Bókaðu tíma",
+    "book": "Bókaðu"
   }
 }

@@ -18,5 +18,48 @@
     "unauthorized": "Uautorisert tilgang",
     "sessionExpired": "Økten er utløpt",
     "required": "Dette feltet er påkrevd"
+  },
+  "footer": {
+    "description": "Bestill avtaler med de beste tannlegene i ditt område.",
+    "quickLinks": "Hurtiglenker",
+    "findDentist": "Finn en tannlege",
+    "contactUs": "Kontakt oss",
+    "aboutUs": "Om oss",
+    "privacyPolicy": "Personvernregler",
+    "account": "Konto",
+    "login": "Logg inn",
+    "signUp": "Registrer deg",
+    "myAccount": "Min konto",
+    "myAppointments": "Mine avtaler",
+    "contact": "Kontakt",
+    "email": "E-post",
+    "phone": "Telefon",
+    "termsOfService": "Bruksvilkår",
+    "cookiePolicy": "Informasjonskapselpolicy"
+  },
+  "hero": {
+    "description": "Bestill avtaler med over 100 tannleger over hele Europa med bare ett klikk. Finn den perfekte legen, det perfekte stedet og den perfekte tiden.",
+    "title1": "Finn din nye",
+    "title2": "tannlege på nett",
+    "selectLocation": "Velg plassering",
+    "selectService": "Velg tjeneste",
+    "book": "Bestill time",
+    "search": "Søk"
+  },
+  "search": {
+    "location": "Plassering",
+    "selectDate": "Velg dato"
+  },
+  "dentistList": {
+    "noMatch": "Ingen tannleger funnet som samsvarer med kriteriene dine"
+  },
+  "navigation": {
+    "myAccount": "Min konto",
+    "logout": "Logg ut",
+    "home": "Hjem",
+    "login": "Logg inn",
+    "signUp": "Registrer deg",
+    "bookAppointment": "Bestill time",
+    "book": "Bestill"
   }
 }

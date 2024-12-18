@@ -18,5 +18,48 @@
     "unauthorized": "Obehörig åtkomst",
     "sessionExpired": "Sessionen har löpt ut",
     "required": "Detta fält är obligatoriskt"
+  },
+  "footer": {
+    "description": "Boka tider med de bästa tandläkarna i ditt område.",
+    "quickLinks": "Snabblänkar",
+    "findDentist": "Hitta en tandläkare",
+    "contactUs": "Kontakta oss",
+    "aboutUs": "Om oss",
+    "privacyPolicy": "Integritetspolicy",
+    "account": "Konto",
+    "login": "Logga in",
+    "signUp": "Registrera dig",
+    "myAccount": "Mitt konto",
+    "myAppointments": "Mina bokningar",
+    "contact": "Kontakt",
+    "email": "E-post",
+    "phone": "Telefon",
+    "termsOfService": "Användarvillkor",
+    "cookiePolicy": "Cookiepolicy"
+  },
+  "hero": {
+    "description": "Boka tider med över 100 tandläkare i hela Europa med bara ett klick. Hitta den perfekta läkaren, den perfekta platsen och den perfekta tiden.",
+    "title1": "Hitta din nya",
+    "title2": "tandläkare online",
+    "selectLocation": "Välj plats",
+    "selectService": "Välj tjänst",
+    "book": "Boka tid",
+    "search": "Sök"
+  },
+  "search": {
+    "location": "Plats",
+    "selectDate": "Välj datum"
+  },
+  "dentistList": {
+    "noMatch": "Inga tandläkare hittades som matchar dina kriterier"
+  },
+  "navigation": {
+    "myAccount": "Mitt konto",
+    "logout": "Logga ut",
+    "home": "Hem",
+    "login": "Logga in",
+    "signUp": "Registrera dig",
+    "bookAppointment": "Boka tid",
+    "book": "Boka"
   }
 }

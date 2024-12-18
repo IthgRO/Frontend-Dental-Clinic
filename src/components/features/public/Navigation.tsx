@@ -1,3 +1,4 @@
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import LanguageSwitcher from '@/components/common/LanguageSwitcher'
 import { useAuthStore } from '@/store/useAuthStore'
 import {
@@ -17,6 +18,7 @@ const Navigation = () => {
   const { token, logout } = useAuthStore()
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useAppTranslation('common')
 
   const handleLogout = () => {
     logout()
@@ -27,11 +29,11 @@ const Navigation = () => {
   const userMenu = (
     <Menu>
       <Menu.Item key="account" onClick={() => navigate('/my-account')} icon={<UserOutlined />}>
-        My Account
+        {t('navigation.myAccount')}
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" onClick={handleLogout} icon={<LogoutOutlined />} danger>
-        Logout
+        {t('navigation.logout')}
       </Menu.Item>
     </Menu>
   )
@@ -55,7 +57,7 @@ const Navigation = () => {
               }}
               className="h-12 text-left justify-start text-base"
             >
-              Home
+              {t('navigation.home')}
             </Button>
 
             {token ? (
@@ -70,7 +72,7 @@ const Navigation = () => {
                   }}
                   className="h-12 text-left justify-start text-base"
                 >
-                  My Account
+                  {t('navigation.myAccount')}
                 </Button>
                 <Button
                   icon={<LogoutOutlined />}
@@ -79,7 +81,7 @@ const Navigation = () => {
                   onClick={handleLogout}
                   className="h-12 text-left justify-start text-base text-red-500 hover:text-red-600"
                 >
-                  Logout
+                  {t('navigation.logout')}
                 </Button>
               </>
             ) : (
@@ -94,7 +96,7 @@ const Navigation = () => {
                   }}
                   className="h-12 text-left justify-start text-base"
                 >
-                  Log In
+                  {t('navigation.login')}
                 </Button>
                 <Button
                   icon={<UserAddOutlined />}
@@ -106,7 +108,7 @@ const Navigation = () => {
                   }}
                   className="h-12 text-left justify-start text-base"
                 >
-                  Sign Up
+                  {t('navigation.signUp')}
                 </Button>
               </>
             )}
@@ -136,7 +138,7 @@ const Navigation = () => {
                     icon={<UserOutlined />}
                     className="flex items-center gap-2 border-none hover:text-teal-600 h-10"
                   >
-                    My Account
+                    {t('navigation.myAccount')}
                   </Button>
                 </Dropdown>
                 <Button
@@ -146,7 +148,7 @@ const Navigation = () => {
                   onClick={() => navigate('/dentists')}
                   className="bg-teal-600 hover:bg-teal-700 border-none h-10"
                 >
-                  Book Appointment
+                  {t('navigation.bookAppointment')}
                 </Button>
               </>
             ) : (
@@ -159,14 +161,14 @@ const Navigation = () => {
                       className="flex-1 flex items-center justify-center gap-2 text-gray-600 font-medium hover:bg-teal-600 hover:text-white transition-all"
                     >
                       <LoginOutlined />
-                      Log In
+                      {t('navigation.login')}
                     </Link>
                     <Link
                       to="/register"
                       className="flex-1 flex items-center justify-center gap-2 text-gray-600 font-medium hover:bg-teal-600 hover:text-white transition-all"
                     >
                       <UserAddOutlined />
-                      Sign Up
+                      {t('navigation.signUp')}
                     </Link>
                   </div>
                 </div>
@@ -177,7 +179,7 @@ const Navigation = () => {
                   onClick={() => navigate('/dentists')}
                   className="bg-teal-600 hover:bg-teal-700 border-none h-10"
                 >
-                  Book Appointment
+                  {t('navigation.bookAppointment')}
                 </Button>
               </>
             )}
@@ -192,7 +194,7 @@ const Navigation = () => {
               onClick={() => navigate('/dentists')}
               className="bg-teal-600 hover:bg-teal-700"
             >
-              Book
+              {t('navigation.book')}
             </Button>
             <Button icon={<MenuOutlined />} onClick={() => setIsOpen(true)} />
             <Drawer
