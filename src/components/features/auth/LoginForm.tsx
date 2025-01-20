@@ -26,7 +26,7 @@ export const LoginForm = ({
       layout="vertical"
       onFinish={onFinish}
       validateTrigger="onSubmit"
-      className={`space-y-4  ${className}`}
+      className={`space-y-4 ${className}`}
     >
       <Form.Item
         name="email"
@@ -71,6 +71,15 @@ export const LoginForm = ({
       </Form.Item>
 
       {error && <div className="text-red-500 text-sm text-center mb-4">{error}</div>}
+
+      <div className="text-right mb-4">
+        <Link
+          to="/forgot-password"
+          className="text-teal-600 text-sm hover:text-teal-700 hover:underline"
+        >
+          {t('login.forgotPassword')}
+        </Link>
+      </div>
 
       <Form.Item>
         <Button
