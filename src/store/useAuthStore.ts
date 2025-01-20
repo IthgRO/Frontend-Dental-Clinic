@@ -1,3 +1,5 @@
+// src/store/useAuthStore.ts
+
 import { authService } from '@/services/auth.service'
 import { LoginRequest, RegisterRequest, User } from '@/types'
 import { create } from 'zustand'
@@ -10,19 +12,25 @@ interface AuthState {
   error: string | null
   setToken: (token: string) => void
   setUser: (user: User) => void
-  login: (credentials: LoginRequest) => Promise<void>
+  login: (credentials: LoginRequest) => Promise<{
+    shouldRedirect: boolean
+    redirectUrl?: string
+  }>
   register: (userData: RegisterRequest) => Promise<void>
   logout: () => void
   clearError: () => void
 }
 
+const DENTIST_APP_URL = 'http://localhost:5174'
+
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    set => ({
       token: null,
       user: null,
       isLoading: false,
       error: null,
+
       setToken: (token: string) => set({ token }),
       setUser: (user: User) => set({ user }),
 
@@ -30,13 +38,39 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           const response = await authService.login(credentials)
-          const token = response.jwt // Changed from response.token to response.jwt
+          const { jwt: token } = response
+
+          // Decode token
+          const decodedToken = JSON.parse(atob(token.split('.')[1]))
+          const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+
+          // If Dentist, do not store in localStorage here
+          // Instead, redirect them with the token in the URL
+          if (role === 'Dentist') {
+            return {
+              shouldRedirect: true,
+              // Append ?token=...
+              redirectUrl: `${DENTIST_APP_URL}/auto-login?token=${token}`,
+            }
+          }
+
+          // Otherwise, user is Patient -> store token
+          localStorage.setItem('auth_token', token)
           set({
             token,
-            // For now, we won't set the user since we don't have user info
+            user: {
+              id: decodedToken['http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor'],
+              firstName: response.firstName,
+              lastName: response.lastName,
+              email: response.email,
+              phone: response.phone,
+              role,
+            },
             isLoading: false,
+            error: null,
           })
-          localStorage.setItem('token', token)
+
+          return { shouldRedirect: false }
         } catch (err: any) {
           set({
             error: err.response?.data?.message || 'Login failed',
@@ -61,7 +95,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        localStorage.removeItem('token')
+        localStorage.removeItem('auth_token')
         set({ token: null, user: null })
       },
 
@@ -70,7 +104,10 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => localStorage),
-      partialize: state => ({ token: state.token, user: state.user }),
+      partialize: state => ({
+        token: state.token,
+        user: state.user,
+      }),
     }
   )
 )

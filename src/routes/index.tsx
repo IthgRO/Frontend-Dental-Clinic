@@ -1,4 +1,5 @@
 // src/routes/index.tsx
+
 import AuthLayout from '@/components/layouts/AuthLayout'
 import PublicLayout from '@/components/layouts/public/PublicLayout'
 import LoadingScreen from '@/components/ui/LoadingScreen'
@@ -8,6 +9,7 @@ import PrivateRoute from './PrivateRoute'
 
 const LandingPage = lazy(() => import('@/pages/public/LandingPage'))
 const Login = lazy(() => import('@/pages/auth/Login'))
+const AutoLoginPage = lazy(() => import('@/pages/auth/AutoLogin'))
 const Register = lazy(() => import('@/pages/auth/Register'))
 const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'))
@@ -31,6 +33,8 @@ const AppRoutes = () => {
               </PrivateRoute>
             }
           />
+          {/* Our auto-login route */}
+          <Route path="/auto-login" element={<AutoLoginPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>

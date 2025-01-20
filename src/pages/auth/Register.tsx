@@ -27,7 +27,7 @@ const RegisterPage = () => {
       firstName: values.firstName,
       lastName: values.lastName,
       phone: values.phone,
-      role: 0,
+      role: 1,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       password: values.password,
     }

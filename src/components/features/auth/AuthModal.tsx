@@ -50,7 +50,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
         firstName: values.firstName,
         lastName: values.lastName,
         phone: values.phone,
-        role: 0, // Patient role
+        role: 1, // Patient role
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         password: values.password,
       }

@@ -14,8 +14,12 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string
-  user: User
+  jwt: string
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  role: number
 }
 
 export interface RegisterRequest {
