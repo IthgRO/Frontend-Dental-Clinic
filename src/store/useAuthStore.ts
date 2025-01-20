@@ -21,7 +21,7 @@ interface AuthState {
   clearError: () => void
 }
 
-const DENTIST_APP_URL = 'http://localhost:5174'
+const DENTIST_APP_URL = import.meta.env.VITE_DENTIST_APP_URL
 
 export const useAuthStore = create<AuthState>()(
   persist(
