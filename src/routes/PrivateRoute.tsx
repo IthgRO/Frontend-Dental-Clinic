@@ -16,10 +16,12 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
+  const DENTIST_APP_URL = import.meta.env.VITE_DENTIST_APP_URL
+
   // If user is Dentist, possibly redirect them to dentist auto-login with the token:
   if (role === 'Dentist') {
     // It's up to you if you want a one-liner or something more elaborate:
-    window.location.href = `http://localhost:5174/auto-login?token=${token}`
+    window.location.href = `${DENTIST_APP_URL}/auto-login?token=${token}`
     return null
   }
 
