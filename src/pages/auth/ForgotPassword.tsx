@@ -2,19 +2,22 @@ import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { authService } from '@/services/auth.service'
 import { Button, Form, Input, message, Typography } from 'antd'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
 const ForgotPassword = () => {
   const { t } = useAppTranslation('auth')
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const onFinish = async (values: { email: string }) => {
     setLoading(true)
     try {
-      await authService.forgotPassword(values.email)
-      message.success(t('forgotPassword.emailSent'))
+      await authService.sendPasswordResetCode(values.email)
+      message.success(t('forgotPassword.codeSent'))
+      // Navigate to reset password page with email
+      navigate(`/reset-password?email=${encodeURIComponent(values.email)}`)
     } catch (error: any) {
       message.error(error.response?.data?.message || t('forgotPassword.sendError'))
     } finally {

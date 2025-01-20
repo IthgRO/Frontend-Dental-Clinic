@@ -1,7 +1,8 @@
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { Button, Form, Input, Modal } from 'antd'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import PasswordValidation from './PasswordValidation'
 
 const validatePhoneNumber = (t: any) => (_: any, value: string) => {
   const phoneRegex = /^\+?\d{10,15}$/
@@ -35,12 +36,27 @@ export const RegisterForm = ({
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
   const [isTermsModalVisible, setIsTermsModalVisible] = useState(false)
+  const [form] = Form.useForm()
+  const [password, setPassword] = useState('')
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+  const passwordContainerRef = useRef<HTMLDivElement>(null)
 
   const showTermsModal = () => setIsTermsModalVisible(true)
   const closeTermsModal = () => setIsTermsModalVisible(false)
 
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+    form.setFieldsValue({ password: e.target.value })
+  }
+
+  const handleValidationChange = (isValid: boolean) => {
+    setIsPasswordValid(isValid)
+  }
+
   return (
     <Form
+      form={form}
       layout="vertical"
       onFinish={onFinish}
       validateTrigger="onSubmit"
@@ -97,38 +113,45 @@ export const RegisterForm = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="password"
-        label=""
-        rules={[
-          { required: true, message: t('validation.required') },
-          { min: 8, message: t('validation.passwordLength') },
-          {
-            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-            message: t('validation.passwordRequirements'),
-          },
-        ]}
-      >
-        <div className="relative">
-          <Input
-            type={passwordVisible ? 'text' : 'password'}
-            size="large"
-            placeholder={t('register.passwordPlaceholder')}
-            className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
-            disabled={isLoading}
-          />
-          <div
-            className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-            onClick={() => !isLoading && setPasswordVisible(prev => !prev)}
-          >
-            <img
-              src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
-              alt="Toggle Password Visibility"
-              className="w-5 h-5"
+      <div ref={passwordContainerRef}>
+        <Form.Item
+          name="password"
+          label=""
+          rules={[{ required: true, message: t('validation.required') }]}
+        >
+          <div className="space-y-2">
+            <div className="relative">
+              <Input
+                type={passwordVisible ? 'text' : 'password'}
+                size="large"
+                placeholder={t('register.passwordPlaceholder')}
+                className="placeholder:text-gray-400 rounded-lg border-gray-300 focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+                disabled={isLoading}
+                onChange={handlePasswordChange}
+                value={password}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
+              />
+              <div
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+                onClick={() => !isLoading && setPasswordVisible(prev => !prev)}
+              >
+                <img
+                  src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
+                  alt="Toggle Password Visibility"
+                  className="w-5 h-5"
+                />
+              </div>
+            </div>
+            <PasswordValidation
+              password={password}
+              onValidationChange={handleValidationChange}
+              containerRef={passwordContainerRef}
+              isInputFocused={isPasswordFocused}
             />
           </div>
-        </div>
-      </Form.Item>
+        </Form.Item>
+      </div>
 
       <Form.Item
         name="confirmPassword"
@@ -211,7 +234,7 @@ export const RegisterForm = ({
           className="w-full bg-teal-600 hover:bg-teal-600 rounded-md"
           size="large"
           loading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || !termsAccepted || !isPasswordValid}
         >
           {isLoading ? t('register.loadingButton') : t('register.submitButton')}
         </Button>

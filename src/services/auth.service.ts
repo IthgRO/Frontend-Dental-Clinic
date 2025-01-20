@@ -22,22 +22,22 @@ export const authService = {
     }
   },
 
-  forgotPassword: async (email: string) => {
+  sendPasswordResetCode: async (email: string) => {
     try {
-      const response = await apiClient.post('/user/forgot-password', { email })
+      const response = await apiClient.post('/user/sendPasswordChangeCode', { email })
       return response.data
     } catch (error: any) {
-      console.error('Forgot password error:', error.response?.data || error.message)
+      console.error('Send reset code error:', error.response?.data || error.message)
       throw error
     }
   },
 
-  resetPassword: async (token: string, password: string) => {
+  changePassword: async (data: { email: string; code: string; newPassword: string }) => {
     try {
-      const response = await apiClient.post('/user/reset-password', { token, password })
+      const response = await apiClient.post('/user/changeForgottenPassword', data)
       return response.data
     } catch (error: any) {
-      console.error('Reset password error:', error.response?.data || error.message)
+      console.error('Change password error:', error.response?.data || error.message)
       throw error
     }
   },
