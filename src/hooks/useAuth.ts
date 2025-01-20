@@ -1,4 +1,5 @@
 // src/hooks/useAuth.ts
+
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useAuthStore } from '@/store/useAuthStore'
 import { LoginRequest, RegisterRequest } from '@/types'
@@ -11,10 +12,15 @@ export const useAuth = () => {
 
   const login = useMutation({
     mutationFn: async (credentials: LoginRequest) => {
-      await loginStore(credentials)
+      // returns { shouldRedirect: boolean, redirectUrl?: string }
+      return await loginStore(credentials)
     },
-    onSuccess: () => {
+    onSuccess: response => {
       toast.success(t('notifications.login.success'))
+
+      if (response.shouldRedirect && response.redirectUrl) {
+        window.location.href = response.redirectUrl
+      }
     },
     onError: (error: any) => {
       const errorMessage =

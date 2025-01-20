@@ -1,25 +1,5 @@
+import { LoginRequest, LoginResponse, RegisterRequest } from '@/types'
 import apiClient from './apiClient'
-
-export interface RegisterRequest {
-  id: number
-  clinicId: number
-  email: string
-  firstName: string
-  lastName: string
-  phone: string
-  role: number
-  timezone: string
-  password: string
-}
-
-export interface LoginRequest {
-  email: string
-  password: string
-}
-
-export interface LoginResponse {
-  jwt: string
-}
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
