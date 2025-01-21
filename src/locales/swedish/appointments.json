@@ -6,8 +6,9 @@
   },
   "appointmentList": {
     "doctorPrefix": "Dr.",
-    "timeFormat": "kl.",
+    "timeFormat": " kl.",
     "cancelButton": "Avboka Tid",
+    "editButton": "Ändra Tid",
     "noAppointments": "Inga bokningar hittades"
   },
   "cancelModal": {
@@ -18,6 +19,15 @@
     "successMessage": "Tiden har avbokats",
     "errorMessage": "Kunde inte avboka tiden"
   },
+  "editModal": {
+    "title": "Ändra Tid",
+    "message": "Välj ett nytt datum eller tid för din bokning nedan.",
+    "newDateLabel": "Nytt Datum/Tid",
+    "confirmButton": "Spara Ändringar",
+    "keepButton": "Behåll Nuvarande",
+    "successMessage": "Bokningen har uppdaterats",
+    "errorMessage": "Kunde inte uppdatera bokningen"
+  },
   "details": {
     "service": "Behandling",
     "location": "Plats",
@@ -26,11 +36,14 @@
   },
   "notifications": {
     "success": {
-      "cancelled": "Tiden har avbokats"
+      "cancelled": "Tiden har avbokats",
+      "updated": "Bokningen har uppdaterats"
     },
     "error": {
       "cancellation": "Kunde inte avboka tiden",
-      "loading": "Fel vid laddning av bokningar"
+      "updating": "Kunde inte uppdatera bokningen",
+      "loading": "Fel vid laddning av bokningar",
+      "invalidDate": "Vänligen välj ett giltigt datum/tid"
     }
   }
 }

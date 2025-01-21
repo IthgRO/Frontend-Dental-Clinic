@@ -6,8 +6,9 @@
   },
   "appointmentList": {
     "doctorPrefix": "Dr.",
-    "timeFormat": "at",
+    "timeFormat": " at",
     "cancelButton": "Cancel Appointment",
+    "editButton": "Edit Appointment",
     "noAppointments": "No appointments found"
   },
   "cancelModal": {
@@ -18,6 +19,15 @@
     "successMessage": "Appointment cancelled successfully",
     "errorMessage": "Failed to cancel appointment"
   },
+  "editModal": {
+    "title": "Edit Appointment",
+    "message": "Select a new date or time for your appointment below.",
+    "newDateLabel": "New Date/Time",
+    "confirmButton": "Save Changes",
+    "keepButton": "Keep Current",
+    "successMessage": "Appointment updated successfully",
+    "errorMessage": "Failed to update appointment"
+  },
   "details": {
     "service": "Service",
     "location": "Location",
@@ -26,11 +36,14 @@
   },
   "notifications": {
     "success": {
-      "cancelled": "Appointment cancelled successfully"
+      "cancelled": "Appointment cancelled successfully",
+      "updated": "Appointment updated successfully"
     },
     "error": {
       "cancellation": "Failed to cancel appointment",
-      "loading": "Error loading appointments"
+      "updating": "Failed to update appointment",
+      "loading": "Error loading appointments",
+      "invalidDate": "Please select a valid date/time"
     }
   }
 }

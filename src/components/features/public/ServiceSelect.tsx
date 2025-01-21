@@ -23,7 +23,7 @@ const ServiceSelect = ({ services, className = '' }: ServiceSelectProps) => {
       value={selectedAppointment?.serviceId}
       options={services.map(service => ({
         value: service.id,
-        label: `${service.name} (${t('booking.service.price', { price: service.price })})`,
+        label: `${service.name}`,
       }))}
       onChange={value => {
         const service = services.find(s => s.id === value)

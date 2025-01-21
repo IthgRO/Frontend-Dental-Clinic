@@ -85,7 +85,7 @@ const DentistHeader = ({
               </div>
             </div>
 
-            {priceRange && (
+            {/* {priceRange && (
               <div className="text-left md:text-right mt-4 md:mt-0">
                 <div className="text-gray-600 flex items-center gap-1">
                   <EuroOutlined />
@@ -97,7 +97,7 @@ const DentistHeader = ({
                   </span>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

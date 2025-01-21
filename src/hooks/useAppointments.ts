@@ -17,15 +17,8 @@ export const useAppointments = () => {
     mutationFn: (data: BookAppointmentRequest) =>
       dentistService.bookAppointment(data.dentistId, data.clinicId, data.serviceId, data.startDate),
     onSuccess: (_, variables) => {
-      // Invalidate both queries to force a refetch
-      queryClient.invalidateQueries({
-        queryKey: [APPOINTMENTS_QUERY_KEY],
-      })
-
-      queryClient.invalidateQueries({
-        queryKey: [TIME_SLOTS_QUERY_KEY],
-      })
-
+      queryClient.invalidateQueries({ queryKey: [APPOINTMENTS_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [TIME_SLOTS_QUERY_KEY] })
       resetSelection()
     },
   })
@@ -33,23 +26,31 @@ export const useAppointments = () => {
   const cancelAppointment = useMutation({
     mutationFn: dentistService.cancelAppointment,
     onSuccess: async () => {
-      // Invalidate both queries to force a refetch
-      queryClient.invalidateQueries({
-        queryKey: [APPOINTMENTS_QUERY_KEY],
-      })
-      queryClient.invalidateQueries({
-        queryKey: [TIME_SLOTS_QUERY_KEY],
-      })
+      queryClient.invalidateQueries({ queryKey: [APPOINTMENTS_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [TIME_SLOTS_QUERY_KEY] })
+    },
+  })
+
+  const updateAppointment = useMutation({
+    mutationFn: ({ appointmentId, newDate }: { appointmentId: number; newDate: string }) =>
+      dentistService.updateAppointment(appointmentId, newDate),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: [APPOINTMENTS_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [TIME_SLOTS_QUERY_KEY] })
     },
   })
 
   return {
     appointments: fetchAppointments.data,
     isLoading:
-      fetchAppointments.isLoading || bookAppointment.isPending || cancelAppointment.isPending,
+      fetchAppointments.isLoading ||
+      bookAppointment.isPending ||
+      cancelAppointment.isPending ||
+      updateAppointment.isPending,
     error: fetchAppointments.error,
     bookAppointment,
     cancelAppointment,
+    updateAppointment,
     setSelectedService,
     setSelectedDateTime,
     resetSelection,

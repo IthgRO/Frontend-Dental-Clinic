@@ -1,7 +1,10 @@
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useDentists } from '@/hooks/useDentists'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
-import { Card, Checkbox, Collapse, Divider, Select, Slider, Tag } from 'antd'
+import { Card, Checkbox, Collapse, Divider, Select } from 'antd'
+/* 
+  REMOVED: Slider, Tag for price, and references to price 
+*/
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -11,32 +14,30 @@ const SearchFilters = () => {
   const { dentists } = useDentists()
   const [activeKey, setActiveKey] = useState<string[]>(['0'])
 
-  const { cities, services, priceRange } = useMemo(() => {
+  // Build sets of data from all dentists
+  const { cities, services } = useMemo(() => {
     const citiesSet = new Set<string>()
-    const servicesSet = new Map<string, { name: string; price: number }>()
-    let minPrice = Infinity
-    let maxPrice = 0
+    const servicesSet = new Set<string>()
 
     dentists.forEach(dentist => {
       citiesSet.add(dentist.clinic.city)
       dentist.services.forEach(service => {
-        servicesSet.set(service.name, { name: service.name, price: service.price })
-        minPrice = Math.min(minPrice, service.price)
-        maxPrice = Math.max(maxPrice, service.price)
+        // We only track the service name now, ignoring price
+        servicesSet.add(service.name)
       })
     })
 
     return {
       cities: Array.from(citiesSet).map(city => ({ label: city, value: city })),
-      services: Array.from(servicesSet.entries()).map(([name, { price }]) => ({
-        label: `${name} (€${price})`,
+      // ONLY storing service name in label, no price
+      services: Array.from(servicesSet).map(name => ({
+        label: name, // removed " (€${price})"
         value: name,
-        price,
       })),
-      priceRange: { min: Math.floor(minPrice), max: Math.ceil(maxPrice) },
     }
   }, [dentists])
 
+  // Removed all local states for price range
   const [selectedCity, setSelectedCity] = useState(searchParams.get('location') || '')
   const [selectedServices, setSelectedServices] = useState<string[]>(() => {
     const servicesParam = searchParams.get('services')
@@ -53,13 +54,6 @@ const SearchFilters = () => {
     return []
   })
 
-  const [selectedPriceRange, setSelectedPriceRange] = useState<[number, number]>([
-    Number(searchParams.get('minPrice')) || priceRange.min,
-    Number(searchParams.get('maxPrice')) || priceRange.max,
-  ])
-  const [tempPriceRange, setTempPriceRange] = useState<[number, number]>(selectedPriceRange)
-  const [isDragging, setIsDragging] = useState(false)
-
   useEffect(() => {
     if (searchParams.has('service')) {
       const params = new URLSearchParams(searchParams)
@@ -68,10 +62,10 @@ const SearchFilters = () => {
     }
   }, [])
 
+  // Update searchParams whenever user changes city or services
   useEffect(() => {
     const params = new URLSearchParams(searchParams)
-
-    params.delete('service')
+    params.delete('service') // ensure we don't conflict with legacy
 
     if (selectedCity) {
       params.set('location', selectedCity)
@@ -85,18 +79,9 @@ const SearchFilters = () => {
       params.delete('services')
     }
 
-    if (!isDragging) {
-      if (selectedPriceRange[0] !== priceRange.min || selectedPriceRange[1] !== priceRange.max) {
-        params.set('minPrice', selectedPriceRange[0].toString())
-        params.set('maxPrice', selectedPriceRange[1].toString())
-      } else {
-        params.delete('minPrice')
-        params.delete('maxPrice')
-      }
-    }
-
+    // Since we've removed price, we skip minPrice, maxPrice
     setSearchParams(params)
-  }, [selectedCity, selectedServices, selectedPriceRange, isDragging])
+  }, [selectedCity, selectedServices])
 
   const handleServiceSelect = (serviceName: string, checked: boolean) => {
     setSelectedServices(prev =>
@@ -108,42 +93,15 @@ const SearchFilters = () => {
     setSelectedCity(value || '')
   }
 
-  const handleSliderChange = (value: number[]) => {
-    setTempPriceRange([value[0], value[1]])
-    setIsDragging(true)
-  }
-
-  const handleSliderAfterChange = (value: number[]) => {
-    setSelectedPriceRange([value[0], value[1]])
-    setIsDragging(false)
-  }
-
-  const getExtraContent = (type: 'location' | 'services' | 'price') => {
-    switch (type) {
-      case 'location':
-        return selectedCity ? <Tag color="blue">{selectedCity}</Tag> : null
-      case 'services':
-        return selectedServices.length ? (
-          <Tag color="blue">
-            {t('filters.services.selected', { count: selectedServices.length })}
-          </Tag>
-        ) : null
-      case 'price':
-        return selectedPriceRange[0] !== priceRange.min ||
-          selectedPriceRange[1] !== priceRange.max ? (
-          <Tag color="blue">
-            {t('filters.price.format', { min: selectedPriceRange[0], max: selectedPriceRange[1] })}
-          </Tag>
-        ) : null
-      default:
-        return null
-    }
-  }
+  // Removed all references to price slider
+  // Removed getExtraContent('price'), priceRange lines, etc.
 
   return (
     <Card className="sticky top-24">
+      {/* Desktop Filters */}
       <div className="hidden md:block">
         <div className="space-y-6">
+          {/* Location Filter */}
           <div>
             <h3 className="font-medium mb-3">{t('filters.location.title')}</h3>
             <Select
@@ -163,6 +121,7 @@ const SearchFilters = () => {
 
           <Divider />
 
+          {/* Services Filter */}
           <div>
             <h3 className="font-medium mb-3">{t('filters.services.title')}</h3>
             <div className="space-y-2">
@@ -178,27 +137,14 @@ const SearchFilters = () => {
             </div>
           </div>
 
-          <Divider />
-
-          <div>
-            <h3 className="font-medium mb-3">{t('filters.price.title')}</h3>
-            <Slider
-              range
-              min={priceRange.min}
-              max={priceRange.max}
-              value={isDragging ? tempPriceRange : selectedPriceRange}
-              onChange={handleSliderChange}
-              onAfterChange={handleSliderAfterChange}
-              marks={{
-                [priceRange.min]: `€${priceRange.min}`,
-                [priceRange.max]: `€${priceRange.max}`,
-              }}
-              className="mt-6"
-            />
-          </div>
+          {/* PRICE FILTER REMOVED
+              <Divider />
+              ... 
+          */}
         </div>
       </div>
 
+      {/* Mobile Filters (Accordion) */}
       <div className="md:hidden">
         <Collapse
           activeKey={activeKey}
@@ -206,11 +152,8 @@ const SearchFilters = () => {
           expandIconPosition="end"
           expandIcon={({ isActive }) => (isActive ? <UpOutlined /> : <DownOutlined />)}
         >
-          <Collapse.Panel
-            header={t('filters.location.title')}
-            key="0"
-            extra={getExtraContent('location')}
-          >
+          {/* Location Panel */}
+          <Collapse.Panel header={t('filters.location.title')} key="0">
             <Select
               className="w-full"
               size="large"
@@ -226,11 +169,8 @@ const SearchFilters = () => {
             />
           </Collapse.Panel>
 
-          <Collapse.Panel
-            header={t('filters.services.title')}
-            key="1"
-            extra={getExtraContent('services')}
-          >
+          {/* Services Panel */}
+          <Collapse.Panel header={t('filters.services.title')} key="1">
             <div className="space-y-2">
               {services.map(service => (
                 <Checkbox
@@ -244,25 +184,9 @@ const SearchFilters = () => {
             </div>
           </Collapse.Panel>
 
-          <Collapse.Panel
-            header={t('filters.price.title')}
-            key="2"
-            extra={getExtraContent('price')}
-          >
-            <Slider
-              range
-              min={priceRange.min}
-              max={priceRange.max}
-              value={isDragging ? tempPriceRange : selectedPriceRange}
-              onChange={handleSliderChange}
-              onAfterChange={handleSliderAfterChange}
-              marks={{
-                [priceRange.min]: `€${priceRange.min}`,
-                [priceRange.max]: `€${priceRange.max}`,
-              }}
-              className="mt-6"
-            />
-          </Collapse.Panel>
+          {/* PRICE PANEL REMOVED
+              <Collapse.Panel ...> ... </Collapse.Panel>
+          */}
         </Collapse>
       </div>
     </Card>

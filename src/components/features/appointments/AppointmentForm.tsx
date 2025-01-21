@@ -58,7 +58,7 @@ const AppointmentForm = ({ appointment, onSuccess }: AppointmentFormProps) => {
             <Select>
               {services.data?.map((service: Service) => (
                 <Select.Option key={service.id} value={service.id}>
-                  {service.name} - ${service.price}
+                  {service.name}
                 </Select.Option>
               ))}
             </Select>

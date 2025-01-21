@@ -6,8 +6,9 @@
   },
   "appointmentList": {
     "doctorPrefix": "Dr.",
-    "timeFormat": "kl.",
+    "timeFormat": " kl.",
     "cancelButton": "Afbóka Tíma",
+    "editButton": "Breyta Tíma",
     "noAppointments": "Engar bókanir fundust"
   },
   "cancelModal": {
@@ -18,6 +19,15 @@
     "successMessage": "Tíminn var afbókaður",
     "errorMessage": "Ekki tókst að afbóka tímann"
   },
+  "editModal": {
+    "title": "Breyta Tíma",
+    "message": "Veldu nýjan dag eða tíma fyrir tímann þinn hér að neðan.",
+    "newDateLabel": "Nýr Dagur/Tími",
+    "confirmButton": "Vista Breytingar",
+    "keepButton": "Halda Núverandi",
+    "successMessage": "Tíminn var uppfærður",
+    "errorMessage": "Ekki tókst að breyta tímanum"
+  },
   "details": {
     "service": "Þjónusta",
     "location": "Staðsetning",
@@ -26,11 +36,14 @@
   },
   "notifications": {
     "success": {
-      "cancelled": "Tíminn var afbókaður"
+      "cancelled": "Tíminn var afbókaður",
+      "updated": "Tíminn var uppfærður"
     },
     "error": {
       "cancellation": "Ekki tókst að afbóka tímann",
-      "loading": "Villa við að hlaða bókanir"
+      "updating": "Ekki tókst að breyta tímanum",
+      "loading": "Villa við að hlaða bókanir",
+      "invalidDate": "Vinsamlega veldu giltan dag/tíma"
     }
   }
 }

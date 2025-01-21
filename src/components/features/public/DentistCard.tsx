@@ -41,12 +41,12 @@ const DentistCard = ({ dentist }: DentistCardProps) => {
               alt={dentist.name}
               className="w-full h-44 object-cover rounded-lg"
             />
-            <div className="absolute top-3 right-3">
+            {/* <div className="absolute top-3 right-3">
               <Tag className="bg-white/90 backdrop-blur-sm border-0">
                 <EuroOutlined className="mr-1" />
                 {priceRange}
               </Tag>
-            </div>
+            </div> */}
           </div>
 
           <div className="space-y-3">
@@ -93,10 +93,10 @@ const DentistCard = ({ dentist }: DentistCardProps) => {
                 <h2 className="text-2xl font-semibold mb-1">{dentist.name}</h2>
                 <p className="text-gray-600">{dentist.clinic.name}</p>
               </div>
-              <div className="text-gray-600 flex items-center">
+              {/* <div className="text-gray-600 flex items-center">
                 <EuroOutlined className="mr-1" />
                 {priceRange}
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-center gap-2 text-gray-500 mb-4">
