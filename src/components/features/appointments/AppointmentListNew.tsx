@@ -2,14 +2,15 @@ import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { ApiAppointment } from '@/types'
 import { Button } from 'antd'
 import { format, parseISO } from 'date-fns'
-import { Clock, CreditCard, MapPin } from 'lucide-react'
+import { Clock, MapPin } from 'lucide-react'
 
 interface AppointmentListProps {
   appointments: ApiAppointment[]
   onCancelClick: (id: number) => void
+  onEditClick: (id: number) => void
 }
 
-const AppointmentListNew = ({ appointments, onCancelClick }: AppointmentListProps) => {
+const AppointmentListNew = ({ appointments, onCancelClick, onEditClick }: AppointmentListProps) => {
   const { t } = useAppTranslation('appointments')
 
   if (appointments.length === 0) {
@@ -53,17 +54,26 @@ const AppointmentListNew = ({ appointments, onCancelClick }: AppointmentListProp
                       {appointment.clinicName}, {appointment.city}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <CreditCard size={16} className="flex-shrink-0" />
                     <span>
                       {appointment.currency} {appointment.servicePrice}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
           </div>
-          <div className="mt-4 sm:mt-0 sm:ml-4">
+          <div className="mt-4 sm:mt-0 sm:ml-4 flex gap-2">
+            <Button
+              type="primary"
+              size="large"
+              className="w-full sm:w-auto px-6"
+              onClick={() => onEditClick(appointment.id)}
+            >
+              {t('appointmentList.editButton')}
+            </Button>
+
             <Button
               danger
               onClick={() => onCancelClick(appointment.id)}

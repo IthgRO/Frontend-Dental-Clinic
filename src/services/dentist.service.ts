@@ -41,4 +41,12 @@ export const dentistService = {
     })
     return response.data
   },
+
+  updateAppointment: async (appointmentId: number, newDate: string) => {
+    const response = await apiClient.post('/dentist/updateAppointment', {
+      appointmentId,
+      newDate,
+    })
+    return response.data
+  },
 }

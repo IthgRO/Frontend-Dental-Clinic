@@ -24,7 +24,7 @@
   },
   "card": {
     "price": {
-      "range": "€{{min}}-{{max}}"
+      "range": "{{min}}-{{max}}"
     },
     "services": {
       "title": "Services",

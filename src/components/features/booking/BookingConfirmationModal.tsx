@@ -93,14 +93,14 @@ const BookingConfirmationModal = ({ isOpen, onClose, appointment }: BookingConfi
               </p>
             </div>
 
-            {servicePrice && (
+            {/* {servicePrice && (
               <div className="flex items-center gap-3">
                 <CreditCard size={20} className="text-gray-400" />
                 <p className="text-gray-900">
                   {t('booking.service.price', { price: servicePrice })}
                 </p>
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
