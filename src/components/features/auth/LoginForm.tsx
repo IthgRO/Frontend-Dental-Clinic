@@ -62,7 +62,7 @@ export const LoginForm = ({
             onClick={() => !isLoading && setPasswordVisible(prev => !prev)}
           >
             <img
-              src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
+              src={passwordVisible ? '/seePasswordOff.png' : '/seePasswordOn.png'}
               alt="Toggle Password Visibility"
               className="w-5 h-5"
             />

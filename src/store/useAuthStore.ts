@@ -1,5 +1,3 @@
-// src/store/useAuthStore.ts
-
 import { authService } from '@/services/auth.service'
 import { LoginRequest, RegisterRequest, User } from '@/types'
 import { create } from 'zustand'
@@ -17,6 +15,7 @@ interface AuthState {
     redirectUrl?: string
   }>
   register: (userData: RegisterRequest) => Promise<void>
+  updateUserData: (data: Partial<User>) => Promise<void>
   logout: () => void
   clearError: () => void
 }
@@ -44,17 +43,15 @@ export const useAuthStore = create<AuthState>()(
           const decodedToken = JSON.parse(atob(token.split('.')[1]))
           const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
 
-          // If Dentist, do not store in localStorage here
-          // Instead, redirect them with the token in the URL
+          // If Dentist, redirect with token in URL
           if (role === 'Dentist') {
             return {
               shouldRedirect: true,
-              // Append ?token=...
               redirectUrl: `${DENTIST_APP_URL}/auto-login?token=${token}`,
             }
           }
 
-          // Otherwise, user is Patient -> store token
+          // Otherwise, store token for Patient
           localStorage.setItem('auth_token', token)
           set({
             token,
@@ -88,6 +85,35 @@ export const useAuthStore = create<AuthState>()(
         } catch (err: any) {
           set({
             error: err.response?.data?.message || 'Registration failed',
+            isLoading: false,
+          })
+          throw err
+        }
+      },
+
+      updateUserData: async (data: Partial<User>) => {
+        set({ isLoading: true, error: null })
+        try {
+          await authService.updateUserData({
+            email: data.email || '',
+            phone: data.phone || '',
+          })
+
+          const currentUser = useAuthStore.getState().user
+          if (currentUser) {
+            set({
+              user: {
+                ...currentUser,
+                email: data.email || currentUser.email,
+                phone: data.phone || currentUser.phone,
+              },
+              isLoading: false,
+              error: null,
+            })
+          }
+        } catch (err: any) {
+          set({
+            error: err.response?.data?.message || 'Update failed',
             isLoading: false,
           })
           throw err

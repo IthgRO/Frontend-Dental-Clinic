@@ -7,8 +7,8 @@
   "appointmentList": {
     "doctorPrefix": "Dr.",
     "timeFormat": " kl.",
-    "cancelButton": "Avboka Tid",
-    "editButton": "Ändra Tid",
+    "cancelButton": "Avboka",
+    "editButton": "Ändra",
     "noAppointments": "Inga bokningar hittades"
   },
   "cancelModal": {
@@ -26,7 +26,12 @@
     "confirmButton": "Spara Ändringar",
     "keepButton": "Behåll Nuvarande",
     "successMessage": "Bokningen har uppdaterats",
-    "errorMessage": "Kunde inte uppdatera bokningen"
+    "errorMessage": "Kunde inte uppdatera bokningen",
+    "selectDateTime": "Välj datum och tid",
+    "selectTime": "Välj tid",
+    "noSlots": "Inga lediga tider",
+    "tryAnother": "Vänligen välj ett annat datum",
+    "newAppointment": "Ny Bokning"
   },
   "details": {
     "service": "Behandling",

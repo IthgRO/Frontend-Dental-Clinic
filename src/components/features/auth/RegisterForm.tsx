@@ -137,7 +137,7 @@ export const RegisterForm = ({
                 onClick={() => !isLoading && setPasswordVisible(prev => !prev)}
               >
                 <img
-                  src={passwordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
+                  src={passwordVisible ? '/seePasswordOff.png' : '/seePasswordOn.png'}
                   alt="Toggle Password Visibility"
                   className="w-5 h-5"
                 />
@@ -182,7 +182,7 @@ export const RegisterForm = ({
             onClick={() => !isLoading && setConfirmPasswordVisible(prev => !prev)}
           >
             <img
-              src={confirmPasswordVisible ? '/seePasswordOn.png' : '/seePasswordOff.png'}
+              src={confirmPasswordVisible ? '/seePasswordOff.png' : '/seePasswordOn.png'}
               alt="Toggle Password Visibility"
               className="w-5 h-5"
             />

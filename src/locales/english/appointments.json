@@ -7,8 +7,8 @@
   "appointmentList": {
     "doctorPrefix": "Dr.",
     "timeFormat": " at",
-    "cancelButton": "Cancel Appointment",
-    "editButton": "Edit Appointment",
+    "cancelButton": "Cancel",
+    "editButton": "Edit",
     "noAppointments": "No appointments found"
   },
   "cancelModal": {
@@ -26,7 +26,12 @@
     "confirmButton": "Save Changes",
     "keepButton": "Keep Current",
     "successMessage": "Appointment updated successfully",
-    "errorMessage": "Failed to update appointment"
+    "errorMessage": "Failed to update appointment",
+    "selectDateTime": "Select date and time",
+    "selectTime": "Select time",
+    "noSlots": "No available slots",
+    "tryAnother": "Please try another date",
+    "newAppointment": "New Appointment"
   },
   "details": {
     "service": "Service",

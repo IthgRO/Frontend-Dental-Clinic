@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/store/useAuthStore'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -9,10 +10,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   config => {
-    // const token = localStorage.getItem('token')
-
-    const token =
-      'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6IjE5IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiUGF0aWVudCIsImV4cCI6MTc2ODkzMzEwM30.7srIqU6_tMTiMRFR2gFHDixlI_i9hHH7kMr14rTJK0eauod7QLmWCT5d8TYVEs9hdi41AnfJe1OJFNjc-3yIUg'
+    const { token } = useAuthStore.getState()
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`

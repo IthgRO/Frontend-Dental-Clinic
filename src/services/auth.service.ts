@@ -1,4 +1,4 @@
-import { LoginRequest, LoginResponse, RegisterRequest } from '@/types'
+import { LoginRequest, LoginResponse, RegisterRequest, User, UpdateUserDataRequest } from '@/types'
 import apiClient from './apiClient'
 
 export const authService = {
@@ -48,6 +48,18 @@ export const authService = {
       return response.data
     } catch (error: any) {
       console.error('Get user profile error:', error.response?.data || error.message)
+      throw error
+    }
+  },
+
+  updateUserData: async (data: UpdateUserDataRequest) => {
+    try {
+      console.log('Data received in service:', data)
+      const response = await apiClient.post('/user/updateData', data)
+      console.log('Response received:', response.data)
+      return response.data
+    } catch (error: any) {
+      console.error('Update user data error:', error.response?.data || error.message)
       throw error
     }
   },

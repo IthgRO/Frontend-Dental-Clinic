@@ -24,64 +24,63 @@ const AppointmentListNew = ({ appointments, onCancelClick, onEditClick }: Appoin
       {appointments.map(appointment => (
         <div
           key={appointment.id}
-          className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-200"
+          className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-200"
         >
-          <div className="flex flex-col sm:flex-row sm:gap-6">
-            <div className="flex gap-4 sm:gap-6 items-start">
+          <div className="p-4 flex flex-col lg:flex-row gap-4">
+            {/* Image and Details */}
+            <div className="flex gap-4 flex-1">
               <img
                 src={`/placeholders/${appointment.dentistLastName}.png`}
                 alt={`${appointment.dentistFirstName} ${appointment.dentistLastName}`}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover shadow-sm"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover shadow-sm flex-shrink-0"
               />
-              <div className="flex-1">
-                <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-gray-900">
+
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">
                   {t('appointmentList.doctorPrefix')} {appointment.dentistFirstName}{' '}
                   {appointment.dentistLastName}
                 </h3>
-                <p className="text-teal-600 font-medium mb-2 sm:mb-3">{appointment.serviceName}</p>
-                <div className="space-y-1.5 sm:space-y-2 text-gray-600 text-sm sm:text-base">
+                <p className="text-teal-600 font-medium mb-2">{appointment.serviceName}</p>
+
+                <div className="space-y-2 text-gray-600 text-sm">
                   <div className="flex items-center gap-2">
-                    <Clock size={16} className="flex-shrink-0" />
-                    <span>
+                    <Clock size={16} className="flex-shrink-0 text-gray-400" />
+                    <span className="truncate">
                       {format(parseISO(appointment.startTime), 'EEE d MMM, yyyy')}{' '}
                       {t('appointmentList.timeFormat')}{' '}
                       {format(parseISO(appointment.startTime), 'HH:mm')}
                     </span>
                   </div>
+
                   <div className="flex items-center gap-2">
-                    <MapPin size={16} className="flex-shrink-0" />
-                    <span>
+                    <MapPin size={16} className="flex-shrink-0 text-gray-400" />
+                    <span className="truncate">
                       {appointment.clinicName}, {appointment.city}
                     </span>
                   </div>
-                  {/* <div className="flex items-center gap-2">
-                    <CreditCard size={16} className="flex-shrink-0" />
-                    <span>
-                      {appointment.currency} {appointment.servicePrice}
-                    </span>
-                  </div> */}
                 </div>
               </div>
             </div>
-          </div>
-          <div className="mt-4 sm:mt-0 sm:ml-4 flex gap-2">
-            <Button
-              type="primary"
-              size="large"
-              className="w-full sm:w-auto px-6"
-              onClick={() => onEditClick(appointment.id)}
-            >
-              {t('appointmentList.editButton')}
-            </Button>
 
-            <Button
-              danger
-              onClick={() => onCancelClick(appointment.id)}
-              size="large"
-              className="w-full sm:w-auto px-6 hover:border-red-500"
-            >
-              {t('appointmentList.cancelButton')}
-            </Button>
+            {/* Buttons */}
+            <div className="flex flex-col gap-2 sm:min-w-[120px]">
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => onEditClick(appointment.id)}
+                className="w-full bg-teal-600 hover:bg-teal-700 border-teal-600 hover:border-teal-700 rounded-md h-10"
+              >
+                {t('appointmentList.editButton')}
+              </Button>
+
+              <Button
+                size="large"
+                onClick={() => onCancelClick(appointment.id)}
+                className="w-full border-red-500 hover:border-red-600 text-red-500 hover:text-red-600 rounded-md h-10"
+              >
+                {t('appointmentList.cancelButton')}
+              </Button>
+            </div>
           </div>
         </div>
       ))}
