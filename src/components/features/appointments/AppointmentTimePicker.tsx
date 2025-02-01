@@ -1,58 +1,74 @@
 // AppointmentTimePicker.tsx
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
-import { addDays, format, parseISO } from 'date-fns'
+import { addDays, format, parseISO, startOfWeek } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCallback, useMemo, useRef, useEffect, useState } from 'react'
-import { Button, Empty, Spin } from 'antd'
+import { Empty, Spin } from 'antd'
 
 interface AppointmentTimePickerProps {
   dentistId: number
-  onDateSelect: (date: Date) => void
-  onTimeSelect: (time: string) => void
+  onDateTimeSelect: (date: Date, time: string) => void
   selectedDate?: Date
   selectedTime?: string
+  originalDate?: Date
+  originalTime: string
 }
 
 const AppointmentTimePicker = ({
   dentistId,
-  onDateSelect,
-  onTimeSelect,
+  onDateTimeSelect,
   selectedDate,
   selectedTime,
+  originalDate,
+  originalTime,
 }: AppointmentTimePickerProps) => {
   const { t } = useAppTranslation('appointments')
-  const [currentWeekStart, setCurrentWeekStart] = useState(new Date())
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>()
+  const [viewingDate, setViewingDate] = useState<Date>()
   const [showTopGradient, setShowTopGradient] = useState(false)
   const [showBottomGradient, setShowBottomGradient] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const weekEnd = addDays(currentWeekStart, 6)
-  const { availableSlots, isLoading } = useTimeSlots(dentistId, currentWeekStart, weekEnd)
+  const weekEnd = currentWeekStart ? addDays(currentWeekStart, 6) : undefined
+  const { availableSlots, isLoading } = useTimeSlots(
+    dentistId,
+    currentWeekStart || new Date(),
+    weekEnd || addDays(new Date(), 6)
+  )
 
-  // Initialize currentWeekStart based on selectedDate
+  // Initialize currentWeekStart and viewingDate based on originalDate
   useEffect(() => {
-    if (selectedDate) {
-      const day = selectedDate.getDay()
-      const diff = selectedDate.getDate() - day + (day === 0 ? -6 : 1)
-      const weekStart = new Date(selectedDate)
-      weekStart.setDate(diff)
+    if (originalDate) {
+      const weekStart = startOfWeek(originalDate, { weekStartsOn: 1 })
       setCurrentWeekStart(weekStart)
+      setViewingDate(originalDate)
+    } else {
+      const today = new Date()
+      setCurrentWeekStart(startOfWeek(today, { weekStartsOn: 1 }))
+      setViewingDate(today)
     }
-  }, [])
+  }, [originalDate])
 
-  const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const date = addDays(currentWeekStart, i)
-    return {
-      date,
-      dayName: format(date, 'EEE'),
-      dayNumber: format(date, 'd'),
-      month: format(date, 'MMM'),
-      isSelected: selectedDate
-        ? format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
-        : false,
-    }
-  })
+  const weekDays = useMemo(() => {
+    if (!currentWeekStart) return []
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = addDays(currentWeekStart, i)
+      return {
+        date,
+        dayName: format(date, 'EEE'),
+        dayNumber: format(date, 'd'),
+        month: format(date, 'MMM'),
+        isSelected: selectedDate
+          ? format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
+          : false,
+        isViewing: viewingDate
+          ? format(date, 'yyyy-MM-dd') === format(viewingDate, 'yyyy-MM-dd')
+          : false,
+      }
+    })
+  }, [currentWeekStart, selectedDate, viewingDate])
 
   const handleScroll = useCallback(() => {
     if (scrollRef.current) {
@@ -81,37 +97,44 @@ const AppointmentTimePicker = ({
       const dateStr = format(date, 'yyyy-MM-dd')
 
       // Get available slots for the date
-      const availableSlotsForDate = (availableSlots || [])
+      let availableSlotsForDate = (availableSlots || [])
         .filter(slot => format(parseISO(slot.startTime), 'yyyy-MM-dd') === dateStr)
         .map(slot => format(parseISO(slot.startTime), 'HH:mm'))
+        .sort()
 
-      // If this is the selected date and we have a selectedTime, include it
+      // If we're looking at the original date, include the original time
       if (
-        selectedDate &&
-        selectedTime &&
-        format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd') &&
-        !availableSlotsForDate.includes(selectedTime)
+        originalDate &&
+        originalTime &&
+        format(date, 'yyyy-MM-dd') === format(originalDate, 'yyyy-MM-dd')
       ) {
-        return [...availableSlotsForDate, selectedTime].sort()
+        if (!availableSlotsForDate.includes(originalTime)) {
+          availableSlotsForDate = [...availableSlotsForDate, originalTime].sort()
+        }
       }
 
       return availableSlotsForDate
     },
-    [availableSlots, selectedDate, selectedTime]
+    [availableSlots, originalDate, originalTime]
   )
 
   const handlePrevWeek = () => {
-    setCurrentWeekStart(prev => addDays(prev, -7))
+    setCurrentWeekStart(prev => prev && addDays(prev, -7))
   }
 
   const handleNextWeek = () => {
-    setCurrentWeekStart(prev => addDays(prev, 7))
+    setCurrentWeekStart(prev => prev && addDays(prev, 7))
   }
 
   const handleDateSelect = (date: Date) => {
     if (!isDateInPast(date)) {
-      onDateSelect(date)
-      onTimeSelect('') // Reset time selection when date changes
+      setViewingDate(date)
+    }
+  }
+
+  const handleTimeSelect = (time: string) => {
+    if (viewingDate) {
+      onDateTimeSelect(viewingDate, time)
     }
   }
 
@@ -129,7 +152,11 @@ const AppointmentTimePicker = ({
     )
   }
 
-  const selectedDaySlots = selectedDate ? getTimeSlotsForDate(selectedDate) : []
+  if (!currentWeekStart || !viewingDate) {
+    return null
+  }
+
+  const viewingDaySlots = getTimeSlotsForDate(viewingDate)
 
   return (
     <div className="w-full bg-white h-full sm:h-auto">
@@ -156,7 +183,7 @@ const AppointmentTimePicker = ({
 
               <div className="bg-white">
                 <div className="grid grid-cols-7">
-                  {weekDays.map(({ date, dayNumber, month, isSelected }) => (
+                  {weekDays.map(({ date, dayNumber, month, isSelected, isViewing }) => (
                     <button
                       key={date.toISOString()}
                       onClick={() => handleDateSelect(date)}
@@ -167,7 +194,7 @@ const AppointmentTimePicker = ({
                     >
                       <div
                         className={`text-center py-1.5 sm:py-2 ${
-                          isSelected ? 'bg-teal-600 text-white' : ''
+                          isViewing ? 'bg-teal-600 text-white' : isSelected ? 'bg-teal-50' : ''
                         }`}
                       >
                         <div className="text-lg sm:text-xl font-medium leading-tight">
@@ -175,7 +202,11 @@ const AppointmentTimePicker = ({
                         </div>
                         <div
                           className={`text-xs sm:text-sm ${
-                            isSelected ? 'text-white' : 'text-gray-500'
+                            isViewing
+                              ? 'text-white'
+                              : isSelected
+                                ? 'text-teal-600'
+                                : 'text-gray-500'
                           }`}
                         >
                           {month}
@@ -209,15 +240,14 @@ const AppointmentTimePicker = ({
             <h3 className="text-base sm:text-lg font-medium text-gray-900 px-1">
               {t('editModal.selectTime')}
             </h3>
-            {selectedDate && (
+            {viewingDate && (
               <p className="text-sm text-gray-600 px-1 mt-1">
-                {format(selectedDate, 'EEEE, MMMM d')}
+                {format(viewingDate, 'EEEE, MMMM d')}
               </p>
             )}
           </div>
 
           <div className="relative">
-            {/* Top gradient */}
             {showTopGradient && (
               <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent pointer-events-none z-10" />
             )}
@@ -226,30 +256,33 @@ const AppointmentTimePicker = ({
               ref={scrollRef}
               className="max-h-[150px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
             >
-              {selectedDate ? (
-                selectedDaySlots.length > 0 ? (
+              {viewingDate ? (
+                viewingDaySlots.length > 0 ? (
                   <div className="grid grid-cols-3 gap-1.5 sm:gap-3 px-0.5 pb-0.5">
-                    {selectedDaySlots.map(time => {
-                      const isTimeSelected = selectedTime === time
-                      const isOriginalAppointmentTime =
-                        isTimeSelected &&
-                        !availableSlots?.some(
-                          slot => format(parseISO(slot.startTime), 'HH:mm') === time
-                        )
+                    {viewingDaySlots.map(time => {
+                      const isTimeSelected =
+                        selectedTime === time &&
+                        selectedDate &&
+                        format(viewingDate, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
+
+                      const isOriginalTime =
+                        originalDate &&
+                        format(viewingDate, 'yyyy-MM-dd') === format(originalDate, 'yyyy-MM-dd') &&
+                        time === originalTime
 
                       return (
                         <button
                           key={time}
-                          onClick={() => onTimeSelect(time)}
-                          disabled={isOriginalAppointmentTime}
+                          onClick={() => handleTimeSelect(time)}
+                          disabled={isOriginalTime && !isTimeSelected}
                           className={`py-2 sm:py-3 px-2 sm:px-4 rounded-lg border text-center text-sm sm:text-base transition-colors
-                    ${
-                      isTimeSelected
-                        ? 'border-teal-600 bg-teal-50 text-teal-600'
-                        : 'border-gray-200 text-gray-900 hover:border-teal-600'
-                    }
-                    ${isOriginalAppointmentTime ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
+                            ${
+                              isTimeSelected
+                                ? 'border-teal-600 bg-teal-50 text-teal-600'
+                                : 'border-gray-200 text-gray-900 hover:border-teal-600'
+                            }
+                            ${isOriginalTime && !isTimeSelected ? 'opacity-50 cursor-not-allowed' : ''}
+                          `}
                         >
                           {time}
                         </button>
@@ -271,7 +304,6 @@ const AppointmentTimePicker = ({
               ) : null}
             </div>
 
-            {/* Bottom gradient */}
             {showBottomGradient && (
               <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent pointer-events-none" />
             )}

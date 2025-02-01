@@ -19,16 +19,26 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
   const { appointments, updateAppointment } = useAppointments()
   const [selectedDate, setSelectedDate] = useState<Date>()
   const [selectedTime, setSelectedTime] = useState<string>()
+  const [originalDate, setOriginalDate] = useState<Date>()
 
   const appointment = appointments?.find((a: any) => a.id === appointmentId)
   if (!appointment) return null
 
-  // Set initial selected date and time from the appointment when the modal opens.
+  // Set original appointment date when modal opens
   useEffect(() => {
     if (appointment && isOpen) {
       const appointmentDate = parseISO(appointment.startTime)
-      setSelectedDate(appointmentDate)
-      setSelectedTime(format(appointmentDate, 'HH:mm'))
+      setOriginalDate(appointmentDate)
+      // Only set selected date/time if they haven't been chosen yet
+      if (!selectedDate && !selectedTime) {
+        setSelectedDate(appointmentDate)
+        setSelectedTime(format(appointmentDate, 'HH:mm'))
+      }
+    } else {
+      // Clear selections when modal closes
+      setSelectedDate(undefined)
+      setSelectedTime(undefined)
+      setOriginalDate(undefined)
     }
   }, [appointment, isOpen])
 
@@ -39,7 +49,7 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
         return
       }
 
-      // Combine the selected date with the chosen time.
+      // Combine the selected date with the chosen time
       const [hours, minutes] = selectedTime.split(':').map(Number)
       const newDate = new Date(selectedDate)
       newDate.setHours(hours, minutes, 0)
@@ -52,6 +62,12 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
       toast.error(t('notifications.error.updating'))
       console.error('Failed to update appointment:', error)
     }
+  }
+
+  // Handle both date and time selection together
+  const handleDateTimeSelect = (date: Date, time: string) => {
+    setSelectedDate(date)
+    setSelectedTime(time)
   }
 
   return (
@@ -155,10 +171,11 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
           <div className="flex-1">
             <AppointmentTimePicker
               dentistId={appointment.dentistId}
-              onDateSelect={setSelectedDate}
-              onTimeSelect={setSelectedTime}
+              onDateTimeSelect={handleDateTimeSelect}
               selectedDate={selectedDate}
               selectedTime={selectedTime}
+              originalDate={originalDate}
+              originalTime={format(parseISO(appointment.startTime), 'HH:mm')}
             />
           </div>
         </div>
