@@ -1,7 +1,6 @@
-// AppointmentTimePicker.tsx
 import { useTimeSlots } from '@/hooks/useTimeSlots'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
-import { addDays, format, parseISO, startOfWeek } from 'date-fns'
+import { addDays, format, parseISO, startOfWeek, isPast } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCallback, useMemo, useRef, useEffect, useState } from 'react'
 import { Empty, Spin } from 'antd'
@@ -13,6 +12,7 @@ interface AppointmentTimePickerProps {
   selectedTime?: string
   originalDate?: Date
   originalTime: string
+  disabled?: boolean
 }
 
 const AppointmentTimePicker = ({
@@ -22,6 +22,7 @@ const AppointmentTimePicker = ({
   selectedTime,
   originalDate,
   originalTime,
+  disabled = false,
 }: AppointmentTimePickerProps) => {
   const { t } = useAppTranslation('appointments')
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>()
@@ -119,21 +120,25 @@ const AppointmentTimePicker = ({
   )
 
   const handlePrevWeek = () => {
-    setCurrentWeekStart(prev => prev && addDays(prev, -7))
+    if (!disabled) {
+      setCurrentWeekStart(prev => prev && addDays(prev, -7))
+    }
   }
 
   const handleNextWeek = () => {
-    setCurrentWeekStart(prev => prev && addDays(prev, 7))
+    if (!disabled) {
+      setCurrentWeekStart(prev => prev && addDays(prev, 7))
+    }
   }
 
   const handleDateSelect = (date: Date) => {
-    if (!isDateInPast(date)) {
+    if (!disabled && !isDateInPast(date)) {
       setViewingDate(date)
     }
   }
 
   const handleTimeSelect = (time: string) => {
-    if (viewingDate) {
+    if (!disabled && viewingDate) {
       onDateTimeSelect(viewingDate, time)
     }
   }
@@ -162,7 +167,7 @@ const AppointmentTimePicker = ({
     <div className="w-full bg-white h-full sm:h-auto">
       <div className="p-3 sm:p-6 space-y-3 sm:space-y-6">
         <h2 className="text-lg sm:text-xl font-semibold text-gray-900 px-1">
-          {t('editModal.selectDateTime')}
+          {disabled ? t('viewModal.dateTime') : t('editModal.selectDateTime')}
         </h2>
 
         <div className="relative">
@@ -187,10 +192,10 @@ const AppointmentTimePicker = ({
                     <button
                       key={date.toISOString()}
                       onClick={() => handleDateSelect(date)}
-                      disabled={isDateInPast(date)}
+                      disabled={disabled || isDateInPast(date)}
                       className={`${
-                        isDateInPast(date) ? 'text-gray-300 cursor-not-allowed' : 'text-gray-900'
-                      }`}
+                        isDateInPast(date) || disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+                      } ${isDateInPast(date) ? 'text-gray-300' : 'text-gray-900'}`}
                     >
                       <div
                         className={`text-center py-1.5 sm:py-2 ${
@@ -221,15 +226,22 @@ const AppointmentTimePicker = ({
 
           <button
             onClick={handlePrevWeek}
-            className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 w-6 sm:w-8 h-6 sm:h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
-            disabled={isDateInPast(currentWeekStart)}
+            disabled={disabled || isDateInPast(currentWeekStart)}
+            className={`absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 w-6 sm:w-8 h-6 sm:h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 transition-colors ${
+              disabled || isDateInPast(currentWeekStart)
+                ? 'bg-gray-100 cursor-not-allowed'
+                : 'hover:bg-gray-50'
+            }`}
           >
             <ChevronLeft className="w-4 h-4 text-gray-600" />
           </button>
 
           <button
             onClick={handleNextWeek}
-            className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 w-6 sm:w-8 h-6 sm:h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50"
+            disabled={disabled}
+            className={`absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 w-6 sm:w-8 h-6 sm:h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 transition-colors ${
+              disabled ? 'bg-gray-100 cursor-not-allowed' : 'hover:bg-gray-50'
+            }`}
           >
             <ChevronRight className="w-4 h-4 text-gray-600" />
           </button>
@@ -238,7 +250,7 @@ const AppointmentTimePicker = ({
         <div className="space-y-2 sm:space-y-4">
           <div>
             <h3 className="text-base sm:text-lg font-medium text-gray-900 px-1">
-              {t('editModal.selectTime')}
+              {disabled ? t('viewModal.time') : t('editModal.selectTime')}
             </h3>
             {viewingDate && (
               <p className="text-sm text-gray-600 px-1 mt-1">
@@ -274,14 +286,18 @@ const AppointmentTimePicker = ({
                         <button
                           key={time}
                           onClick={() => handleTimeSelect(time)}
-                          disabled={isOriginalTime && !isTimeSelected}
+                          disabled={disabled || (isOriginalTime && !isTimeSelected)}
                           className={`py-2 sm:py-3 px-2 sm:px-4 rounded-lg border text-center text-sm sm:text-base transition-colors
                             ${
                               isTimeSelected
                                 ? 'border-teal-600 bg-teal-50 text-teal-600'
                                 : 'border-gray-200 text-gray-900 hover:border-teal-600'
                             }
-                            ${isOriginalTime && !isTimeSelected ? 'opacity-50 cursor-not-allowed' : ''}
+                            ${
+                              disabled || (isOriginalTime && !isTimeSelected)
+                                ? 'opacity-50 cursor-not-allowed'
+                                : ''
+                            }
                           `}
                         >
                           {time}
@@ -295,7 +311,9 @@ const AppointmentTimePicker = ({
                       description={
                         <div className="space-y-2">
                           <p className="text-gray-600">{t('editModal.noSlots')}</p>
-                          <p className="text-gray-400 text-sm">{t('editModal.tryAnother')}</p>
+                          {!disabled && (
+                            <p className="text-gray-400 text-sm">{t('editModal.tryAnother')}</p>
+                          )}
                         </div>
                       }
                     />

@@ -1,8 +1,7 @@
-// EditConfirmationModal.tsx
 import { useAppointments } from '@/hooks/useAppointments'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { AlertCircle, Clock, MapPin, User, X } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, isPast } from 'date-fns'
 import { Button, Modal } from 'antd'
 import { toast } from 'react-hot-toast'
 import { useState, useEffect } from 'react'
@@ -21,8 +20,10 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
   const [selectedTime, setSelectedTime] = useState<string>()
   const [originalDate, setOriginalDate] = useState<Date>()
 
-  const appointment = appointments?.find((a: any) => a.id === appointmentId)
+  const appointment = appointments?.find(a => a.id === appointmentId)
   if (!appointment) return null
+
+  const isPastAppointment = isPast(parseISO(appointment.startTime))
 
   // Set original appointment date when modal opens
   useEffect(() => {
@@ -43,6 +44,8 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
   }, [appointment, isOpen])
 
   const handleUpdate = async () => {
+    if (isPastAppointment) return
+
     try {
       if (!selectedDate || !selectedTime) {
         toast.error(t('notifications.error.invalidDate'))
@@ -55,7 +58,11 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
       newDate.setHours(hours, minutes, 0)
       const formattedDate = format(newDate, "yyyy-MM-dd'T'HH:mm:ss")
 
-      await updateAppointment.mutateAsync({ appointmentId, newDate: formattedDate })
+      await updateAppointment.mutateAsync({
+        appointmentId,
+        newDate: formattedDate,
+      })
+
       toast.success(t('notifications.success.updated'))
       onClose()
     } catch (error) {
@@ -64,10 +71,11 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
     }
   }
 
-  // Handle both date and time selection together
   const handleDateTimeSelect = (date: Date, time: string) => {
-    setSelectedDate(date)
-    setSelectedTime(time)
+    if (!isPastAppointment) {
+      setSelectedDate(date)
+      setSelectedTime(time)
+    }
   }
 
   return (
@@ -101,11 +109,18 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
           <div className="flex-1 p-3 sm:p-4 lg:border-r border-gray-200">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <AlertCircle className="text-blue-500" size={24} />
-                <h3 className="text-xl font-semibold text-gray-900">{t('editModal.title')}</h3>
+                <AlertCircle
+                  className={isPastAppointment ? 'text-gray-500' : 'text-blue-500'}
+                  size={24}
+                />
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {isPastAppointment ? t('viewModal.title') : t('editModal.title')}
+                </h3>
               </div>
 
-              <p className="text-base text-gray-600">{t('editModal.message')}</p>
+              {!isPastAppointment && (
+                <p className="text-base text-gray-600">{t('editModal.message')}</p>
+              )}
 
               <div className="bg-gray-50 p-3 sm:p-4 rounded-xl space-y-3">
                 <div className="flex items-center gap-3">
@@ -136,11 +151,9 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
                 </div>
               </div>
 
-              {selectedDate && selectedTime && (
+              {!isPastAppointment && selectedDate && selectedTime && (
                 <div className="mt-4 p-3 border border-gray-200 rounded-lg">
-                  <p className="text-gray-800 font-medium">
-                    {t('editModal.newAppointment') || 'New Appointment'}
-                  </p>
+                  <p className="text-gray-800 font-medium">{t('editModal.newAppointment')}</p>
                   <p className="text-gray-600">
                     {format(selectedDate, 'EEE, d MMM yyyy')} {t('appointmentList.timeFormat')}{' '}
                     {selectedTime}
@@ -151,18 +164,20 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
               <div className="pt-3">
                 <div className="flex gap-3">
                   <Button size="large" onClick={onClose} className="flex-1 h-11">
-                    {t('editModal.keepButton')}
+                    {isPastAppointment ? t('viewModal.closeButton') : t('editModal.keepButton')}
                   </Button>
-                  <Button
-                    type="primary"
-                    size="large"
-                    onClick={handleUpdate}
-                    loading={updateAppointment.isPending}
-                    disabled={updateAppointment.isPending || !selectedDate || !selectedTime}
-                    className="flex-1 h-11 bg-teal-600 hover:bg-teal-700 border-teal-600 hover:border-teal-700"
-                  >
-                    {t('editModal.confirmButton')}
-                  </Button>
+                  {!isPastAppointment && (
+                    <Button
+                      type="primary"
+                      size="large"
+                      onClick={handleUpdate}
+                      loading={updateAppointment.isPending}
+                      disabled={updateAppointment.isPending || !selectedDate || !selectedTime}
+                      className="flex-1 h-11 bg-teal-600 hover:bg-teal-700 border-teal-600 hover:border-teal-700"
+                    >
+                      {t('editModal.confirmButton')}
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -176,6 +191,7 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
               selectedTime={selectedTime}
               originalDate={originalDate}
               originalTime={format(parseISO(appointment.startTime), 'HH:mm')}
+              disabled={isPastAppointment}
             />
           </div>
         </div>
