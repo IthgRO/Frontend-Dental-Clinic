@@ -36,7 +36,6 @@ const EditConfirmationModal = ({ isOpen, appointmentId, onClose }: EditConfirmat
         setSelectedTime(format(appointmentDate, 'HH:mm'))
       }
     } else {
-      // Clear selections when modal closes
       setSelectedDate(undefined)
       setSelectedTime(undefined)
       setOriginalDate(undefined)
