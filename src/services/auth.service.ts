@@ -1,4 +1,4 @@
-import { LoginRequest, LoginResponse, RegisterRequest, User, UpdateUserDataRequest } from '@/types'
+import { LoginRequest, LoginResponse, RegisterRequest, UpdateUserDataRequest } from '@/types'
 import apiClient from './apiClient'
 
 export const authService = {
@@ -38,16 +38,6 @@ export const authService = {
       return response.data
     } catch (error: any) {
       console.error('Change password error:', error.response?.data || error.message)
-      throw error
-    }
-  },
-
-  me: async () => {
-    try {
-      const response = await apiClient.get('/auth/me')
-      return response.data
-    } catch (error: any) {
-      console.error('Get user profile error:', error.response?.data || error.message)
       throw error
     }
   },

@@ -1,8 +1,7 @@
 import { useAppTranslation } from '@/hooks/useAppTranslation'
-import { authService } from '@/services/auth.service'
 import { useAuthStore } from '@/store/useAuthStore'
 import { LoginRequest, RegisterRequest, User } from '@/types'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 
 export const useAuth = () => {
@@ -14,13 +13,6 @@ export const useAuth = () => {
     user,
     updateUserData: updateUserStore,
   } = useAuthStore()
-
-  const { data: userData, isLoading: isLoadingUser } = useQuery({
-    queryKey: ['user'],
-    queryFn: authService.me,
-    enabled: !!user,
-    retry: false,
-  })
 
   const login = useMutation({
     mutationFn: async (credentials: LoginRequest) => {
@@ -82,8 +74,8 @@ export const useAuth = () => {
     register,
     logout,
     updateUserData,
-    user: userData || user,
-    isLoading: login.isPending || register.isPending || isLoadingUser,
+    user: user,
+    isLoading: login.isPending || register.isPending,
     isAuthenticated: !!user,
   }
 }
