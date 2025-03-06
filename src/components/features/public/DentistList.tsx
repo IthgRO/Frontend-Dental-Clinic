@@ -1,9 +1,14 @@
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useFilteredDentists } from '@/hooks/useFilteredDentists'
+import { ViewMode } from '@/types'
 import { Spin } from 'antd'
 import DentistCard from './DentistCard'
 
-const DentistList = () => {
+interface DentistListProps {
+  viewMode: ViewMode
+}
+
+const DentistList = ({ viewMode }: DentistListProps) => {
   const { t } = useAppTranslation('dentists')
   const { filteredDentists, isLoading, error } = useFilteredDentists()
 
@@ -24,9 +29,15 @@ const DentistList = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div
+      className={
+        viewMode === 'grid'
+          ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'
+          : 'flex flex-col space-y-6'
+      }
+    >
       {filteredDentists.map(dentist => (
-        <DentistCard key={dentist.id} dentist={dentist} />
+        <DentistCard key={dentist.id} dentist={dentist} viewMode={viewMode} />
       ))}
     </div>
   )

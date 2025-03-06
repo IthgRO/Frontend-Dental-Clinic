@@ -1,123 +1,112 @@
 import { useAppTranslation } from '@/hooks/useAppTranslation'
-import { useTimeSlots } from '@/hooks/useTimeSlots'
-import { Dentist } from '@/types'
-import { getNextAvailableTime } from '@/utils/dateUtils'
-import { CalendarOutlined, EuroOutlined } from '@ant-design/icons'
-import { Card, Tag } from 'antd'
+import { Dentist, ViewMode } from '@/types'
+import { Card, Tag, Tooltip } from 'antd'
 import { MapPin } from 'lucide-react'
-import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { useMemo } from 'react'
 
 interface DentistCardProps {
   dentist: Dentist
+  viewMode: ViewMode
 }
 
-const DentistCard = ({ dentist }: DentistCardProps) => {
+const DentistCard = ({ dentist, viewMode }: DentistCardProps) => {
   const { t } = useAppTranslation('dentists')
-  const priceRange = t('card.price.range', {
-    min: dentist.priceRange.min.toLocaleString(),
-    max: dentist.priceRange.max.toLocaleString(),
-  })
-
   const lastName = dentist.name.split(' ')[1]
   const imageFileName = `${lastName}.png`
   const imagePath = `/placeholders/${imageFileName}`
 
-  const today = new Date()
-  const nextWeek = new Date(today)
-  nextWeek.setDate(today.getDate() + 7)
+  const { visibleServices, remainingServices } = useMemo(() => {
+    const containerWidth = viewMode === 'grid' ? 300 : 500
+    const avgServiceWidth = 120
+    const maxServicesInRow = Math.floor(containerWidth / avgServiceWidth)
 
-  const { availableSlots } = useTimeSlots(dentist.id, today, nextWeek)
-  const nextAvailableTime = useMemo(() => getNextAvailableTime(availableSlots), [availableSlots])
+    return {
+      visibleServices: dentist.services.slice(0, maxServicesInRow - 1),
+      remainingServices: dentist.services.slice(maxServicesInRow - 1),
+    }
+  }, [dentist.services, viewMode])
 
-  return (
-    <Link to={`/dentists/${dentist.id}`}>
-      <Card hoverable className="transition-all hover:shadow-lg">
-        {/* Mobile Layout */}
-        <div className="block sm:hidden">
-          <div className="relative mb-4">
+  const tooltipContent =
+    remainingServices.length > 0 ? (
+      <div className="flex flex-col gap-1">
+        {remainingServices.map(service => (
+          <span key={service.id}>{service.name}</span>
+        ))}
+      </div>
+    ) : null
+
+  if (viewMode === 'list') {
+    return (
+      <Link to={`/dentists/${dentist.id}`} className="block">
+        <Card hoverable className="transition-all hover:shadow-lg">
+          <div className="flex items-center gap-6">
             <img
               src={imagePath}
               alt={dentist.name}
-              className="w-full h-44 object-cover rounded-lg"
+              className="w-32 md:w-40 h-32 md:h-40 rounded-lg object-cover"
             />
-            {/* <div className="absolute top-3 right-3">
-              <Tag className="bg-white/90 backdrop-blur-sm border-0">
-                <EuroOutlined className="mr-1" />
-                {priceRange}
-              </Tag>
-            </div> */}
-          </div>
-
-          <div className="space-y-3">
-            <h2 className="text-xl font-semibold">{dentist.name}</h2>
-
-            <div className="flex items-center justify-between text-gray-600">
-              <div className="flex items-center gap-2">
-                <MapPin size={16} className="text-gray-400" />
-                <span>{dentist.clinic.name}</span>
+            <div className="flex-1">
+              <h2 className="text-xl md:text-2xl font-semibold mb-1">{dentist.name}</h2>
+              <p className="text-gray-500 mb-2">{dentist.clinic.name}</p>
+              <div className="flex items-center gap-1 text-gray-400 text-sm mb-4">
+                <MapPin size={14} />
+                <span>{dentist.clinic.city}</span>
               </div>
-              <span className="text-gray-500">{dentist.clinic.city}</span>
+
+              <div className="flex items-center gap-2">
+                {visibleServices.map(service => (
+                  <Tag key={service.id} className="m-0 bg-gray-50">
+                    {service.name}
+                  </Tag>
+                ))}
+                {remainingServices.length > 0 && (
+                  <Tooltip title={tooltipContent} placement="top">
+                    <Tag className="m-0 bg-gray-50 cursor-help">+{remainingServices.length}</Tag>
+                  </Tooltip>
+                )}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Link>
+    )
+  }
+
+  return (
+    <Link to={`/dentists/${dentist.id}`} className="block h-full">
+      <Card
+        hoverable
+        className="transition-all hover:shadow-lg overflow-hidden h-full"
+        bodyStyle={{ padding: 0 }}
+      >
+        <div>
+          <img
+            src={imagePath}
+            alt={dentist.name}
+            className="w-full aspect-[4/3] object-cover rounded-t-lg"
+          />
+
+          <div className="px-4 py-3 space-y-2">
+            <h2 className="text-xl font-semibold">{dentist.name}</h2>
+            <p className="text-gray-500">{dentist.clinic.name}</p>
+            <div className="flex items-center gap-1 text-gray-400 text-sm">
+              <MapPin size={14} />
+              <span>{dentist.clinic.city}</span>
             </div>
 
-            <div className="flex flex-wrap gap-1.5">
-              {dentist.services.slice(0, 3).map(service => (
+            <div className="flex items-center gap-2">
+              {visibleServices.map(service => (
                 <Tag key={service.id} className="m-0 bg-gray-50">
                   {service.name}
                 </Tag>
               ))}
-              {dentist.services.length > 3 && (
-                <Tag className="m-0 bg-gray-50">
-                  {t('card.services.more', { count: dentist.services.length - 3 })}
-                </Tag>
+              {remainingServices.length > 0 && (
+                <Tooltip title={tooltipContent} placement="top">
+                  <Tag className="m-0 bg-gray-50 cursor-help">+{remainingServices.length}</Tag>
+                </Tooltip>
               )}
             </div>
-
-            {nextAvailableTime && (
-              <div className="flex items-center text-teal-600 border-t pt-3">
-                <CalendarOutlined className="mr-2" />
-                <span className="text-sm">
-                  {t('card.availability.today', { time: nextAvailableTime })}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Desktop/Tablet Layout */}
-        <div className="hidden items-center sm:flex gap-6">
-          <img src={imagePath} alt={dentist.name} className="w-40 h-40 rounded-lg object-cover" />
-          <div className="flex-1">
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <h2 className="text-2xl font-semibold mb-1">{dentist.name}</h2>
-                <p className="text-gray-600">{dentist.clinic.name}</p>
-              </div>
-              {/* <div className="text-gray-600 flex items-center">
-                <EuroOutlined className="mr-1" />
-                {priceRange}
-              </div> */}
-            </div>
-
-            <div className="flex items-center gap-2 text-gray-500 mb-4">
-              <MapPin size={16} />
-              <span>{dentist.clinic.city}</span>
-            </div>
-
-            <div className="flex flex-wrap gap-2 mb-4">
-              {dentist.services.map(service => (
-                <Tag key={service.id} className="bg-gray-50">
-                  {service.name}
-                </Tag>
-              ))}
-            </div>
-
-            {nextAvailableTime && (
-              <div className="inline-flex items-center px-3 py-1.5 bg-teal-50 text-teal-600 rounded-md">
-                <CalendarOutlined className="mr-2" />
-                <span>{t('card.availability.today', { time: nextAvailableTime })}</span>
-              </div>
-            )}
           </div>
         </div>
       </Card>

@@ -34,6 +34,11 @@ export interface RegisterRequest {
   password: string
 }
 
+export interface UpdateUserDataRequest {
+  email?: string
+  phone?: string
+}
+
 // Appointment related types
 export type AppointmentStatus = 'pending' | 'confirmed' | 'cancelled'
 
@@ -73,6 +78,8 @@ export interface DentistResponse {
     price: number
   }[]
 }
+
+export type ViewMode = 'grid' | 'list'
 
 export interface Dentist {
   id: number

@@ -15,6 +15,7 @@ const LoginPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
+  console.log('token', token)
   useEffect(() => {
     clearError()
   }, [clearError])

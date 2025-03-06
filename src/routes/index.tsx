@@ -1,5 +1,3 @@
-// src/routes/index.tsx
-
 import AuthLayout from '@/components/layouts/AuthLayout'
 import PublicLayout from '@/components/layouts/public/PublicLayout'
 import LoadingScreen from '@/components/ui/LoadingScreen'
@@ -25,6 +23,8 @@ const AppRoutes = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/dentists" element={<DentistsPage />} />
           <Route path="/dentists/:id" element={<DentistBookingPage />} />
+
+          {/* Account routes */}
           <Route
             path="/my-account"
             element={
@@ -32,8 +32,12 @@ const AppRoutes = () => {
                 <MyAccountPage />
               </PrivateRoute>
             }
-          />
-          {/* Our auto-login route */}
+          >
+            <Route index element={<MyAccountPage />} />
+            <Route path="settings" element={<MyAccountPage />} />
+          </Route>
+
+          {/* Auto-login route */}
           <Route path="/auto-login" element={<AutoLoginPage />} />
         </Route>
 

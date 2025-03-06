@@ -7,8 +7,8 @@
   "appointmentList": {
     "doctorPrefix": "Dr.",
     "timeFormat": " kl.",
-    "cancelButton": "Avbestill Time",
-    "editButton": "Rediger Time",
+    "cancelButton": "Avbestill",
+    "editButton": "Rediger",
     "noAppointments": "Ingen timer funnet"
   },
   "cancelModal": {
@@ -26,7 +26,12 @@
     "confirmButton": "Lagre Endringer",
     "keepButton": "Behold Nåværende",
     "successMessage": "Timen ble oppdatert",
-    "errorMessage": "Kunne ikke oppdatere timen"
+    "errorMessage": "Kunne ikke oppdatere timen",
+    "selectDateTime": "Velg dato og tid",
+    "selectTime": "Velg tid",
+    "noSlots": "Ingen ledige tider",
+    "tryAnother": "Vennligst velg en annen dato",
+    "newAppointment": "Ny Time"
   },
   "details": {
     "service": "Tjeneste",

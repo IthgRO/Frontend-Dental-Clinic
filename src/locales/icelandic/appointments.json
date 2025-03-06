@@ -8,7 +8,7 @@
     "doctorPrefix": "Dr.",
     "timeFormat": " kl.",
     "cancelButton": "Afbóka Tíma",
-    "editButton": "Breyta Tíma",
+    "editButton": "Breyta",
     "noAppointments": "Engar bókanir fundust"
   },
   "cancelModal": {
@@ -26,7 +26,12 @@
     "confirmButton": "Vista Breytingar",
     "keepButton": "Halda Núverandi",
     "successMessage": "Tíminn var uppfærður",
-    "errorMessage": "Ekki tókst að breyta tímanum"
+    "errorMessage": "Ekki tókst að breyta tímanum",
+    "selectDateTime": "Veldu dag og tíma",
+    "selectTime": "Veldu tíma",
+    "noSlots": "Engir lausir tímar",
+    "tryAnother": "Vinsamlegast veldu annan dag",
+    "newAppointment": "Nýr Tími"
   },
   "details": {
     "service": "Þjónusta",
